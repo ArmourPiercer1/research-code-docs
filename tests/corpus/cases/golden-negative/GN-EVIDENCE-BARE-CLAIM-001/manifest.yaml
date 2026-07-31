@@ -1,0 +1,46 @@
+case_id: GN-EVIDENCE-BARE-CLAIM-001
+case_version: 1
+class: golden-negative
+artifact_type: evidence-matrix
+language: en
+holdout: false
+document: tests/corpus/cases/golden-negative/GN-EVIDENCE-BARE-CLAIM-001/document.md
+
+source:
+  kind: synthetic                # hand-authored bare-claim negative (split from quarantined GN-EXP-001, D-04)
+
+profile:
+  provenance_policy: controlled
+  evidence_requirement: key-claims
+  reader_test: evidence-comprehension
+  output_mode: gate
+
+expected:
+  document_quality: FAIL
+  quality_band: FAIL             # A/B adjudicated: an evidence note whose sole payload is an unsupported number is FAIL (ADR-DQE-001 two-axis)
+  gate_decision: BLOCK
+  factual_validity_allowed: [UNVERIFIED]
+  reader_test: FAIL
+  required_blockers: [HF-12A]    # a quantitative result asserted as an established fact, with NO handle and NO assumption label
+  forbidden_blockers: [HF-9, HF-13, HF-14a, HF-14b, HF-15]   # frontmatter complete -> HF-9 silent; one clean claim -> no structural gate
+  acceptable_cofindings: [HF-10, HF-12E]   # a bare unsupported claim legitimately also lacks an evidence-status label (HF-12E) and over-elevates ≤E2 evidence (HF-10); NOT forbidden
+  required_findings:
+    - unsupported-load-bearing-claim
+    - no-reproduction-handle
+
+# Design note: the frontmatter is deliberately COMPLETE (all 6 HF-9 keys incl. status) so HF-9 stays
+# silent under the controlled profile — this isolates HF-12A from D-01. The 74% claim has no experiment
+# id / run link / config / code commit and no HYPOTHESIS label, so it is a load-bearing claim without a
+# handle. Mirror image of BP-005-pass (honest HYPOTHESIS label -> PASS).
+
+adjudication:
+  status: gold
+  method: two-axis blind Reviewer A/B (adjudication-v4, isolated, no DQE skill)
+  reviewer_a: {quality_band: FAIL, gate: BLOCK, defect_tags: [unsupported-claim, not-reproducible], confidence: HIGH}
+  reviewer_b: {quality_band: FAIL, gate: BLOCK, defect_tags: [unsupported-claim], confidence: HIGH}
+  consensus: FAIL
+  confidence: HIGH
+  adjudicated_at: '2026-07-31'
+  notes: 'Pure-HF-12A split CONFIRMED: both reviewers FAIL/BLOCK the bare 74% claim as unsupported; with
+    complete front-matter neither raised a controlled-profile provenance (HF-9) gap. Clean isolation of
+    HF-12A from D-01. Gold set fresh (no v1 to inherit).'

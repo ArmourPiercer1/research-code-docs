@@ -1,0 +1,14 @@
+# Immutable v1 snapshot — excluded from all live metrics (validators skip **/quarantine/**).
+adjudication_status: quarantine
+quarantined_at: '2026-07-31'
+dataset_version_at_quarantine: 3
+reason: fixture-invalid-or-contract-ambiguous
+detail: >-
+  CONTRACT-AMBIGUOUS METADATA. Frontmatter `status: DECIDED` sat over a body that is an explicitly-labeled
+  `HYPOTHESIS (尚未验证)`. That mixed signal invited HF-3 (candidate-as-decided) + HF-14a and false-FAILed
+  a case meant to PASS. Under ADR-DQE-001 the fix is `document_lifecycle: ACCEPTED` (an accepted note may
+  record a hypothesis), isolating the honest-hypothesis signal.
+defect_ledger: D-09
+replaced_by:
+  - BP-005-pass   # case_version 2 (document_lifecycle: ACCEPTED; no claim-status header)
+do_not: [edit, run, count-in-metrics]

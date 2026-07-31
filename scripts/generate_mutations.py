@@ -8,13 +8,22 @@ and writes, under tests/corpus/cases/golden-negative/<case-id>/:
     mutation.diff         unified diff base -> mutated
     mutation_result.yaml  machine-readable summary + assertions
 
-Supported ops: remove-sections | append-file | delete-substrings | remove-lines | insert-after.
+Supported ops: remove-sections | append-file | delete-substrings | replace-text | remove-lines | insert-after.
+
+Optional `postconditions:` block — a SEMANTIC proof that the intended defect actually landed (and no
+stale anchor survived), checked at generation time so a mutation that "ran" but did not carry its target
+defect can never silently ship:
+    postconditions:
+      assert_absent:  ["- **GO:**", ...]   # each substring MUST be gone from the mutated text
+      assert_present: ["届时定", ...]       # each substring MUST appear in the mutated text
+      assert_no_dangling_toc: true          # flag passed through; enforced by validate_mutation_semantics.py
 
 Assertions (a failed assertion aborts, so a stale/no-op plan can never silently ship):
   - the mutated text DIFFERS from the base;
   - removed headings are gone; the append marker is present; each delete-substring existed;
     remove-lines removed >= 1 line; the insert anchor matched;
-  - every heading named in `forbidden_unrelated_changes` is BYTE-IDENTICAL between base and mutated.
+  - every heading named in `forbidden_unrelated_changes` is BYTE-IDENTICAL between base and mutated;
+  - every `postconditions.assert_absent` string is gone and every `assert_present` string is present.
 
 Usage:
   python scripts/generate_mutations.py                 # all plans
@@ -176,6 +185,20 @@ def run_plan(plan_path: Path) -> str:
         elif sb and not sm:
             raise SystemExit(f"[{cid}] forbidden change: section '{title}' vanished")
 
+    # semantic post-conditions: prove the intended defect landed and no stale anchor survived
+    post = plan.get("postconditions", {}) or {}
+    sem_findings: list = []
+    for s in post.get("assert_absent", []) or []:
+        sem_findings.append({"check": "assert_absent", "value": s,
+                             "status": "FAIL" if s in text else "PASS"})
+    for s in post.get("assert_present", []) or []:
+        sem_findings.append({"check": "assert_present", "value": s,
+                             "status": "PASS" if s in text else "FAIL"})
+    sem_fail = [f for f in sem_findings if f["status"] == "FAIL"]
+    if sem_fail:
+        raise SystemExit(f"[{cid}] postcondition(s) FAILED (mutation did not carry its target defect "
+                         f"cleanly): {sem_fail}")
+
     out_dir = OUT / cid
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / f"document.{ext}").write_text(text, encoding="utf-8")
@@ -192,6 +215,8 @@ def run_plan(plan_path: Path) -> str:
             "intended_findings": plan.get("intended_findings", []),
             "forbidden_unrelated_changes": plan.get("forbidden_unrelated_changes", []),
             "forbidden_changes_verified": True,
+            "postconditions": post,
+            "semantic_validation": {"status": "PASS", "findings": sem_findings},
             "generated_at": NOW,
         }
     }, sort_keys=False, allow_unicode=True), encoding="utf-8")

@@ -1,5 +1,5 @@
 case_id: GN-PROP-001
-case_version: 1
+case_version: 2
 class: golden-negative
 artifact_type: technical-proposal
 language: en
@@ -20,34 +20,39 @@ profile:
 
 expected:
   document_quality: FAIL
+  quality_band: PARTIAL          # a strong KEP minus its validation story -> not executable
+  gate_decision: BLOCK
   factual_validity_allowed: [VERIFIED, PARTIALLY_VERIFIED, UNVERIFIED]
   reader_test: FAIL
-  required_blockers: []                # soft-FAIL on executability; the evaluator must NOT invent a hard gate
-  forbidden_blockers: [HF-13, HF-14a, HF-14b, HF-15]
+  required_blockers: []          # soft-FAIL on executability; the evaluator must NOT invent a hard gate
+  forbidden_blockers: [HF-13, HF-14a, HF-14b, HF-15]   # HF-14a now truly forbidden: no dangling TOC to misread
   required_findings:
     - missing-test-plan
     - missing-graduation-criteria
+    - missing-rollback
     - not-executable
 
 mutation:
   base_case: GP-PROP-001
-  mutation_id: MUT-PROP-NO-VALIDATION
-  difference_under_test: removed Test Plan + Graduation Criteria + Feature-Enablement-and-Rollback
+  mutation_id: MUT-PROP-NO-VALIDATION-V2
+  difference_under_test: removed Test Plan + Graduation Criteria + Feature-Enablement-and-Rollback AND their TOC entries (no dangling anchors)
+
+# v2 repair (D-08): v1 removed the sections but left their <!-- toc --> anchors dangling, which the
+# evaluator read as an HF-14a state contradiction (a secondary defect). v2 removes the matching TOC lines
+# too (mutation postcondition assert_no_dangling_toc), so the ONLY defect is the missing validation story.
 
 adjudication:
-  reviewer_a:
-    verdict: PARTIAL
-    confidence: MEDIUM
-    tag: not-actionable
-  reviewer_b:
-    verdict: PARTIAL
-    confidence: MEDIUM
-  consensus: FAIL
-  confidence: MEDIUM
-  status: gold
-  adjudicated_at: '2026-07-31T11:52:38Z'
-  notes: 'USER DECISION D-1: gold=FAIL (reviewers A=PARTIAL/B=PARTIAL; ruling recorded,
-    not overridden by auto-queue) | builder_note: REFINED per D-2 (signoff checklist
-    items unchecked + orphan sub-items removed); re-confirmed CONTRADICTION=NO on
-    blind-run reconfirm-2026-07-31 — now a clean single-defect (validation/graduation/rollback
-    removed -> not executable).'
+  status: disputed                # A/B AGREE (PASS/ALLOW) but CONTRADICT the corpus-intended FAIL -> user must rule
+  method: two-axis blind Reviewer A/B (adjudication-v4, isolated, no DQE skill)
+  reviewer_a: {quality_band: PASS, gate: ALLOW, defect_tags: [], confidence: HIGH}
+  reviewer_b: {quality_band: PASS, gate: ALLOW, defect_tags: [], confidence: HIGH}
+  consensus: pending             # UNRESOLVED — excluded from any live metric until the user rules
+  confidence: HIGH
+  adjudicated_at: '2026-07-31'
+  dispute: 'Both blind reviewers rated the mutated KEP PASS/ALLOW: its Design Details (CRI protobufs,
+    ID-mapping algorithm, worked idmap examples, PRR questionnaire, failure modes, alternatives) are so
+    complete that removing Test Plan / Graduation Criteria / Feature-Enablement leaves a document a reader
+    can still IMPLEMENT. They read the missing validation sections as non-blocking process scaffolding, not
+    an executability blocker. => GN-PROP-001 may be an INVALID negative (same failure mode as GN-EXP-001,
+    D-04: too rich a base to break with one deletion). USER DECISION NEEDED (decisions-pending D6):
+    (a) quarantine + rebuild on a leaner proposal, or (b) override to FAIL as in v1 D-1.'

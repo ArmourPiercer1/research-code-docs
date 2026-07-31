@@ -1,0 +1,14 @@
+# Immutable v1 snapshot — excluded from all live metrics (validators skip **/quarantine/**).
+adjudication_status: quarantine
+quarantined_at: '2026-07-31'
+dataset_version_at_quarantine: 3
+reason: fixture-invalid-or-contract-ambiguous
+detail: >-
+  INCIDENTAL STATE CONTRADICTION. The fixture carried `status: DECIDED` + "The core is done" while `OQ-2`
+  was "(design review in progress)" — a genuine done-vs-in-progress contradiction. HF-14a therefore fired
+  LEGITIMATELY, so listing HF-14a in forbidden_blockers was the corpus's mistake. The intended sole
+  defect was HF-14b (a bare live test count with no dynamic-source pointer).
+defect_ledger: D-07
+replaced_by:
+  - BP-002-fail   # case_version 2 (over-claim + contradiction removed; HF-14b is the lone defect)
+do_not: [edit, run, count-in-metrics]

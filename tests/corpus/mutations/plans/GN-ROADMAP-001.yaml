@@ -1,19 +1,35 @@
 case_id: GN-ROADMAP-001
-mutation_id: MUT-HF15-VAGUE-DOD
+case_version: 2
+mutation_id: MUT-HF15-VAGUE-DOD-V2
 base:
   kind: fixture                    # reuse the existing (frozen) positive as the minimal-difference base
   ref: evals/skills/task-quality/fixtures/dqe/positive/b2-research-roadmap.md
   ext: md
-# Phase 1 is "committed · next". Remove its measurable GO/MODIFY/STOP gate and replace with a vague DoD.
-# (Phase 2's combined "GO / MODIFY / STOP:" line is NOT matched by the regex, so it keeps its gate ->
-#  clean single-phase HF-15 defect.)
+# v1 FAILED: its regex `^\s*\*\*(GO|MODIFY|STOP):\*\*` did not match the dash-prefixed `- **GO:**` line,
+# so Phase-1 kept a measurable GO gate and the phase was still measurable (defect never landed — D-05).
+# v2: remove Phase-1's ENTIRE GO/MODIFY/STOP gate AND its downstream route, leaving only a vague DoD.
+# Phase-2's gate ("GO if worst-case < 10%") is asserted to SURVIVE, so this is a clean single-phase
+# HF-15 defect: one committed phase whose acceptance is non-measurable.
 operations:
   - op: remove-lines
-    pattern: '^\s*\*\*(GO|MODIFY|STOP):\*\*'
+    pattern: '\*\*(GO|MODIFY|STOP):\*\*'   # Phase-1 GO/MODIFY/STOP (3 lines); cap stops before Phase-2
     max_removals: 3
+  - op: delete-substrings
+    substrings:
+      - "\n- **Downstream impact:** GO unlocks Phase 2 (architecture search); STOP reroutes to the algebraic\n  refinement track in the decision register (D-12)."
   - op: insert-after
     anchor: '^- \*\*Metric:\*\* time-averaged'
     text: "- **验收（committed · next）：** 与基线对照，效果达标即可，具体算例与阈值届时定。"
+postconditions:
+  assert_absent:                   # the measurable gate + downstream route must be GONE
+    - "20% error reduction"
+    - "proceed to Phase 2"
+    - "Downstream impact"
+    - "GO unlocks Phase 2"
+  assert_present:                  # committed marker + vague DoD survive; Phase-2 gate untouched
+    - "届时定"
+    - "committed · next"
+    - "GO if worst-case < 10%"
 intended_blockers: [HF-15]         # a committed phase's acceptance is now non-measurable/vague
 intended_findings: [non-executable-committed-milestone, vague-dod]
 forbidden_unrelated_changes: []

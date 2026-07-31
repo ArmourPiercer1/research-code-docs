@@ -1,0 +1,73 @@
+mutation_result:
+  case_id: GN-EXP-REPRO-001
+  mutation_id: MUT-EXP-UNREPRODUCIBLE
+  base_kind: normalized-seed
+  base_ref: SEED-EXP-YAHOO-RESNET
+  base_path: D:/AI_Coworking/skill-build/research-code-dev/tests/corpus/source-seeds/normalized/SEED-EXP-YAHOO-RESNET/document.md
+  base_sha256: 98f0bcebc66c6f1c8626a1c07abbfaf029c4b3f31905f371d637aac9148c250a
+  mutated_sha256: ad890cdf98d5d9288d1ba1167531b9d3d9d9627a3e9d6eff45190e09feb98789
+  changed_ranges:
+  - section: Optimization Methods
+    action: removed
+  - substring: ' We ran the code using commit `bd56a06d2815e3dc2914fc8ce2fa1ea60e19d324`.'
+    action: deleted
+  - substring: ' We used a p3.2xlarge instance on AWS which has an NVIDIA GPU V100.'
+    action: deleted
+  - substring: ' We use TensorFlow v1.8.'
+    action: deleted
+  intended_blockers: []
+  intended_findings:
+  - missing-code-version
+  - missing-execution-entry
+  - missing-hyperparameters
+  - missing-environment
+  - missing-reproduction-tolerance
+  forbidden_unrelated_changes: []
+  forbidden_changes_verified: true
+  postconditions:
+    assert_absent:
+    - python train.py
+    - Stochastic gradient descent
+    - Learning rate starts at 0.1
+    - 24b236fdb6
+    - bd56a06d28
+    - p3.2xlarge
+    - v1.10.0
+    - TensorFlow v1.8
+    assert_present:
+    - 74.0% after 500K iterations
+    - 74.05% single crop accuracy
+  semantic_validation:
+    status: PASS
+    findings:
+    - check: assert_absent
+      value: python train.py
+      status: PASS
+    - check: assert_absent
+      value: Stochastic gradient descent
+      status: PASS
+    - check: assert_absent
+      value: Learning rate starts at 0.1
+      status: PASS
+    - check: assert_absent
+      value: 24b236fdb6
+      status: PASS
+    - check: assert_absent
+      value: bd56a06d28
+      status: PASS
+    - check: assert_absent
+      value: p3.2xlarge
+      status: PASS
+    - check: assert_absent
+      value: v1.10.0
+      status: PASS
+    - check: assert_absent
+      value: TensorFlow v1.8
+      status: PASS
+    - check: assert_present
+      value: 74.0% after 500K iterations
+      status: PASS
+    - check: assert_present
+      value: 74.05% single crop accuracy
+      status: PASS
+  generated_at: '2026-07-31T14:06:16Z'

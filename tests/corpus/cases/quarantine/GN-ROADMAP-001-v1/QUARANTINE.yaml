@@ -1,0 +1,15 @@
+# Immutable v1 snapshot — excluded from all live metrics (validators skip **/quarantine/**).
+adjudication_status: quarantine
+quarantined_at: '2026-07-31'
+dataset_version_at_quarantine: 3
+reason: fixture-invalid-or-contract-ambiguous
+detail: >-
+  MUTATION FAILED TO LAND. MUT-HF15-VAGUE-DOD intended to replace Phase-1's measurable gate with a vague
+  DoD, but its remove-lines regex `^\s*\*\*(GO|MODIFY|STOP):\*\*` did NOT match the dash-prefixed
+  `- **GO:** >= 20% error reduction ... proceed to Phase 2` line, so Phase-1 KEPT a measurable GO gate.
+  The phase was therefore still measurable and v0.3 not firing HF-15 was defensible. The target defect
+  was never present.
+defect_ledger: D-05
+replaced_by:
+  - GN-ROADMAP-001   # case_version 2 (GO gate + downstream route truly removed)
+do_not: [edit, run, count-in-metrics]

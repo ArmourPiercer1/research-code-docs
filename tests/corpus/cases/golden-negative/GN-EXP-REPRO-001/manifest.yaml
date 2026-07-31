@@ -1,0 +1,57 @@
+case_id: GN-EXP-REPRO-001
+case_version: 1
+class: golden-negative
+artifact_type: experiment-report
+language: en
+holdout: false
+document: tests/corpus/cases/golden-negative/GN-EXP-REPRO-001/document.md
+
+source:
+  kind: mutation
+  base_seed: SEED-EXP-YAHOO-RESNET
+  upstream_repo: https://github.com/yahoo/ml-reproducibility-guidelines.git
+  upstream_commit: ff931bf844c1238073e6781e1d7e440914903fc9
+
+profile:
+  provenance_policy: external
+  evidence_requirement: key-claims
+  reader_test: reproducibility-execution
+  output_mode: audit
+
+expected:
+  document_quality: FAIL
+  quality_band: PARTIAL          # readable recipe prose, but every reproduction handle is missing
+  gate_decision: BLOCK
+  factual_validity_allowed: [UNVERIFIED, PARTIALLY_VERIFIED]   # no source access; result claims kept but unrunnable
+  reader_test: FAIL
+  required_blockers: []          # soft-FAIL on reproducibility findings; must NOT invent a hard gate
+  forbidden_blockers: [HF-13, HF-14a, HF-14b, HF-15]
+  required_findings:
+    - missing-code-version
+    - missing-execution-entry
+    - missing-hyperparameters
+    - missing-environment
+    - missing-reproduction-tolerance
+
+mutation:
+  base_case: GP-EXP-001
+  mutation_id: MUT-EXP-UNREPRODUCIBLE
+  difference_under_test: result claims retained, but training command + hyperparameters + LR schedule + code commits + framework versions + hardware all stripped
+
+# Design note: this is the EXTERNAL Yahoo recipe (D-04 split — the reproducibility half). Under the
+# UNCHANGED v0.3 skill, HF-9 will still misfire here because v0.3 is not profile-aware (D-01); that is a
+# KNOWN, separate defect already isolated by the BP-004 pair and GP-EXP-001, NOT this case's target — so
+# HF-9 is intentionally NOT in forbidden_blockers here. This case's target is the reproducibility
+# reader-test failure (findings above).
+
+adjudication:
+  status: gold
+  method: two-axis blind Reviewer A/B (adjudication-v4, isolated, no DQE skill)
+  reviewer_a: {quality_band: PARTIAL, gate: BLOCK, defect_tags: [not-reproducible, context-dependent], confidence: MEDIUM}
+  reviewer_b: {quality_band: FAIL, gate: BLOCK, defect_tags: [not-reproducible], confidence: HIGH}
+  consensus: FAIL                 # gate=BLOCK consensus; quality-band split (PARTIAL/FAIL) noted
+  confidence: MEDIUM-HIGH
+  adjudicated_at: '2026-07-31'
+  notes: 'Reproducibility split CONFIRMED: both reviewers BLOCK on not-reproducible (recipe stripped of
+    command/hyperparameters/versions/hardware). Quality-band split PARTIAL(A)/FAIL(B); gate consensus is
+    BLOCK. Under the external profile neither penalized the missing local front-matter. Gold set fresh.'

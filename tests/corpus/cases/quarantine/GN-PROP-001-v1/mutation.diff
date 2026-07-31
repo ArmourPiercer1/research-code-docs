@@ -1,0 +1,243 @@
+--- base:D:/AI_Coworking/skill-build/research-code-dev/tests/corpus/source-seeds/normalized/SEED-KEP-127/document.md
++++ mutated:GN-PROP-001
+@@ -64,12 +64,8 @@
+ - [X] (R) Enhancement issue in release milestone, which links to KEP dir in [kubernetes/enhancements] (not the initial KEP PR)
+ - [X] (R) KEP approvers have approved the KEP status as `implementable`
+ - [X] (R) Design details are appropriately documented
+-- [X] (R) Test plan is in place, giving consideration to SIG Architecture and SIG Testing input (including test refactors)
+-  - [X] e2e Tests for all Beta API Operations (endpoints)
+-  - [X] (R) Ensure GA e2e tests meet requirements for [Conformance Tests](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/conformance-tests.md)
+-  - [X] (R) Minimum Two Week Window for GA e2e tests to prove flake free
+-- [X] (R) Graduation criteria is in place
+-  - [X] (R) [all GA Endpoints](https://github.com/kubernetes/community/pull/1806) must be hit by [Conformance Tests](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/conformance-tests.md)
++- [ ] (R) Test plan is in place, giving consideration to SIG Architecture and SIG Testing input (including test refactors)
++- [ ] (R) Graduation criteria is in place
+ - [X] (R) Production readiness review completed
+ - [X] (R) Production readiness review approved
+ - [X] "Implementation History" section is up-to-date for milestone
+@@ -513,132 +509,6 @@
+ A serial test will be added to validate the functionality with the enabled
+ feature gate.
+ 
+-### Test Plan
+-
+-<!--
+-**Note:** *Not required until targeted at a release.*
+-The goal is to ensure that we don't accept enhancements with inadequate testing.
+-
+-All code is expected to have adequate tests (eventually with coverage
+-expectations). Please adhere to the [Kubernetes testing guidelines][testing-guidelines]
+-when drafting this test plan.
+-
+-[testing-guidelines]: https://git.k8s.io/community/contributors/devel/sig-testing/testing.md
+--->
+-
+-[x] I/we understand the owners of the involved components may require updates to
+-existing tests to make this code solid enough prior to committing the changes necessary
+-to implement this enhancement.
+-
+-##### Prerequisite testing updates
+-
+-<!--
+-Based on reviewers feedback describe what additional tests need to be added prior
+-implementing this enhancement to ensure the enhancements have also solid foundations.
+--->
+-None.
+-
+-##### Unit tests
+-
+-<!--
+-In principle every added code should have complete unit test coverage, so providing
+-the exact set of tests will not bring additional value.
+-However, if complete unit test coverage is not possible, explain the reason of it
+-together with explanation why this is acceptable.
+--->
+-
+-<!--
+-Additionally, for Alpha try to enumerate the core package you will be touching
+-to implement this enhancement and provide the current unit coverage for those
+-in the form of:
+-- <package>: <date> - <current test coverage>
+-The data can be easily read from:
+-https://testgrid.k8s.io/sig-testing-canaries#ci-kubernetes-coverage-unit
+-
+-This can inform certain test coverage improvements that we want to do before
+-extending the production code to implement this enhancement.
+--->
+-
+-Most of the changes will be in a new file we will create, the userns manager.
+-Tests are already written for that file.
+-
+-The rest of the changes are more about hooking it up so it is called.
+-
+-- `pkg/kubelet/kuberuntime/kuberuntime_container_linux.go`: 24.05.2022 - 90.8%
+-
+-##### Integration tests
+-
+-<!--
+-This question should be filled when targeting a release.
+-For Alpha, describe what tests will be added to ensure proper quality of the enhancement.
+-
+-For Beta and GA, add links to added tests together with links to k8s-triage for those tests:
+-https://storage.googleapis.com/k8s-triage/index.html
+--->
+-
+-We will add a test that:
+-
+-1. Starts the kubelet with the feature gate enabled
+-1. Creates a pod with user namespaces
+-1. Restarts the kubelet with the feature gate disabled
+-1. Deletes the pod
+-
+-We will check the pod is deleted correctly and the pod folder is indeed deleted.
+-
+-Same note about container runtime version from the e2e section applies.
+-
+-- <test>: <link to test coverage>
+-
+-##### e2e tests
+-
+-<!--
+-This question should be filled when targeting a release.
+-For Alpha, describe what tests will be added to ensure proper quality of the enhancement.
+-
+-For Beta and GA, add links to added tests together with links to k8s-triage for those tests:
+-https://storage.googleapis.com/k8s-triage/index.html
+-
+-We expect no non-infra related flakes in the last month as a GA graduation criteria.
+--->
+-
+-We can do e2e test to verify that userns is disabled when it should.
+-
+-To test with userns enabled, we need to patch container runtimes. We can either
+-try to use a patched version or make the alpha longer and add e2e when we can
+-use container runtime versions that have the needed changes.
+-
+-##### critests
+-
+-- For Beta, the feature is tested for containerd and CRI-O in cri-tools repo using critest to
+-  make sure the specified user namespace configuration is honored.
+-
+-- <test>: <link to test coverage>
+-
+-### Graduation Criteria
+-
+-##### Alpha
+-
+-- Support with idmap mounts
+-- Gather and address feedback from the community
+-- Add API Server feature flag to integrate into [Pod Security Standards (PSS)](#pod-security-standards-pss-integration)
+-- Changing restrictions on the what volumes will be allowed
+-
+-##### Beta
+-
+-- Gather and address feedback from the community
+-- Be able to configure UID/GID ranges to use for pods
+-- Add unit tests that exercise the feature gate switch (see section "Are there
+-  any tests for feature enablement/disablement?")
+-- Add cri-tools test
+-- This feature is not supported on Windows.
+-- Get review from VM container runtimes maintainers (not blocker, as VM runtimes should just ignore
+-  the field, but nice to have)
+-- Fully integrate into [Pod Security Standards (PSS)](#pod-security-standards-pss-integration)
+-
+-##### GA
+-
+-- Gather and address feedback from the community
+-
+ ### Upgrade / Downgrade Strategy
+ 
+ Existing pods will still work as intended, as the new field is missing there.
+@@ -744,92 +614,6 @@
+ team. Please reach out on the
+ [#prod-readiness](https://kubernetes.slack.com/archives/CPNHUMN74) channel if
+ you need any help or guidance.
+--->
+-
+-### Feature Enablement and Rollback
+-
+-<!--
+-This section must be completed when targeting alpha to a release.
+--->
+-
+-###### How can this feature be enabled / disabled in a live cluster?
+-
+-<!--
+-Pick one of these and delete the rest.
+-
+-Documentation is available on [feature gate lifecycle] and expectations, as
+-well as the [existing list] of feature gates.
+-
+-[feature gate lifecycle]: https://git.k8s.io/community/contributors/devel/sig-architecture/feature-gates.md
+-[existing list]: https://kubernetes.io/docs/reference/command-line-tools-reference/feature-gates/
+--->
+-
+-- [x] Feature gate (also fill in values in `kep.yaml`)
+-  - Feature gate name: UserNamespacesSupport
+-  - Components depending on the feature gate: kubelet, kube-apiserver
+-
+-###### Does enabling the feature change any default behavior?
+-
+-No.
+-
+-<!--
+-Any change of default behavior may be surprising to users or break existing
+-automations, so be extremely careful here.
+--->
+-
+-###### Can the feature be disabled once it has been enabled (i.e. can we roll back the enablement)?
+-
+-Yes. Pods that were created and opted-in to use user namespaces, will have to be
+-recreated to run again without user namespaces.
+-
+-Other than that, it is safe to disable once it was enabled.
+-
+-It is also safe to:
+-
+-1. Enable the feature gate
+-1. Create a pod with user namespaces,
+-1. Disable the feature gate in the kubelet (and restart it)
+-1. Delete the pod
+-
+-We won't leak files nor other resources on that scenario either.
+-
+-<!--
+-Describe the consequences on existing workloads (e.g., if this is a runtime
+-feature, can it break the existing applications?).
+-
+-Feature gates are typically disabled by setting the flag to `false` and
+-restarting the component. No other changes should be necessary to disable the
+-feature.
+-
+-NOTE: Also set `disable-supported` to `true` or `false` in `kep.yaml`.
+--->
+-
+-###### What happens if we reenable the feature if it was previously rolled back?
+-
+-Pods will have to be re-created to use the feature.
+-
+-###### Are there any tests for feature enablement/disablement?
+-
+-Yes, we have unit test to verify this.
+-
+-Tests that exercise  enabling and disabling the feature gate are
+-[here](https://github.com/kubernetes/kubernetes/blob/0cf6c382a04d9669db210e95f3d62276376730c2/pkg/kubelet/userns/userns_manager_switch_test.go) 
+-
+-Tests that have the feature gate disabled and test that the public function work as expected are
+-[here](https://github.com/kubernetes/kubernetes/blob/0cf6c382a04d9669db210e95f3d62276376730c2/pkg/kubelet/userns/userns_manager_disabled_test.go).
+-They do test for all possible values of `hostUsers` too.
+-
+-<!--
+-The e2e framework does not currently support enabling or disabling feature
+-gates. However, unit tests in each component dealing with managing data, created
+-with and without the feature, are necessary. At the very least, think about
+-conversion tests if API types are being modified.
+-
+-Additionally, for features that are introducing a new API field, unit tests that
+-are exercising the `switch` of feature gate itself (what happens if I disable a
+-feature gate after having objects written with the new field) are also critical.
+-You can take a look at one potential example of such test in:
+-https://github.com/kubernetes/kubernetes/pull/97058/files#diff-7826f7adbc1996a05ab52e3f5f02429e94b68ce6bce0dc534d1be636154fded3R246-R282
+ -->
+ 
+ ### Rollout, Upgrade and Rollback Planning

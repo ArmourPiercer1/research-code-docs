@@ -1,14 +1,14 @@
 case_id: GN-PROP-001
-mutation_id: MUT-PROP-NO-VALIDATION
+case_version: 2
+mutation_id: MUT-PROP-NO-VALIDATION-V2
 base:
   kind: normalized-seed
   ref: SEED-KEP-127
   ext: md
 operations:
-  # (D-2 refinement) First make the Release Signoff Checklist honest: uncheck the two parent items whose
-  # sections we are about to remove, and drop their now-orphaned sub-items. This removes the UNINTENDED
-  # "checklist claims present, body absent" contradiction the reviewers caught — leaving a clean
-  # single-defect "validation/graduation story removed → not executable".
+  # (D-2 refinement, kept) Make the Release Signoff Checklist honest: uncheck the two parent items whose
+  # sections we remove, and drop their now-orphaned sub-items — removes the UNINTENDED "checklist claims
+  # present, body absent" contradiction.
   - op: replace-text
     edits:
       - find: "- [X] (R) Test plan is in place, giving consideration to SIG Architecture and SIG Testing input (including test refactors)"
@@ -20,8 +20,26 @@ operations:
     max_removals: 4
   - op: remove-sections
     headings: ["Test Plan", "Graduation Criteria", "Feature Enablement and Rollback"]
+  # (D-8 fix, NEW) Remove the TOC entries for the removed sections + their subsections, so the mutation
+  # leaves NO dangling `<!-- toc -->` anchors (the secondary defect that made v1's HF-14a fire). Matches
+  # only full TOC bullet lines ending in a removed anchor — body cross-links are inline and won't match.
+  - op: remove-lines
+    pattern: '^\s*- \[[^\]]+\]\(#(test-plan|prerequisite-testing-updates|unit-tests|integration-tests|e2e-tests|critests|graduation-criteria|alpha|beta|ga|feature-enablement-and-rollback)\)\s*$'
+    max_removals: 11
 intended_blockers: []              # soft-FAIL on executability/actionability; must NOT invent HF-13/HF-14
 intended_findings: [missing-test-plan, missing-graduation-criteria, missing-rollback, not-executable, reader-cannot-tell-when-done]
+postconditions:
+  assert_absent:                   # the removed sections' TOC anchors must be gone (no dangling nav)
+    - "](#test-plan)"
+    - "](#graduation-criteria)"
+    - "](#feature-enablement-and-rollback)"
+    - "](#alpha)"
+    - "](#critests)"
+  assert_present:                  # sibling framing sections + their TOC entries survive intact
+    - "](#summary)"
+    - "](#proposal)"
+    - "](#upgrade--downgrade-strategy)"
+  assert_no_dangling_toc: true     # enforced by validate_mutation_semantics.py
 # NOTE: "Test Plan"/"Graduation Criteria" are nested UNDER "## Design Details", so that parent
 # legitimately changes. Assert only the sibling framing sections that must survive intact.
 forbidden_unrelated_changes: ["Summary", "Motivation", "Proposal"]

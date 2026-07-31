@@ -1,0 +1,76 @@
+--- base:D:/AI_Coworking/skill-build/research-code-dev/tests/corpus/source-seeds/normalized/SEED-EXP-YAHOO-RESNET/document.md
++++ mutated:GN-EXP-REPRO-001
+@@ -20,63 +20,12 @@
+ Images are downloaded and processed into the TFRecord format. The training data is sharded into 1024 training files with names `train-0????-of-01024` and 128 validation files with names `validation-0????-of-00128`. The classes are randomly distributed within each file. Data processing may take up to half a day. 
+ 
+ #### Code
+-We follow the data processing methods from the Inception [guide](https://github.com/tensorflow/models/tree/master/research/inception#getting-started). We ran the code using commit `bd56a06d2815e3dc2914fc8ce2fa1ea60e19d324`. 
++We follow the data processing methods from the Inception [guide](https://github.com/tensorflow/models/tree/master/research/inception#getting-started). 
+ 
+ #### Path
+ The processed data can be found in HDFS at `hdfs:/projects/ml/data/imagenet_bbox`. Contact the author for permissions and access.
+ 
+ ## Training
+-
+-### Optimization Methods
+-
+-#### Description
+-We use the ResNet-50 architecture and the softmax loss. 
+-
+-#### Code
+-We ran our experiments using git commit `24b236fdb6ca449eb52e8f816e039e0d634015a5`. The code is written using TensorFlow and uses its high level [APIs](https://www.tensorflow.org/guide/estimators). After cloning the repository you can train the model by running
+-
+-```
+-python train.py \
+-  --dataset_directory=/path/to/data \
+-  --output_directory=/path/to/output \
+-  --models_repository=/path/to/repo
+-```
+-
+-where
+-
+-* `dataset_directory` points to the training data. We expect a directory with the training and validation files with patterns `train-0????-of-01024` and `validation-0????-of-00128`.
+-* `output_directory` is the directory where model checkpoints and logs are written.
+-* `models_repository` points to the directory where you have cloned the TensorFlow models [repository](https://github.com/tensorflow/models) which contains the code to build the ResNet architecture. We use version `v1.10.0`. 
+-
+-You can visualize the training by running TensorBoard `tensorboard --logdir /path/to/outputs`, where `logdir` points to the parent directory of `output_directory`. 
+-
+-#### Hyperparameters
+-
+-We use the following hyperparameters:
+-
+-* Optimizer
+-    * Stochastic gradient descent (SGD) with momentum 0.9
+-    * Synchronized SGD across 4 GPUs
+-    * Batch size: 256, e.g. 64 per GPU
+-    * Learning rate starts at 0.1, decayed by a factor of 10 after 150000, 300000, 400000, and 450000 iterations
+-* Regularization
+-    * Weight decay: 0.0001
+-* Data augmentation
+-    * crop a distorted bounding box around the object (see [code](preprocess.py\#L59-L66) for details).
+-    * randomly flip the image left to right
+-    * resize the image to 224 x 224 x 3
+-    * subtract mean value in R, G, B channels (see [code](preprocess.py\#L59-L66) for values). 
+-
+-#### Dynamics
+-Training takes ~24 hours. You can visualize below the evolution of the total, cross-entropy, and l2 losses.
+-
+-![loss](figures/loss2.png)
+-![cross_entropy_loss](figures/cross_entropy2.png)
+-![l2_loss](figures/l2_loss2.png)
+-
+-#### Outputs
+-
+-The model checkpoints and TensorFlow logs can be found on HDFS at `hdfs://projects/ml/recipe/resnet50_imagenet`. 
+ 
+ ### Performance metrics
+ 
+@@ -96,7 +45,7 @@
+ We provide a [notebook](inference.ipynb) that provides an example of how to run inference on sample images. 
+ 
+ #### Timing information
+-We measure the model latency using the inference notebook. We used a p3.2xlarge instance on AWS which has an NVIDIA GPU V100. The latency including preprocessing is 11ms with a batch size of 1. Note that the inference code doesn't run on a CPU because the channel ordering is NCHW and the max pooling operation only supports NHWC on a CPU device. We use TensorFlow v1.8. 
++We measure the model latency using the inference notebook. The latency including preprocessing is 11ms with a batch size of 1. Note that the inference code doesn't run on a CPU because the channel ordering is NCHW and the max pooling operation only supports NHWC on a CPU device. 
+ 
+ #### Serialization 
+ Not applicable. The model was trained for research purposes and is not deployed to production.

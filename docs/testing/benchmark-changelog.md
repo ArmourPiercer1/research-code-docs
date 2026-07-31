@@ -52,3 +52,41 @@ shift to a data change vs an evaluator change. `dataset_version` is bumped on ev
 - Result: **20/20 gold, 0 queued**; `validate_case_manifests.py` = 0 errors. Corpus ready for the blind
   eval matrix. New op `replace-text` added to `generate_mutations.py`; `apply_adjudication.py` gained a
   `user_decision` override path.
+
+## dataset_version 4 — 2026-07-31 — v0.4 test upgrade (repair, not skill change)
+
+Test-side upgrade driven by `docs/third-party-suggestions/DQE_v0.4_测试修正与最小升级计划.md` + the §4X
+re-check. **No skill file was modified** (SKILL.md / hard-fail.md / rubric.md / checkers all byte-frozen).
+
+- **Quarantined** 5 contaminated v1 cases → `tests/corpus/cases/quarantine/<id>-v1/` (immutable snapshots +
+  `QUARANTINE.yaml`): GN-EXP-001, GN-ROADMAP-001, BP-002-fail, BP-005-pass, GN-PROP-001. Validators now
+  skip `**/quarantine/**`, excluding them from every live metric.
+- **Repaired / split (case_version 2 / new ids):**
+  - GN-EXP-001 **split** → `GN-EVIDENCE-BARE-CLAIM-001` (pure HF-12A) + `GN-EXP-REPRO-001` (reproducibility).
+  - `GN-ROADMAP-001 v2` — Phase-1 GO/MODIFY/STOP gate + downstream route truly removed (v1 regex missed the
+    dash-prefixed `- **GO:**`); Phase-2 gate asserted intact.
+  - `GN-PROP-001 v2` — removed sections' `<!-- toc -->` anchors removed (no dangling nav).
+  - `BP-002-fail v2` — incidental `status: DECIDED`/"core is done" contradiction removed; bare HF-14b count
+    kept.
+  - `BP-005-pass v2` — `status: DECIDED` → `document_lifecycle: ACCEPTED` + `status: OPEN`.
+- **Tooling:** `generate_mutations.py` +`postconditions` (assert_absent/present, aborts if the defect did
+  not land); NEW `scripts/validate_mutation_semantics.py` (dangling-TOC, retired-DECIDED+unverified,
+  post-condition re-check, profile-pair SHA); `validate_case_manifests.py` +case_version/two-axis/quarantine
+  skip; `aggregate_eval_results.py` +quarantine skip; `make_grading_injection.py` REVIEWER_CONTRACT → two
+  axes (EVALUATOR_CONTRACT unchanged).
+- **Contract:** `ADR-DQE-001` (PROPOSED) — evaluation_profile / provenance_policy / QUALITY_BAND vs
+  GATE_DECISION / document_lifecycle vs claim-status / reproducibility findings. Corpus aligned now; skill
+  impl deferred. Manifests gain additive `expected.quality_band` / `expected.gate_decision`.
+- **Deterministic gates:** generate 3/3 postconditions PASS; semantic-validator 0 errors; manifest-validator
+  0 errors (21 live ids, 5 pairs, 5 quarantined skipped).
+- **Re-adjudication (two-axis blind A/B):** 4 gold locked (BP-005-pass PASS; GN-ROADMAP-001,
+  GN-EVIDENCE-BARE-CLAIM-001, GN-EXP-REPRO-001 FAIL); **2 disputed → user** (GN-PROP-001 both-PASS vs corpus
+  FAIL; BP-002-fail gate split). Gold not inherited from v1.
+- **Confirmatory spot-check (unchanged v0.3 evaluator on repaired fixtures):** BP-005-pass→PASS[];
+  GN-ROADMAP-001→FAIL[HF-15]; GN-EVIDENCE-BARE-CLAIM-001→FAIL[HF-12A,HF-12E,HF-10]; BP-002-fail→FAIL[HF-14b];
+  GN-EXP-REPRO-001→FAIL[HF-9,HF-12A,HF-12E]; GN-PROP-001→FAIL[HF-9,HF-14a,HF-12E]. **Conclusion: of the
+  report's F1–F4 skill fixes, only F1 (HF-9 profile-gating) is justified** — HF-12A/HF-15 recall are fine
+  (fixture defects), HF-13/HF-14a did not over-fire on the clean fixture. Full analysis:
+  `docs/testing/corpus-repair-report-v4.md`, `docs/skill-development/reports/dqe-v0.4-defect-ledger.md`.
+- Nothing installed, pushed, or auto-triggered.
+

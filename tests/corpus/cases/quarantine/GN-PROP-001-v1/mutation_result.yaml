@@ -1,0 +1,35 @@
+mutation_result:
+  case_id: GN-PROP-001
+  mutation_id: MUT-PROP-NO-VALIDATION
+  base_kind: normalized-seed
+  base_ref: SEED-KEP-127
+  base_path: D:/AI_Coworking/skill-build/research-code-dev/tests/corpus/source-seeds/normalized/SEED-KEP-127/document.md
+  base_sha256: 786abf4c0ccd928037f685f3a571fec0bae2da2ac2946bdfe51ae0cdb4f8c299
+  mutated_sha256: 52deac14b90e876899bcc0b2022b946abae9e10ac02a6479db83054009e9a54e
+  changed_ranges:
+  - find: '- [X] (R) Test plan is in place, giving consideration to SIG Architect'
+    action: replaced
+  - find: '- [X] (R) Graduation criteria is in place'
+    action: replaced
+  - pattern: ^  - \[X\]
+    action: removed-lines
+    count: 4
+  - section: Test Plan
+    action: removed
+  - section: Graduation Criteria
+    action: removed
+  - section: Feature Enablement and Rollback
+    action: removed
+  intended_blockers: []
+  intended_findings:
+  - missing-test-plan
+  - missing-graduation-criteria
+  - missing-rollback
+  - not-executable
+  - reader-cannot-tell-when-done
+  forbidden_unrelated_changes:
+  - Summary
+  - Motivation
+  - Proposal
+  forbidden_changes_verified: true
+  generated_at: '2026-07-31T11:46:04Z'

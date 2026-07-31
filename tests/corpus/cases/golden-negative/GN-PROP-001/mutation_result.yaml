@@ -1,11 +1,11 @@
 mutation_result:
   case_id: GN-PROP-001
-  mutation_id: MUT-PROP-NO-VALIDATION
+  mutation_id: MUT-PROP-NO-VALIDATION-V2
   base_kind: normalized-seed
   base_ref: SEED-KEP-127
   base_path: D:/AI_Coworking/skill-build/research-code-dev/tests/corpus/source-seeds/normalized/SEED-KEP-127/document.md
   base_sha256: 786abf4c0ccd928037f685f3a571fec0bae2da2ac2946bdfe51ae0cdb4f8c299
-  mutated_sha256: 52deac14b90e876899bcc0b2022b946abae9e10ac02a6479db83054009e9a54e
+  mutated_sha256: f8e773e8ba640da73617bac6033e71a4a0b7b47f8a553ce42700add23a7a3a5f
   changed_ranges:
   - find: '- [X] (R) Test plan is in place, giving consideration to SIG Architect'
     action: replaced
@@ -20,6 +20,9 @@ mutation_result:
     action: removed
   - section: Feature Enablement and Rollback
     action: removed
+  - pattern: ^\s*- \[[^\]]+\]\(#(test-plan|prerequisite-testing-updates|unit-tests|integration-tests|e2e-tests|critests|graduation-criteria|alpha|beta|ga|feature-enablement-and-rollback)\)\s*$
+    action: removed-lines
+    count: 11
   intended_blockers: []
   intended_findings:
   - missing-test-plan
@@ -32,4 +35,43 @@ mutation_result:
   - Motivation
   - Proposal
   forbidden_changes_verified: true
-  generated_at: '2026-07-31T11:46:04Z'
+  postconditions:
+    assert_absent:
+    - '](#test-plan)'
+    - '](#graduation-criteria)'
+    - '](#feature-enablement-and-rollback)'
+    - '](#alpha)'
+    - '](#critests)'
+    assert_present:
+    - '](#summary)'
+    - '](#proposal)'
+    - '](#upgrade--downgrade-strategy)'
+    assert_no_dangling_toc: true
+  semantic_validation:
+    status: PASS
+    findings:
+    - check: assert_absent
+      value: '](#test-plan)'
+      status: PASS
+    - check: assert_absent
+      value: '](#graduation-criteria)'
+      status: PASS
+    - check: assert_absent
+      value: '](#feature-enablement-and-rollback)'
+      status: PASS
+    - check: assert_absent
+      value: '](#alpha)'
+      status: PASS
+    - check: assert_absent
+      value: '](#critests)'
+      status: PASS
+    - check: assert_present
+      value: '](#summary)'
+      status: PASS
+    - check: assert_present
+      value: '](#proposal)'
+      status: PASS
+    - check: assert_present
+      value: '](#upgrade--downgrade-strategy)'
+      status: PASS
+  generated_at: '2026-07-31T14:06:16Z'

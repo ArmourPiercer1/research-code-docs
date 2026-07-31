@@ -1,0 +1,32 @@
+case_id: BP-005-pass
+case_version: 1
+class: boundary-pass
+pair_id: BP-005
+pair_role: pass
+difference_under_test: a load-bearing claim labeled HYPOTHESIS/尚未验证 (with to-verify plan) vs a bare "VERIFIED" with no support
+artifact_type: evidence-matrix
+language: en
+holdout: false
+document: tests/corpus/cases/boundary-pairs/BP-005-pass/document.md
+source: {kind: synthetic}
+profile: {provenance_policy: controlled, evidence_requirement: key-claims, reader_test: evidence-comprehension, output_mode: audit}
+expected:
+  document_quality: PASS               # an HONESTLY-labeled hypothesis is high document quality...
+  factual_validity_allowed: [UNVERIFIED, PARTIALLY_VERIFIED]   # ...even though it is not yet verified
+  reader_test: PASS
+  required_blockers: []
+  forbidden_blockers: [HF-10, HF-12E]  # correctly labeled evidence status -> these must NOT fire
+  required_findings: ["claim is labeled HYPOTHESIS with an explicit to-verify experiment"]
+adjudication:
+  reviewer_a:
+    verdict: PASS
+    confidence: HIGH
+    tag: none
+  reviewer_b:
+    verdict: PASS
+    confidence: HIGH
+  consensus: PASS
+  confidence: HIGH
+  status: gold
+  adjudicated_at: '2026-07-31T11:52:38Z'
+  notes: A/B agree and match corpus intent

@@ -1,9 +1,9 @@
 case_id: BP-002-fail
-case_version: 1
+case_version: 2
 class: boundary-fail
 pair_id: BP-002
 pair_role: fail
-difference_under_test: state is a dated frozen snapshot + pointer to status/current.md vs a bare live "当前 69 项测试全部通过"
+difference_under_test: state is a dated frozen snapshot + pointer to status/current.md (pass) vs a bare live "当前 69 项测试全部通过" with no dynamic-source pointer (fail)
 artifact_type: architecture-doc
 language: en
 holdout: true                          # reserved holdout
@@ -12,21 +12,29 @@ source: {kind: synthetic}
 profile: {provenance_policy: controlled, evidence_requirement: key-claims, reader_test: architecture-comprehension, output_mode: audit}
 expected:
   document_quality: FAIL
+  quality_band: PARTIAL                 # a clean stable design doc except one volatile fact lacks a pointer
+  gate_decision: BLOCK
   factual_validity_allowed: [VERIFIED, PARTIALLY_VERIFIED, UNVERIFIED]
   reader_test: FAIL
-  required_blockers: [HF-14b]          # a stable design doc embeds a bare live count with no dynamic-source pointer
+  required_blockers: [HF-14b]           # a stable design doc embeds a bare live count with no dynamic-source pointer
   forbidden_blockers: [HF-13, HF-14a, HF-15]
   required_findings: [volatile-in-stable-no-pointer]
+
+# v2 repair (D-07): v1 carried an INCIDENTAL contradiction (`status: DECIDED` + "The core is done" vs
+# OQ-2 "design review in progress") that made HF-14a fire legitimately, so listing HF-14a as forbidden
+# was wrong. v2 removes the over-claim (document_lifecycle: ACCEPTED, no "core is done", OQ-2 is a plain
+# open question) leaving HF-14b (bare live count, no pointer) as the LONE defect.
+
 adjudication:
-  reviewer_a:
-    verdict: FAIL
-    confidence: MEDIUM
-    tag: volatile-in-stable
-  reviewer_b:
-    verdict: FAIL
-    confidence: MEDIUM
-  consensus: FAIL
+  status: disputed                      # quality agrees (PARTIAL) but the GATE axis splits -> user must rule
+  method: two-axis blind Reviewer A/B (adjudication-v4, isolated, no DQE skill)
+  reviewer_a: {quality_band: PARTIAL, gate: BLOCK, defect_tags: [volatile-in-stable], confidence: MEDIUM}
+  reviewer_b: {quality_band: PARTIAL, gate: ALLOW, defect_tags: [volatile-in-stable], confidence: MEDIUM}
+  consensus: pending                    # UNRESOLVED — excluded from any live metric until the user rules
   confidence: MEDIUM
-  status: gold
-  adjudicated_at: '2026-07-31T11:52:38Z'
-  notes: A/B agree and match corpus intent
+  adjudicated_at: '2026-07-31'
+  dispute: 'Both reviewers see the volatile-in-stable defect (a bare "当前 69 项测试全部通过" in a doc that
+    declares itself the stable/BASELINE design) and rate quality PARTIAL, but split on the gate: A=BLOCK
+    (a baseline reference must not carry a live count), B=ALLOW (architecture comprehension is intact; one
+    line does not block). Corpus intent = FAIL/BLOCK (required HF-14b). USER DECISION NEEDED
+    (decisions-pending D7): does a single volatile-in-stable line BLOCK a baseline architecture doc?'

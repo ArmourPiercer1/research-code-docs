@@ -1,15 +1,19 @@
 mutation_result:
   case_id: GN-ROADMAP-001
-  mutation_id: MUT-HF15-VAGUE-DOD
+  mutation_id: MUT-HF15-VAGUE-DOD-V2
   base_kind: fixture
   base_ref: evals/skills/task-quality/fixtures/dqe/positive/b2-research-roadmap.md
   base_path: D:/AI_Coworking/skill-build/research-code-dev/evals/skills/task-quality/fixtures/dqe/positive/b2-research-roadmap.md
   base_sha256: 4e6884d3131b1d29fa1338d7191f0d75d31ea4c418a09d6f5a12e32c3af4cb02
-  mutated_sha256: 43938158e1c6fc61002c1a09093a3cb6547655d1425e137441e34262c619a184
+  mutated_sha256: b64383424d345b20de61b23df707f039b45e638875c50eaec56190a452860d65
   changed_ranges:
-  - pattern: ^\s*\*\*(GO|MODIFY|STOP):\*\*
+  - pattern: \*\*(GO|MODIFY|STOP):\*\*
     action: removed-lines
-    count: 2
+    count: 3
+  - substring: "\n- **Downstream impact:** GO unlocks Phase 2 (architecture search);\
+      \ STOP reroutes to the algebraic\n  refinement track in the decision register\
+      \ (D-12)."
+    action: deleted
   - anchor: ^- \*\*Metric:\*\* time-averaged
     action: inserted-after
   intended_blockers:
@@ -19,4 +23,38 @@ mutation_result:
   - vague-dod
   forbidden_unrelated_changes: []
   forbidden_changes_verified: true
-  generated_at: '2026-07-31T10:32:32Z'
+  postconditions:
+    assert_absent:
+    - 20% error reduction
+    - proceed to Phase 2
+    - Downstream impact
+    - GO unlocks Phase 2
+    assert_present:
+    - 届时定
+    - committed · next
+    - GO if worst-case < 10%
+  semantic_validation:
+    status: PASS
+    findings:
+    - check: assert_absent
+      value: 20% error reduction
+      status: PASS
+    - check: assert_absent
+      value: proceed to Phase 2
+      status: PASS
+    - check: assert_absent
+      value: Downstream impact
+      status: PASS
+    - check: assert_absent
+      value: GO unlocks Phase 2
+      status: PASS
+    - check: assert_present
+      value: 届时定
+      status: PASS
+    - check: assert_present
+      value: committed · next
+      status: PASS
+    - check: assert_present
+      value: GO if worst-case < 10%
+      status: PASS
+  generated_at: '2026-07-31T14:06:16Z'

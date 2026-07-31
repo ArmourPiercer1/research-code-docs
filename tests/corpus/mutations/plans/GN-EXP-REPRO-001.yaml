@@ -1,0 +1,37 @@
+case_id: GN-EXP-REPRO-001
+case_version: 1
+mutation_id: MUT-EXP-UNREPRODUCIBLE
+base:
+  kind: normalized-seed
+  ref: SEED-EXP-YAHOO-RESNET
+  ext: md
+# Reproducibility negative (split from the too-weak GN-EXP-001, D-04): KEEP the result claims (74.05%,
+# 74.0%) but strip EVERY reproduction handle so the recipe cannot be re-run. Removing the whole (unique)
+# "### Optimization Methods" section deletes the training commit + exact `python train.py` command +
+# models-repo version + ALL hyperparameters + LR schedule in one clean op; two delete-substrings remove
+# the data-processing commit and the inference hardware / framework version. The method prose that
+# remains has no executable entry, no versions, no environment -> not reproducible.
+operations:
+  - op: remove-sections
+    headings: ["Optimization Methods"]
+  - op: delete-substrings
+    substrings:
+      - " We ran the code using commit `bd56a06d2815e3dc2914fc8ce2fa1ea60e19d324`."
+      - " We used a p3.2xlarge instance on AWS which has an NVIDIA GPU V100."
+      - " We use TensorFlow v1.8."
+postconditions:
+  assert_absent:                 # every reproduction handle is gone
+    - "python train.py"
+    - "Stochastic gradient descent"
+    - "Learning rate starts at 0.1"
+    - "24b236fdb6"
+    - "bd56a06d28"
+    - "p3.2xlarge"
+    - "v1.10.0"
+    - "TensorFlow v1.8"
+  assert_present:                # the load-bearing result claims are KEPT -> unreproducible, not merely incomplete
+    - "74.0% after 500K iterations"
+    - "74.05% single crop accuracy"
+intended_blockers: []            # soft-FAIL on reproducibility findings; must NOT invent HF-13/HF-14
+intended_findings: [missing-code-version, missing-execution-entry, missing-hyperparameters, missing-environment, missing-reproduction-tolerance]
+forbidden_unrelated_changes: []

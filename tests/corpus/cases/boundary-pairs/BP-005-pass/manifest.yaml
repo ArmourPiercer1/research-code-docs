@@ -1,9 +1,9 @@
 case_id: BP-005-pass
-case_version: 1
+case_version: 2
 class: boundary-pass
 pair_id: BP-005
 pair_role: pass
-difference_under_test: a load-bearing claim labeled HYPOTHESIS/尚未验证 (with to-verify plan) vs a bare "VERIFIED" with no support
+difference_under_test: a load-bearing claim labeled HYPOTHESIS/尚未验证 (with a to-verify plan) vs a bare "VERIFIED" with no support
 artifact_type: evidence-matrix
 language: en
 holdout: false
@@ -11,22 +11,28 @@ document: tests/corpus/cases/boundary-pairs/BP-005-pass/document.md
 source: {kind: synthetic}
 profile: {provenance_policy: controlled, evidence_requirement: key-claims, reader_test: evidence-comprehension, output_mode: audit}
 expected:
-  document_quality: PASS               # an HONESTLY-labeled hypothesis is high document quality...
-  factual_validity_allowed: [UNVERIFIED, PARTIALLY_VERIFIED]   # ...even though it is not yet verified
+  document_quality: PASS                # an HONESTLY-labeled hypothesis is high document quality...
+  quality_band: PASS
+  gate_decision: ALLOW
+  factual_validity_allowed: [UNVERIFIED, PARTIALLY_VERIFIED]   # ...even though the claim is not yet verified
   reader_test: PASS
   required_blockers: []
-  forbidden_blockers: [HF-10, HF-12E]  # correctly labeled evidence status -> these must NOT fire
+  forbidden_blockers: [HF-3, HF-10, HF-12E, HF-14a]   # correctly labeled evidence status + no DECIDED over-claim -> none may fire
   required_findings: ["claim is labeled HYPOTHESIS with an explicit to-verify experiment"]
+
+# v2 repair (D-09): v1's frontmatter `status: DECIDED` sat over an explicitly-labeled HYPOTHESIS, inviting
+# HF-3 + HF-14a and false-FAILing a PASS case. v2 uses `document_lifecycle: ACCEPTED` (an accepted note may
+# record a hypothesis) + `status: OPEN` (the claim's decision status is honestly open). The only signal
+# under test is now the honest hypothesis label. HF-3/HF-14a are FORBIDDEN.
+
 adjudication:
-  reviewer_a:
-    verdict: PASS
-    confidence: HIGH
-    tag: none
-  reviewer_b:
-    verdict: PASS
-    confidence: HIGH
-  consensus: PASS
-  confidence: HIGH
   status: gold
-  adjudicated_at: '2026-07-31T11:52:38Z'
-  notes: A/B agree and match corpus intent
+  method: two-axis blind Reviewer A/B (adjudication-v4, isolated, no DQE skill)
+  reviewer_a: {quality_band: PASS, gate: ALLOW, defect_tags: [], confidence: HIGH}
+  reviewer_b: {quality_band: PASS, gate: ALLOW, defect_tags: [], confidence: HIGH}
+  consensus: PASS                       # gate=ALLOW; both HIGH; matches corpus intent
+  confidence: HIGH
+  adjudicated_at: '2026-07-31'
+  notes: 'D-09 repair CONFIRMED: with status:DECIDED replaced by document_lifecycle:ACCEPTED + status:OPEN,
+    both blind reviewers PASS/ALLOW the honestly-labeled hypothesis (no HF-3/HF-14a bait). Gold NOT
+    inherited from v1.'

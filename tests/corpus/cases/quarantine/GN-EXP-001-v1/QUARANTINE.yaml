@@ -1,0 +1,16 @@
+# Immutable v1 snapshot — excluded from all live metrics (validators skip **/quarantine/**).
+adjudication_status: quarantine
+quarantined_at: '2026-07-31'
+dataset_version_at_quarantine: 3
+reason: fixture-invalid-or-contract-ambiguous
+detail: >-
+  MUTATION TOO WEAK. MUT-EXP-NO-PROVENANCE deleted git commits / framework versions / hardware but KEPT
+  the full `python train.py` command, all hyperparameters, and the LR schedule — so the method is still
+  largely reproducible and the "74% accuracy" claim is a far weaker HF-12A than intended. The v0.3 PASS
+  was defensible. The case also conflated two concerns (bare unsupported claim vs experiment
+  reproducibility).
+defect_ledger: D-04
+replaced_by:
+  - GN-EVIDENCE-BARE-CLAIM-001   # pure HF-12A (bare load-bearing claim)
+  - GN-EXP-REPRO-001             # reproducibility findings
+do_not: [edit, run, count-in-metrics]

@@ -26,6 +26,8 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 CLASSES = {"golden-positive", "golden-negative", "boundary-pass", "boundary-fail", "candidate"}
+QUALITY_BANDS = {"PASS", "PARTIAL", "FAIL"}
+GATE_DECISIONS = {"ALLOW", "BLOCK", "INCOMPLETE"}
 LEAK_KEYS = ["required_blockers", "forbidden_blockers", "factual_validity_allowed", "difference_under_test"]
 HF = re.compile(r"(HF-\d+[a-e]?)", re.I)
 
@@ -46,6 +48,9 @@ def main(argv: list[str]) -> int:
     base = ROOT / (args[0] if args else "tests/corpus/cases")
 
     manifests = sorted(base.glob("**/manifest.yaml"))
+    # quarantined v1 snapshots (cases/quarantine/**) are archived, not live — skip them entirely.
+    skipped_quarantine = [mp for mp in manifests if "quarantine" in mp.parts]
+    manifests = [mp for mp in manifests if "quarantine" not in mp.parts]
     errors: list[str] = []
     warns: list[str] = []
     ids: dict[str, Path] = {}
@@ -90,6 +95,17 @@ def main(argv: list[str]) -> int:
         if both:
             errors.append(f"{cid}: required ∩ forbidden blockers non-empty: {sorted(both)}")
 
+        # additive two-axis fields (ADR-DQE-001): validate enums when present
+        qb = exp.get("quality_band")
+        if qb is not None and str(qb).upper() not in QUALITY_BANDS:
+            errors.append(f"{cid}: expected.quality_band {qb!r} not in {sorted(QUALITY_BANDS)}")
+        gd = exp.get("gate_decision")
+        if gd is not None and str(gd).upper() not in GATE_DECISIONS:
+            errors.append(f"{cid}: expected.gate_decision {gd!r} not in {sorted(GATE_DECISIONS)}")
+        cv = m.get("case_version")
+        if cv is not None and not isinstance(cv, int):
+            errors.append(f"{cid}: case_version must be an integer, got {cv!r}")
+
         src = m.get("source", {}) or {}
         kind = src.get("kind")
         if kind == "upstream-seed" and not src.get("upstream_commit"):
@@ -115,7 +131,7 @@ def main(argv: list[str]) -> int:
             errors.append(f"boundary pair {pid}: roles must be exactly {{pass, fail}}, got {sorted(roles)}")
 
     print(f"# validated {len(parsed)} manifests under {base.relative_to(ROOT).as_posix()}")
-    print(f"  ids: {len(ids)} unique | boundary pairs: {len(pairs)}")
+    print(f"  ids: {len(ids)} unique | boundary pairs: {len(pairs)} | quarantined(skipped): {len(skipped_quarantine)}")
     for w in warns:
         print(f"  [WARN]  {w}")
     for e in errors:

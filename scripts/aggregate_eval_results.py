@@ -39,6 +39,8 @@ def norm(xs):
 def load_manifests():
     by_id = {}
     for mp in CASES.glob("**/manifest.yaml"):
+        if "quarantine" in mp.parts:      # archived v1 snapshots are excluded from all metrics
+            continue
         m = yaml.safe_load(mp.read_text(encoding="utf-8"))
         by_id[m["case_id"]] = m
     return by_id

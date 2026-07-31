@@ -1,0 +1,14 @@
+# Immutable v1 snapshot — excluded from all live metrics (validators skip **/quarantine/**).
+adjudication_status: quarantine
+quarantined_at: '2026-07-31'
+dataset_version_at_quarantine: 3
+reason: fixture-invalid-or-contract-ambiguous
+detail: >-
+  SECONDARY DEFECT INTRODUCED. MUT-PROP-NO-VALIDATION removed Test Plan / Graduation Criteria / Feature
+  Enablement sections but left their `<!-- toc -->` entries pointing at now-missing anchors. The dangling
+  TOC is a second, unintended defect that the evaluator read as an HF-14a state contradiction, polluting
+  the intended single "no validation story" defect.
+defect_ledger: D-08
+replaced_by:
+  - GN-PROP-001   # case_version 2 (TOC entries removed in the same mutation)
+do_not: [edit, run, count-in-metrics]

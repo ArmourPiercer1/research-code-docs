@@ -1,5 +1,5 @@
 case_id: GN-ROADMAP-001
-case_version: 1
+case_version: 2
 class: golden-negative
 artifact_type: roadmap
 language: en
@@ -19,9 +19,11 @@ profile:
 
 expected:
   document_quality: FAIL
+  quality_band: PARTIAL          # a good research roadmap except ONE committed phase now has a non-measurable DoD
+  gate_decision: BLOCK
   factual_validity_allowed: [VERIFIED, PARTIALLY_VERIFIED]
   reader_test: FAIL
-  required_blockers: [HF-15]           # Phase 1 (committed·next) now has a vague, non-measurable DoD
+  required_blockers: [HF-15]     # Phase 1 (committed·next): GO/MODIFY/STOP gate + downstream route removed -> non-measurable DoD
   forbidden_blockers: [HF-13, HF-14a, HF-14b]
   required_findings:
     - non-executable-committed-milestone
@@ -29,20 +31,22 @@ expected:
 
 mutation:
   base_case: GP-ROADMAP-001
-  mutation_id: MUT-HF15-VAGUE-DOD
-  difference_under_test: Phase-1's measurable GO/MODIFY/STOP gate replaced by "算例与阈值届时定"
+  mutation_id: MUT-HF15-VAGUE-DOD-V2
+  difference_under_test: Phase-1's measurable GO/MODIFY/STOP gate AND downstream route removed (Phase-2 gate untouched); acceptance = "算例与阈值届时定"
+
+# v2 repair (D-05): v1's regex missed the dash-prefixed `- **GO:**` so Phase-1 kept a measurable gate and
+# the HF-15 defect never landed. v2 removes the whole Phase-1 gate + downstream route (postconditions in
+# the mutation plan assert "20% error reduction"/"proceed to Phase 2" are GONE and Phase-2's "GO if
+# worst-case < 10%" SURVIVES). Now a single committed phase is genuinely non-measurable.
 
 adjudication:
-  reviewer_a:
-    verdict: PARTIAL
-    confidence: MEDIUM
-    tag: non-executable-milestone
-  reviewer_b:
-    verdict: PARTIAL
-    confidence: MEDIUM
-  consensus: FAIL
-  confidence: MEDIUM
   status: gold
-  adjudicated_at: '2026-07-31T11:52:38Z'
-  notes: 'USER DECISION D-1: gold=FAIL (reviewers A=PARTIAL/B=PARTIAL; ruling recorded,
-    not overridden by auto-queue)'
+  method: two-axis blind Reviewer A/B (adjudication-v4, isolated, no DQE skill)
+  reviewer_a: {quality_band: PARTIAL, gate: BLOCK, defect_tags: [non-executable-milestone, not-actionable], confidence: MEDIUM}
+  reviewer_b: {quality_band: PARTIAL, gate: BLOCK, defect_tags: [non-executable-milestone], confidence: HIGH}
+  consensus: FAIL                # gate=BLOCK; both independently cite Phase-1 (committed·next) as non-executable = the HF-15 target
+  confidence: MEDIUM-HIGH
+  adjudicated_at: '2026-07-31'
+  notes: 'D-05 repair CONFIRMED: with the surviving GO gate now removed, both reviewers flag Phase-1
+    committed·next as having no executable pass/fail gate — the intended HF-15 defect lands cleanly. Gold
+    NOT inherited from v1.'

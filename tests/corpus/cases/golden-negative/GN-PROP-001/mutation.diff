@@ -1,6 +1,29 @@
 --- base:D:/AI_Coworking/skill-build/research-code-dev/tests/corpus/source-seeds/normalized/SEED-KEP-127/document.md
 +++ mutated:GN-PROP-001
-@@ -64,12 +64,8 @@
+@@ -27,22 +27,11 @@
+     - [Regarding the previous implementation for volumes](#regarding-the-previous-implementation-for-volumes)
+     - [Non-conformant volume types](#non-conformant-volume-types)
+   - [Pod Security Standards (PSS) integration](#pod-security-standards-pss-integration)
+-  - [Test Plan](#test-plan)
+-      - [Prerequisite testing updates](#prerequisite-testing-updates)
+-      - [Unit tests](#unit-tests)
+-      - [Integration tests](#integration-tests)
+-      - [e2e tests](#e2e-tests)
+-      - [critests](#critests)
+-  - [Graduation Criteria](#graduation-criteria)
+-      - [Alpha](#alpha)
+-      - [Beta](#beta)
+-      - [GA](#ga)
+   - [Upgrade / Downgrade Strategy](#upgrade--downgrade-strategy)
+   - [Version Skew Strategy](#version-skew-strategy)
+     - [Kubelet and Kube-apiserver skew](#kubelet-and-kube-apiserver-skew)
+     - [Kubelet and container runtime skews](#kubelet-and-container-runtime-skews)
+ - [Production Readiness Review Questionnaire](#production-readiness-review-questionnaire)
+-  - [Feature Enablement and Rollback](#feature-enablement-and-rollback)
+   - [Rollout, Upgrade and Rollback Planning](#rollout-upgrade-and-rollback-planning)
+   - [Monitoring Requirements](#monitoring-requirements)
+   - [Dependencies](#dependencies)
+@@ -64,12 +53,8 @@
  - [X] (R) Enhancement issue in release milestone, which links to KEP dir in [kubernetes/enhancements] (not the initial KEP PR)
  - [X] (R) KEP approvers have approved the KEP status as `implementable`
  - [X] (R) Design details are appropriately documented
@@ -15,7 +38,7 @@
  - [X] (R) Production readiness review completed
  - [X] (R) Production readiness review approved
  - [X] "Implementation History" section is up-to-date for milestone
-@@ -513,132 +509,6 @@
+@@ -513,132 +498,6 @@
  A serial test will be added to validate the functionality with the enabled
  feature gate.
  
@@ -148,7 +171,7 @@
  ### Upgrade / Downgrade Strategy
  
  Existing pods will still work as intended, as the new field is missing there.
-@@ -744,92 +614,6 @@
+@@ -744,92 +603,6 @@
  team. Please reach out on the
  [#prod-readiness](https://kubernetes.slack.com/archives/CPNHUMN74) channel if
  you need any help or guidance.

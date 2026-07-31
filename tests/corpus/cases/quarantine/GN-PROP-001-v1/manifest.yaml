@@ -1,0 +1,53 @@
+case_id: GN-PROP-001
+case_version: 1
+class: golden-negative
+artifact_type: technical-proposal
+language: en
+holdout: false
+document: tests/corpus/cases/golden-negative/GN-PROP-001/document.md
+
+source:
+  kind: mutation
+  base_seed: SEED-KEP-127
+  upstream_repo: https://github.com/kubernetes/enhancements.git
+  upstream_commit: b175ab3f86ee0cb30f7557df699f52f8eee8ef67
+
+profile:
+  provenance_policy: external
+  evidence_requirement: key-claims
+  reader_test: proposal-execution
+  output_mode: audit
+
+expected:
+  document_quality: FAIL
+  factual_validity_allowed: [VERIFIED, PARTIALLY_VERIFIED, UNVERIFIED]
+  reader_test: FAIL
+  required_blockers: []                # soft-FAIL on executability; the evaluator must NOT invent a hard gate
+  forbidden_blockers: [HF-13, HF-14a, HF-14b, HF-15]
+  required_findings:
+    - missing-test-plan
+    - missing-graduation-criteria
+    - not-executable
+
+mutation:
+  base_case: GP-PROP-001
+  mutation_id: MUT-PROP-NO-VALIDATION
+  difference_under_test: removed Test Plan + Graduation Criteria + Feature-Enablement-and-Rollback
+
+adjudication:
+  reviewer_a:
+    verdict: PARTIAL
+    confidence: MEDIUM
+    tag: not-actionable
+  reviewer_b:
+    verdict: PARTIAL
+    confidence: MEDIUM
+  consensus: FAIL
+  confidence: MEDIUM
+  status: gold
+  adjudicated_at: '2026-07-31T11:52:38Z'
+  notes: 'USER DECISION D-1: gold=FAIL (reviewers A=PARTIAL/B=PARTIAL; ruling recorded,
+    not overridden by auto-queue) | builder_note: REFINED per D-2 (signoff checklist
+    items unchecked + orphan sub-items removed); re-confirmed CONTRADICTION=NO on
+    blind-run reconfirm-2026-07-31 — now a clean single-defect (validation/graduation/rollback
+    removed -> not executable).'

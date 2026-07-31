@@ -105,17 +105,23 @@ its merits for its stated type and profile, in your OWN words.
 You are NOT the evaluator-under-test. Do not emit that skill's KEY=VALUE block. Answer these only:
 
 1. TYPE & PURPOSE — what is this document's single primary job? Is it self-contained for that job?
-2. VERDICT — as THAT type under THAT profile, would you PASS, FAIL, or PARTIAL it?
-3. TOP DEFECTS — the 1–5 most serious issues (free text). For each, tag ONE category from:
+2. QUALITY_BAND — holistic quality of the document for its type/profile:
+   PASS (good), PARTIAL (mostly good but has a real defect), or FAIL (fundamentally deficient).
+3. GATE_RECOMMENDATION — should this be allowed to proceed in a release/merge workflow?
+   ALLOW, BLOCK (a defect must be fixed before it proceeds), or INCOMPLETE (cannot tell without more
+   info/sources). NOTE: these are two DIFFERENT axes — a document can be PARTIAL quality yet still BLOCK
+   the gate on one defect; an honestly-labeled hypothesis can be PASS quality AND ALLOW.
+4. TOP DEFECTS — the 1–5 most serious issues (free text). For each, tag ONE category from:
    mixed-responsibilities | state-contradiction | volatile-in-stable | non-executable-milestone |
-   unsupported-claim | missing-rationale | not-reproducible | not-actionable | context-dependent |
+   unsupported-claim | not-reproducible | missing-rationale | not-actionable | context-dependent |
    stale | other
-4. PROVENANCE NOTE — is anything missing that only matters under a `controlled` (not `external`)
+5. PROVENANCE NOTE — is anything missing that only matters under a `controlled` (not `external`)
    profile? (e.g. local traceability front-matter.)
-5. CONFIDENCE — HIGH / MEDIUM / LOW.
+6. CONFIDENCE — HIGH / MEDIUM / LOW.
 
 End with a compact block:
-REVIEWER_VERDICT=<PASS|FAIL|PARTIAL>
+QUALITY_BAND=<PASS|PARTIAL|FAIL>
+GATE_RECOMMENDATION=<ALLOW|BLOCK|INCOMPLETE>
 DEFECT_TAGS=[...]
 CONFIDENCE=<HIGH|MEDIUM|LOW>
 """

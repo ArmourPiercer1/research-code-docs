@@ -6,11 +6,15 @@ source_documents:
   - evals/skills/adjudication/adjudication-2026-07-31.md
   - evals/skills/adjudication/reviewer-{A,B}-2026-07-31.md
   - evals/skills/harness/hard-fail.md (v0.3 anti-erosion rule; HF-9/12A/15)
-status: RESOLVED 2026-07-31 — D-1=A(FAIL), D-2=A(refine+re-run), D-3=A(clean); D-4 in progress; D-5=A(defer to v0.4+)
+status: RESOLVED 2026-07-31 (v3 decisions) — D-1=A(FAIL), D-2=A(refine+re-run), D-3=A(clean); D-4 in progress; D-5=A(defer to v0.4+). NEW 2026-07-31 (v4 round): D-6, D-7 OPEN (see bottom).
 last_verified: 2026-07-31
 -->
 
 # DQE 测试语料 —— 待决策清单（2026-07-31）
+
+> **🆕 v4 追加（2026-07-31，测试升级轮）：D-6（GN-PROP-001 是否有效负例）与 D-7（BP-002-fail 门槛）待你裁决。
+> 详见文末 [§v4](#v4-测试升级轮的两项待决策-2026-07-31)。这两项来自两轴盲评双评审 + v0.3 确认性抽测。**
+
 
 > **✅ 已裁决（2026-07-31）：D-1=A 全部 FAIL · D-2=A 已细化重跑（矛盾已消，盲审 CONTRADICTION=NO）·
 > D-3=A 已清理（78/94 一致）· D-5=A 暂缓至 v0.4+。结果：20/20 全部锁为 gold，0 待裁决。D-4（你亲自抽查
@@ -172,3 +176,36 @@ reviewer 一致用 PARTIAL 而非 FAIL，其实指向一个更深的产品问题
   [reviewer-B](../../evals/skills/adjudication/reviewer-B-2026-07-31.md)
 - 5 个待裁决案例的 manifest：`tests/corpus/cases/**/{GN-ADR-001,GN-PROP-001,GN-EXP-001,GN-ROADMAP-001,BP-004-controlled}/manifest.yaml`
 - 语料全景与验证：[corpus-build-report.md](corpus-build-report.md)
+
+---
+
+## v4 ｜ 测试升级轮的两项待决策 (2026-07-31)
+
+来源：两轴盲评双评审（[adjudication-v4.md](adjudication-v4.md)）+ 未改动 v0.3 评测器的确认性抽测
+（[corpus-repair-report-v4.md](corpus-repair-report-v4.md)）。**这两项在你裁决前，对应案例标为 `disputed`、
+不进任何 live 指标。** 本轮未改任何 skill。
+
+### D-6 — `GN-PROP-001` 还算不算一个有效负例？
+
+- **现象**：修好悬空 TOC 后，**两位隔离盲评 reviewer 都判 PASS/ALLOW**——他们认为这份 KEP 的 Design
+  Details（CRI protobuf、ID 映射算法、idmap 实例、PRR 问卷、失败模式、备选方案）已足够实现，删掉
+  Test Plan / Graduation / Rollback 只是"流程脚手架缺失"，不阻塞可执行性。v0.3 评测器判 FAIL，但依据是
+  HF-9（external profile 缺口，D-01）+ 一个**新的残留矛盾**（Implementation History 写"1.36 GA"，而签核
+  清单里 Test-plan/Graduation 两个 (R) 项是未勾选）——**都不是**本意的"缺验证故事"缺陷。
+- **本质**：KEP 基文档太完整，**删一处删不垮它**（与已隔离的 GN-EXP-001/D-04 同一失效模式）。
+- **选项**：**A**（推荐）隔离 GN-PROP-001，换一个更精简的 proposal 基文档重建（删掉测试计划就真的不可执行）；
+  **B** 像 v1 的 D-1 一样人工判 FAIL；**C** 改写它的"本意缺陷"（例如改测别的东西）。
+- **影响**：决定 golden-negative 池里是否保留这个案例；不影响已锁的其余 5 个负例。
+
+### D-7 — `BP-002-fail` 的门槛：单条"稳定文档里的易变事实"该不该 BLOCK？
+
+- **现象**：清掉附带矛盾后，两位 reviewer 都识别出 volatile-in-stable 缺陷（BASELINE 架构文档里裸写
+  "当前 69 项测试全部通过"）、质量都判 **PARTIAL**，但**门槛判定分歧**：A=BLOCK（基线参考不该带活跃计数）、
+  B=ALLOW（架构理解不受影响，一行不阻塞）。v0.3 评测器触发 **HF-14b（BLOCK）**，与 A + 语料本意一致。
+- **选项**：**A**（推荐，维持语料本意）单条 volatile-in-stable 即 BLOCK → gold 保持 FAIL；**B** 视为 MINOR →
+  软化为 PASS/ALLOW（则该案例从负例降级）。
+- **影响**：决定 BP-002 边界对 fail 侧的 gold；也间接定义 HF-14b 的严格度（会写回 ADR/skill 契约）。
+
+> 裁决后我再执行：若 D-6=A 则重建 GN-PROP-001 并重新双评审；D-7 按你选项锁 gold。**在此之前不动 skill、
+> 不跑准入矩阵。**
+
