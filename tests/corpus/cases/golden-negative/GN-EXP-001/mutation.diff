@@ -1,0 +1,38 @@
+--- base:D:/AI_Coworking/skill-build/research-code-dev/tests/corpus/source-seeds/normalized/SEED-EXP-YAHOO-RESNET/document.md
++++ mutated:GN-EXP-001
+@@ -20,7 +20,7 @@
+ Images are downloaded and processed into the TFRecord format. The training data is sharded into 1024 training files with names `train-0????-of-01024` and 128 validation files with names `validation-0????-of-00128`. The classes are randomly distributed within each file. Data processing may take up to half a day. 
+ 
+ #### Code
+-We follow the data processing methods from the Inception [guide](https://github.com/tensorflow/models/tree/master/research/inception#getting-started). We ran the code using commit `bd56a06d2815e3dc2914fc8ce2fa1ea60e19d324`. 
++We follow the data processing methods from the Inception [guide](https://github.com/tensorflow/models/tree/master/research/inception#getting-started).  
+ 
+ #### Path
+ The processed data can be found in HDFS at `hdfs:/projects/ml/data/imagenet_bbox`. Contact the author for permissions and access.
+@@ -33,7 +33,7 @@
+ We use the ResNet-50 architecture and the softmax loss. 
+ 
+ #### Code
+-We ran our experiments using git commit `24b236fdb6ca449eb52e8f816e039e0d634015a5`. The code is written using TensorFlow and uses its high level [APIs](https://www.tensorflow.org/guide/estimators). After cloning the repository you can train the model by running
++ The code is written using TensorFlow and uses its high level [APIs](https://www.tensorflow.org/guide/estimators). After cloning the repository you can train the model by running
+ 
+ ```
+ python train.py \
+@@ -46,7 +46,7 @@
+ 
+ * `dataset_directory` points to the training data. We expect a directory with the training and validation files with patterns `train-0????-of-01024` and `validation-0????-of-00128`.
+ * `output_directory` is the directory where model checkpoints and logs are written.
+-* `models_repository` points to the directory where you have cloned the TensorFlow models [repository](https://github.com/tensorflow/models) which contains the code to build the ResNet architecture. We use version `v1.10.0`. 
++* `models_repository` points to the directory where you have cloned the TensorFlow models [repository](https://github.com/tensorflow/models) which contains the code to build the ResNet architecture.  
+ 
+ You can visualize the training by running TensorBoard `tensorboard --logdir /path/to/outputs`, where `logdir` points to the parent directory of `output_directory`. 
+ 
+@@ -96,7 +96,7 @@
+ We provide a [notebook](inference.ipynb) that provides an example of how to run inference on sample images. 
+ 
+ #### Timing information
+-We measure the model latency using the inference notebook. We used a p3.2xlarge instance on AWS which has an NVIDIA GPU V100. The latency including preprocessing is 11ms with a batch size of 1. Note that the inference code doesn't run on a CPU because the channel ordering is NCHW and the max pooling operation only supports NHWC on a CPU device. We use TensorFlow v1.8. 
++We measure the model latency using the inference notebook.  The latency including preprocessing is 11ms with a batch size of 1. Note that the inference code doesn't run on a CPU because the channel ordering is NCHW and the max pooling operation only supports NHWC on a CPU device.  
+ 
+ #### Serialization 
+ Not applicable. The model was trained for research purposes and is not deployed to production.

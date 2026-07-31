@@ -1,0 +1,15 @@
+normalization:
+  source_seed: SEED-KEP-127
+  tool: custom-script
+  rst_to_markdown: false
+  operations:
+  - line-ending-normalization(->LF)
+  - utf-8-reencode
+  - single-trailing-newline
+  semantic_changes: false
+  diff_review_required: true
+  bytes_before: 65084
+  bytes_after: 63679
+  sha256_before: b205c49ae493cc3cdab3fdfcdb70208663aaaafcc27fe9ce692f314e07b03dea
+  sha256_after: 786abf4c0ccd928037f685f3a571fec0bae2da2ac2946bdfe51ae0cdb4f8c299
+  normalized_at: '2026-07-31T10:25:29Z'

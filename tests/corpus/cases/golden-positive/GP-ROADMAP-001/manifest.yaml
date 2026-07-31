@@ -1,0 +1,43 @@
+case_id: GP-ROADMAP-001
+case_version: 1
+class: golden-positive
+artifact_type: roadmap
+language: en
+holdout: false
+document: evals/skills/task-quality/fixtures/dqe/positive/b2-research-roadmap.md
+
+source:
+  kind: reused-fixture                 # frozen v0.3 fixture, re-homed by reference (NOT moved/copied)
+  seed_id: null
+  upstream_repo: null
+  upstream_commit: flowsim@e4f5a6b     # synthetic fixture's own declared provenance front-matter
+
+profile:
+  provenance_policy: controlled        # a locally-authored roadmap DOES carry traceability front-matter
+  evidence_requirement: key-claims
+  reader_test: roadmap-execution
+  output_mode: audit
+
+expected:
+  document_quality: PASS
+  factual_validity_allowed: [VERIFIED, PARTIALLY_VERIFIED]
+  reader_test: PASS
+  required_blockers: []
+  forbidden_blockers: [HF-13, HF-14a, HF-14b, HF-15]
+  required_findings:
+    - "HF-15 research-phase escape APPLIES: each committed phase has question + minimal experiment + metric + GO/MODIFY/STOP"
+
+mutation: null
+adjudication:
+  reviewer_a:
+    verdict: PASS
+    confidence: HIGH
+    tag: none
+  reviewer_b:
+    verdict: PASS
+    confidence: HIGH
+  consensus: PASS
+  confidence: HIGH
+  status: gold
+  adjudicated_at: '2026-07-31T11:52:38Z'
+  notes: A/B agree and match corpus intent

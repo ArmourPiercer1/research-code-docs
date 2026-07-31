@@ -1,0 +1,5 @@
+# test sources
+tests/corpus/upstream/
+
+# python environment
+.venv/

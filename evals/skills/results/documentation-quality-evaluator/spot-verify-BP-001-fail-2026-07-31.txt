@@ -1,0 +1,15 @@
+# DQE evaluator spot-verify — blind input 43cd9d759a79 (= BP-001-fail), run 2026-07-31
+# Isolated general-purpose sub-agent; loaded the skill from disk, ran run_checks.py, walked all gates.
+# Full report in the session transcript; the machine-parseable verdict block is reproduced verbatim here
+# for score_grading.py.
+
+DOCUMENT_QUALITY=FAIL
+FACTUAL_VALIDITY=UNVERIFIED
+READER_TEST=FAIL
+CHECKER_STATUS=COMPLETE
+SOURCE_COVERAGE=0/2
+CONFIDENCE=HIGH
+BLOCKERS=[HF-13,HF-14a,HF-14b]
+FILES_READ=[.claude/skills/documentation-quality-evaluator/SKILL.md, evals/skills/harness/hard-fail.md, evals/skills/harness/rubric.md, evals/skills/harness/canonical-source-map.md, tests/corpus/blind-runs/adj-2026-07-31/inputs/43cd9d759a79.md]
+
+VERDICT=FAIL total=46.5 blockers=[HF-13,HF-14a,HF-14b]

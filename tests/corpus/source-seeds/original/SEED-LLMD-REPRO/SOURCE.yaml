@@ -1,0 +1,12 @@
+seed_id: SEED-LLMD-REPRO
+content_copied: true
+use_mode: reference
+status: source-only
+artifact_type_candidate: reproducibility-guide
+repository: https://github.com/llm-d/llm-d-benchmark.git
+commit: 1c8f481bbc4a86217ee4fb99aa99a15212984e90
+path: llm-d-benchmark/docs/reproducibility.md
+sha256: 289cf30bb5ee91300cafc99e03546cf651a3351b9c80e5b9b98cc70ca012a754
+size_bytes: 1539
+license_spdx: Apache-2.0
+snapshotted_at: '2026-07-31T10:24:17Z'

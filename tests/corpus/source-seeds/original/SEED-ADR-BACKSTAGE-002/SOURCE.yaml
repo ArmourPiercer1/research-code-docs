@@ -1,0 +1,12 @@
+seed_id: SEED-ADR-BACKSTAGE-002
+content_copied: true
+use_mode: snapshot
+status: source-only
+artifact_type_candidate: adr
+repository: https://github.com/backstage/backstage.git
+commit: 04f25e440b36498647d50129b9f82d7dda928ae2
+path: backstage/docs/architecture-decisions/adr002-default-catalog-file-format.md
+sha256: ceb810ec7420cec0fa70bf07ce48dcaa43bb46eea7593515ba190f9ccf60b3ee
+size_bytes: 8994
+license_spdx: Apache-2.0
+snapshotted_at: '2026-07-31T10:24:17Z'

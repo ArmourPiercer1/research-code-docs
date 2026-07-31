@@ -1,0 +1,12 @@
+case_id: GN-ADR-002
+mutation_id: MUT-HF13-MIX-ROLES
+base:
+  kind: normalized-seed
+  ref: SEED-ADR-BACKSTAGE-002
+  ext: md
+operations:
+  - op: append-file
+    payload: tests/corpus/mutations/plans/payloads/GN-ADR-002-append.md
+intended_blockers: [HF-13, HF-14b]     # ADR now also carries deploy runbook + live per-run test counts
+intended_findings: [mixed-responsibilities, volatile-in-stable, operational-content-in-decision-record]
+forbidden_unrelated_changes: ["Background", "Format", "Envelope", "Metadata", "Component"]

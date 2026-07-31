@@ -1,0 +1,44 @@
+case_id: GP-PROP-002
+case_version: 1
+class: golden-positive
+artifact_type: technical-proposal
+language: en
+holdout: true                          # reserved holdout (label withheld from any DQE-tuning iteration)
+document: tests/corpus/source-seeds/normalized/SEED-PEP-2026/document.rst
+
+source:
+  kind: upstream-seed
+  seed_id: SEED-PEP-2026
+  upstream_repo: https://github.com/python/peps.git
+  upstream_commit: f245405682574595cbb0b9dfa0ca554417b99062
+  license_spdx: LicenseRef-Python-PEP-public-domain
+
+profile:
+  provenance_policy: external
+  evidence_requirement: key-claims
+  reader_test: proposal-comprehension
+  output_mode: audit
+
+expected:
+  document_quality: PASS               # DOCUMENT quality is high EVEN THOUGH the decision is "Rejected"
+  factual_validity_allowed: [VERIFIED, PARTIALLY_VERIFIED, UNVERIFIED]
+  reader_test: PASS
+  required_blockers: []
+  forbidden_blockers: [HF-13, HF-14a, HF-14b, HF-15]
+  required_findings:
+    - "recognizes Status: Rejected is a DECISION outcome, not a document-quality defect"
+
+mutation: null
+adjudication:
+  reviewer_a:
+    verdict: PASS
+    confidence: HIGH
+    tag: none
+  reviewer_b:
+    verdict: PASS
+    confidence: HIGH
+  consensus: PASS
+  confidence: HIGH
+  status: gold
+  adjudicated_at: '2026-07-31T11:52:38Z'
+  notes: A/B agree and match corpus intent

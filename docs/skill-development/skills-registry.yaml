@@ -1,0 +1,243 @@
+# =============================================================================
+# skills-registry.yaml
+# Research-Software Documentation Skills System — machine-readable roster
+#
+# generated_by: manual (Phase-1 governance authoring)
+# schema_version: 0.1
+# source_commit: mattpocock/skills vendored snapshot (plugin.json v1.2.0; no pinned commit)
+# last_verified: 2026-07-30T09:47:06Z
+#
+# Schema per entry: see docs/skill-development/system-architecture.md §10.
+# STATUS values: experimental | active | planned | deprecated | replaced | retired | reference-only
+# INVOCATION:     manual-only | orchestrator-only | model-invocable
+# LAYER:          L0-router | L1-control | L2-atomic | L3-existing | L4-asset
+# Rule: auto_trigger MAY be true ONLY when evals.trigger == pass AND evals.conflict == pass.
+# =============================================================================
+
+meta:
+  schema_version: "0.1"
+  generated: "2026-07-30T09:47:06Z"
+  isolation: "workspace-only; nothing here is installed to the live loader without user approval"
+  status_vocabulary: [FACT, VERIFIED, DECIDED, BASELINE, HYPOTHESIS, CANDIDATE, OPEN, DEFERRED, REJECTED, STALE]
+  evidence_levels: [E0, E1, E2, E3, E4, E5]
+  formal_verified_threshold: E3
+  batch1_eval: "PASS (trigger 28/28 x4; DQE discriminative e2e correct). Report: docs/skill-development/reports/batch1-eval-run-2026-07-30.md"
+  batch2_gate: "UNLOCKED but PROVISIONAL. documentation-quality-evaluator passed BASIC evals, but a v0.3 audit found a hybrid-roadmap FALSE-PASS: it is NOT yet a terminal quality gate. Do not treat its PASS as auto-approval for downstream skills until the v1.0 admission bar (full golden suite, severe-issue recall >=90%, false-pass=0, 3-round regression) is met. New skills still ship experimental + manual-only."
+  v0_2_upgrade: "Batch-1 skills upgraded to 0.2.0 from real vendored references (agent-skills/github-awesome-copilot/research-paper-writing-skills MIT; academic-research-skills CC-BY-NC ideas-only). Per-method attribution in references/documentation-methodology/upstream-method-matrix.md. Regression re-eval: see reports/batch1-eval-run-2026-07-30.md (v0.2 section)."
+  v0_3_upgrade: "documentation-quality-evaluator -> 0.3.0 after a hybrid-roadmap false-pass. Added anti-erosion/no-PASS-prediction discipline, structural gates HF-13/HF-14a/HF-14b/HF-15, decomposed HF-12A-E (doc-only vs source-needing -> DOCUMENT_QUALITY vs FACTUAL_VALIDITY), roadmap rubric + non-compensatory scoring, two-layer reader, structured KEY=VALUE verdict, 5 SIGNAL checkers + isolated grading harness. Anchor golden-negative (eoopt roadmap) now FAILs with HF-13/14a/14b/15 (recall 1.0, false_pass 0); B1 comprehensive-report PASSes (no HF-13 over-fire); trigger+conflict 28/28 no-regression. Report: reports/dqe-v0.3-upgrade-2026-07-30.md."
+
+# -----------------------------------------------------------------------------
+# BATCH 1 — created in this deliverable (drafts; experimental; manual-only)
+# -----------------------------------------------------------------------------
+skills:
+
+  - name: documentation-quality-evaluator
+    version: "0.3.0"
+    status: experimental
+    layer: L2-atomic
+    class: evaluate
+    owner: research-code-dev
+    purpose: >
+      Judge a documentation artifact against hard gates (HF-1..HF-15) + a weighted soft/roadmap rubric
+      under a non-compensatory rule, run a two-layer no-context reader test, and emit a structured
+      DOCUMENT_QUALITY/FACTUAL_VALIDITY verdict. Grades every other skill.
+    invocation: orchestrator-only
+    auto_trigger: false
+    disable_model_invocation: true
+    upstream_dependencies: []          # runs on any produced doc
+    downstream_outputs: [quality-report, reader-test-report]
+    conflicts: []                       # read-only gate; composes with all
+    replaces: null
+    replaced_by: null
+    write_scope: {read_only: true, creates_new_files: true, may_overwrite: false, may_move: false, may_delete: false, requires_user_approval: false, requires_isolated_branch: false}
+    context_budget: {default_reads: [target-doc, harness/rubric.md, harness/hard-fail.md, harness/canonical-source-map.md], max_scope: "the doc(s) under review + their cited sources", whole_repo_allowed: false}
+    required_tools: [Read, Grep, Glob, Bash]     # Bash only to run deterministic checkers
+    norm_sources: []
+    status_vocab: true
+    license_sources:
+      - {method: "compact SKILL structure", src: "mattpocock/skills@snapshot writing-great-skills", license: MIT, adoption: method-borrow}
+      - {method: "hard-gate vs soft-score separation", src: "design-guide §14.10", license: internal, adoption: adapt}
+      - {method: "severity taxonomy + reverse-outline", src: "addyosmani/agent-skills code-review-and-quality + research-paper-writing", license: MIT, adoption: method-borrow}
+      - {method: "two-pass adversarial reader", src: "addyosmani/agent-skills doubt-driven-development", license: MIT, adoption: method-borrow}
+      - {method: "HF-13/14/15 + HF-12A-E + non-compensatory + structured verdict + 5 signal checkers", src: "reports/documentation-quality-evaluator_独立检查失败复盘与升级要求.md (v0.3 audit)", license: internal, adoption: adapt}
+    evals: {trigger: pass, conflict: pass, task_quality: "partial (anchor golden-negative FAIL recall=1.0/false_pass=0 + B1 over-strictness PASS; full N/P/B suite + ablation deferred to v0.4)", reader_test: "protocol authored + anchor reader-failures specified; full standalone run deferred to v0.4"}
+    last_evaluated: "2026-07-30"
+    notes: "v0.3: fixed a hybrid-roadmap FALSE-PASS. Anchor (eoopt roadmap) now FAILs with HF-13/14a/14b/15 (was FAIL-on-HF-9-only + predict-PASS). Terminal-gate status PROVISIONAL until v1.0 admission bar. Stays manual-only (D.3)."
+
+  - name: project-state-reconstructor
+    version: "0.2.0"
+    status: experimental
+    layer: L2-atomic
+    class: audit
+    owner: research-code-dev
+    purpose: >
+      Recover verifiable project/workspace facts (entry points, real progress, what runs,
+      what is tested) into a state report that cleanly separates FACT from UNKNOWN.
+    invocation: manual-only
+    auto_trigger: false
+    disable_model_invocation: true
+    upstream_dependencies: [workspace-forensics-and-inventory]   # PLANNED; self-inventories until built
+    downstream_outputs: [state-report]
+    conflicts: []
+    replaces: null
+    replaced_by: null
+    write_scope: {read_only: true, creates_new_files: true, may_overwrite: false, may_move: false, may_delete: false, requires_user_approval: false, requires_isolated_branch: false}
+    context_budget: {default_reads: [manifests, entry-points, tests, status-dirs], max_scope: "repo via summaries; never a raw whole-repo dump", whole_repo_allowed: false}
+    required_tools: [Read, Grep, Glob, Bash]
+    norm_sources: [current-dev-status]
+    status_vocab: true
+    license_sources:
+      - {method: "read CONTEXT.md/ADRs before exploring", src: "mattpocock/skills@snapshot tdd, diagnosing-bugs", license: MIT, adoption: method-borrow}
+      - {method: "facts recovered, not inherited from old roadmaps", src: "design-guide §2.2", license: internal, adoption: adapt}
+    evals: {trigger: pass, conflict: pass, task_quality: pending, reader_test: pending}
+    last_evaluated: "2026-07-30"
+    notes: "Batch-1 trigger 28/28; e2e demonstrated on messy-workspace fixture (STALE claims caught, no fabrication, E1 discipline). task_quality soft-score run pending. Manual-only (D.3)."
+
+  - name: goal-scope-and-workflow-elicitor
+    version: "0.2.0"
+    status: experimental
+    layer: L2-atomic
+    class: audit          # elicits; writes only a scope note
+    owner: research-code-dev
+    purpose: >
+      Structured interview that pins down user goals, scope boundaries, non-goals, and the
+      real intended workflow — asking only decisions the user must make, looking up facts itself.
+    invocation: orchestrator-only
+    auto_trigger: false
+    disable_model_invocation: true
+    upstream_dependencies: [project-state-reconstructor]
+    downstream_outputs: [goal-scope-note, open-decision-list]
+    conflicts: [grilling]        # both interview; elicitor owns automatic questioning in flows
+    replaces: null
+    replaced_by: null
+    write_scope: {read_only: false, creates_new_files: true, may_overwrite: false, may_move: false, may_delete: false, requires_user_approval: false, requires_isolated_branch: false}
+    context_budget: {default_reads: [state-report], max_scope: "state report + user answers; no repo scan", whole_repo_allowed: false}
+    required_tools: [Read, AskUserQuestion]
+    norm_sources: []
+    status_vocab: true
+    license_sources:
+      - {method: "one question at a time, recommend an answer, look up facts don't ask them", src: "mattpocock/skills@snapshot grilling", license: MIT, adoption: adapt}
+      - {method: "frontier/design-tree rounds", src: "mattpocock/skills@snapshot in-progress/batch-grill-me", license: MIT, adoption: method-borrow}
+      - {method: "stop at the decidable boundary; classify open branches", src: "design-guide §6.3", license: internal, adoption: adapt}
+    evals: {trigger: pass, conflict: pass, task_quality: pending, reader_test: pending}
+    last_evaluated: "2026-07-30"
+    notes: "Batch-1 trigger 28/28; correctly declined simple-task + routed manual grilling to grilling. Multi-turn + task_quality runs pending. Manual-only (D.3)."
+
+  - name: uncertainty-and-decision-manager
+    version: "0.2.0"
+    status: experimental
+    layer: L2-atomic
+    class: maintain
+    owner: research-code-dev
+    purpose: >
+      Maintain a decision register that tags every item with a status (FACT..STALE) and an
+      evidence level (E0..E5), keeping candidates/hypotheses/open questions separate from decided facts.
+    invocation: orchestrator-only     # + wayfinder if installed
+    auto_trigger: false
+    disable_model_invocation: true
+    upstream_dependencies: [goal-scope-and-workflow-elicitor, research-evidence-synthesizer]
+    downstream_outputs: [decision-register]
+    conflicts: [domain-modeling]      # boundary: stable→glossary, unstable→register
+    replaces: null
+    replaced_by: null
+    write_scope: {read_only: false, creates_new_files: true, may_overwrite: false, may_move: false, may_delete: false, requires_user_approval: false, requires_isolated_branch: false}
+    context_budget: {default_reads: [decision-register, artifact-under-discussion], max_scope: "register + one artifact", whole_repo_allowed: false}
+    required_tools: [Read, Edit, Bash]
+    norm_sources: [open-questions, hypotheses, candidates]
+    status_vocab: true
+    license_sources:
+      - {method: "status + evidence-level vocabulary", src: "design-guide §2.3", license: internal, adoption: adopt-verbatim}
+      - {method: "decisions are the user's; facts are looked up", src: "mattpocock/skills@snapshot grilling", license: MIT, adoption: method-borrow}
+    evals: {trigger: pass, conflict: pass, task_quality: pending, reader_test: pending}
+    last_evaluated: "2026-07-30"
+    notes: "Batch-1 trigger 28/28; domain-modeling boundary held in all 5 conflict cases; routed code-fact to state-reconstructor. Multi-turn + task_quality (register_check) runs pending. Manual-only (D.3)."
+
+# -----------------------------------------------------------------------------
+# PLANNED — later batches (not created yet; here so the roster is complete)
+# -----------------------------------------------------------------------------
+
+  - {name: document-information-architect,            version: "0.0.0", status: planned, layer: L2-atomic, class: design,   invocation: orchestrator-only, auto_trigger: false, batch: 2, purpose: "Design doc-set information architecture and boundaries."}
+  - {name: research-question-and-literature-planner,  version: "0.0.0", status: planned, layer: L2-atomic, class: research-adapter, invocation: orchestrator-only, auto_trigger: false, batch: 2, purpose: "Scope/inclusion/exclusion/stop-criteria; hands off to lit-review/wos-research/deep-research.", conflicts: [lit-review, wos-research, deep-research, paper-fetch-skill, research]}
+  - {name: research-evidence-synthesizer,             version: "0.0.0", status: planned, layer: L2-atomic, class: research-adapter, invocation: orchestrator-only, auto_trigger: false, batch: 2, purpose: "Turn retrieved evidence into an evidence matrix + method-transfer cards + evidence levels; no retrieval.", conflicts: [lit-review, wos-research, deep-research]}
+  - {name: workspace-forensics-and-inventory,         version: "0.0.0", status: planned, layer: L2-atomic, class: audit,    invocation: orchestrator-only, auto_trigger: false, batch: 2, write_scope: {read_only: true}, purpose: "Read-only inventory of a messy workspace or doc corpus. Never moves/deletes."}
+
+  - {name: numerical-research-software-design,        version: "0.0.0", status: planned, layer: L1-control, class: orchestrate, invocation: manual-only, auto_trigger: false, batch: 3, purpose: "Control flow: fuzzy numerical idea -> stable design spec.", conflicts: [scientific-workspace-reconstruction, documentation-refactor]}
+  - {name: scientific-workspace-reconstruction,       version: "0.0.0", status: planned, layer: L1-control, class: orchestrate, invocation: manual-only, auto_trigger: false, batch: 3, purpose: "Control flow: messy dev-test-experiment workspace -> reconstructed, reproducible structure.", conflicts: [numerical-research-software-design, documentation-refactor, improve-codebase-architecture]}
+  - {name: documentation-refactor,                    version: "0.0.0", status: planned, layer: L1-control, class: orchestrate, invocation: manual-only, auto_trigger: false, batch: 3, purpose: "Control flow: messy/contradictory doc corpus -> audited, canonicalized, rewritten doc system.", conflicts: [numerical-research-software-design, scientific-workspace-reconstruction, technical-document-rewriter]}
+
+  - {name: research-software-problem-framer,          version: "0.0.0", status: planned, layer: L2-atomic, class: design,   batch: 4}
+  - {name: scientific-software-architect,             version: "0.0.0", status: planned, layer: L2-atomic, class: design,   batch: 4, conflicts: [codebase-design]}
+  - {name: algorithm-technical-spec-author,           version: "0.0.0", status: planned, layer: L2-atomic, class: design,   batch: 4}
+  - {name: scientific-prototype-experiment,           version: "0.0.0", status: planned, layer: L2-atomic, class: design,   batch: 4, replaces: null, note: "SPLIT target of prototype; must emit GO/MODIFY/STOP/NEED-MORE-EVIDENCE.", conflicts: [prototype]}
+  - {name: scientific-validation-and-benchmark-planner, version: "0.0.0", status: planned, layer: L2-atomic, class: design, batch: 4}
+  - {name: research-software-roadmap-author,          version: "0.0.0", status: planned, layer: L2-atomic, class: design,   batch: 4}
+
+  - {name: dev-test-experiment-workspace-architect,   version: "0.0.0", status: planned, layer: L2-atomic, class: design,     batch: 5}
+  - {name: experiment-provenance-and-reproducibility, version: "0.0.0", status: planned, layer: L2-atomic, class: maintain,   batch: 5}
+  - {name: workspace-migration-planner,               version: "0.0.0", status: planned, layer: L2-atomic, class: migration,  batch: 5, write_scope: {requires_user_approval: true}, note: "dry-run map first."}
+  - {name: content-canonicalization-and-migration,    version: "0.0.0", status: planned, layer: L2-atomic, class: migration,  batch: 5, write_scope: {requires_user_approval: true}, note: "dry-run map first."}
+  - {name: technical-document-rewriter,               version: "0.0.0", status: planned, layer: L2-atomic, class: rewrite,    batch: 5, write_scope: {may_overwrite: false}, note: "never overwrites originals.", conflicts: [documentation-refactor]}
+  - {name: living-design-maintainer,                  version: "0.0.0", status: planned, layer: L2-atomic, class: maintain,    batch: 5}
+
+  # [ADAPT] additions beyond the guide's 20
+  - {name: scientific-validity-review,                version: "0.0.0", status: planned, layer: L2-atomic, class: evaluate,  batch: 5, note: "keep scientific checks OUT of code-review; separate axis.", conflicts: []}
+  - {name: technical-primary-source-research,         version: "0.0.0", status: planned, layer: L2-atomic, class: research-adapter, batch: 4, note: "narrowed lane of matt research: docs/standards/source/APIs.", conflicts: [lit-review, deep-research]}
+  - {name: research-software-workflow-router,         version: "0.0.0", status: planned, layer: L0-router, class: utility,   batch: 3, replaces: ask-matt, invocation: manual-only}
+
+# -----------------------------------------------------------------------------
+# L3 — EXISTING INSTALLED SKILLS (active; classified by the audit)
+#   These are NOT modified in Phase 1. `limits` = scope to enforce via router/registry.
+#   Provenance of the research/science stack is user-local => UNKNOWN (OQ-3).
+# -----------------------------------------------------------------------------
+existing_installed:
+
+  # research / science stack (user-local; license/commit UNKNOWN)
+  - {name: lit-review,        class_audit: KEEP_WITH_LIMITS, layer: L3-existing, role: "literature-review control (de-facto)", limits: "new research atoms defer retrieval to it", provenance: user-local-UNKNOWN}
+  - {name: wos-research,      class_audit: KEEP,             layer: L3-existing, role: "WoS iterative search + relevance feedback", provenance: user-local-UNKNOWN}
+  - {name: deep-research,     class_audit: KEEP,             layer: L3-existing, role: "multi-source web research + adversarial verify", limits: "do not re-trigger on ordinary doc questions", provenance: user-local-UNKNOWN}
+  - {name: paper-fetch-skill, class_audit: KEEP,             layer: L3-existing, role: "known-paper full text / summary / verify", provenance: user-local-UNKNOWN}
+  - {name: literature-ingest, class_audit: KEEP,             layer: L3-existing, role: "PDF+OCR -> Zotero + Obsidian note (idempotent)", provenance: user-local-UNKNOWN}
+  - {name: scansci-pdf,       class_audit: KEEP,             layer: L3-existing, role: "download papers / citations / batch", provenance: user-local-UNKNOWN}
+  - {name: mineru-ocr,        class_audit: KEEP,             layer: L3-existing, role: "OCR PDF/image -> markdown", provenance: user-local-UNKNOWN}
+  - {name: gpt,               class_audit: KEEP,             layer: L3-existing, role: "GPT particle-tracer sims (realistic numerical-design eval sample)", provenance: user-local-UNKNOWN}
+  - {name: dataviz,           class_audit: KEEP,             layer: L3-existing, role: "chart/plot design system", provenance: anthropic-installed}
+
+  # matt pocock subset (installed; MIT; mattpocock/skills@snapshot v1.2.0)
+  - {name: tdd,                       class_audit: KEEP,             layer: L3-existing, license: MIT}
+  - {name: diagnosing-bugs,           class_audit: KEEP,             layer: L3-existing, license: MIT}
+  - {name: resolving-merge-conflicts, class_audit: KEEP,             layer: L3-existing, license: MIT}
+  - {name: code-review,               class_audit: KEEP_WITH_LIMITS, layer: L3-existing, license: MIT, limits: "keep scientific checks out; add separate scientific-validity-review"}
+  - {name: codebase-design,           class_audit: KEEP_WITH_LIMITS, layer: L3-existing, license: MIT, limits: "internal code-shape lens only; not external API/C4/sci-terminology"}
+  - {name: domain-modeling,           class_audit: KEEP_WITH_LIMITS, layer: L3-existing, license: MIT, limits: "stable/decided terms only; unstable -> uncertainty-and-decision-manager"}
+  - {name: grilling,                  class_audit: KEEP_WITH_LIMITS, layer: L3-existing, license: MIT, limits: "manual primitive; auto elicitation owned by goal-scope-and-workflow-elicitor; stop at decidable boundary"}
+  - {name: prototype,                 class_audit: SPLIT,            layer: L3-existing, license: MIT, split_into: [application-prototype, scientific-prototype-experiment]}
+  - {name: research,                  class_audit: KEEP_WITH_LIMITS, layer: L3-existing, license: MIT, limits: "narrow trigger: technical primary sources only; must not fire on academic-literature tasks", action_item: "G3 (needs user approval to modify installed skill)"}
+
+  # vendor / meta (installed)
+  - {name: skill-creator,   class_audit: KEEP, layer: L3-existing, role: meta-authoring}
+  - {name: doc-coauthoring, class_audit: KEEP, layer: L3-existing, role: doc-methodology-source}
+  - {name: mcp-builder,     class_audit: KEEP, layer: L3-existing, role: utility}
+  - {name: context7-mcp,    class_audit: KEEP, layer: L3-existing, role: utility}
+  - {name: commit,          class_audit: KEEP, layer: L3-existing, role: git-hygiene}
+
+# -----------------------------------------------------------------------------
+# REFERENCE-ONLY (vendored; NOT installed; never symlink into an active dir)
+# -----------------------------------------------------------------------------
+reference_only:
+  license: MIT
+  source: "references/mattpocock-skills/ @ snapshot (plugin.json v1.2.0; no pinned commit)"
+  replace_later: [ask-matt, grill-with-docs, setup-matt-pocock-skills]
+  keep_with_limits_if_installed: [wayfinder, to-spec, to-tickets, improve-codebase-architecture, setup-pre-commit, handoff, git-guardrails-claude-code]
+  method_source: [writing-great-skills, batch-grill-me, to-questionnaire]
+  reference_only: [grill-me, triage, obsidian-vault, edit-article, loop-me, wizard, writing-beats, writing-fragments, writing-shape]
+  remove_irrelevant: [teach, migrate-to-shoehorn, scaffold-exercises, claude-handoff, setup-ts-deep-modules, design-an-interface, qa, request-refactor-plan, ubiquitous-language]
+
+# -----------------------------------------------------------------------------
+# OPEN QUESTIONS (mirror of system-architecture §13)
+# -----------------------------------------------------------------------------
+open_questions:
+  - {id: OQ-1, q: "Adopt an issue tracker (enables wayfinder/to-tickets/triage)?", status: OPEN, owner: user}
+  - {id: OQ-2, q: "Install git-guardrails-claude-code now?", status: OPEN, owner: user}
+  - {id: OQ-3, q: "Confirm license/provenance of the user-local research stack.", status: OPEN, owner: user}
+  - {id: OQ-4, q: "Merge research-question-and-literature-planner + research-evidence-synthesizer into one adapter?", status: OPEN, owner: project, revisit_after: batch-3}
+  - {id: OQ-5, q: "Final router scope vs ask-matt.", status: DEFERRED, owner: project}

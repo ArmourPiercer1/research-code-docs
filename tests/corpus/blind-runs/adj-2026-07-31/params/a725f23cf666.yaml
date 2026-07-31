@@ -1,0 +1,7 @@
+blind_id: a725f23cf666
+artifact_type: roadmap
+profile:
+  provenance_policy: controlled
+  evidence_requirement: key-claims
+  reader_test: roadmap-execution
+  output_mode: audit

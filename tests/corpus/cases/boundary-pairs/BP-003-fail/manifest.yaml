@@ -1,0 +1,32 @@
+case_id: BP-003-fail
+case_version: 1
+class: boundary-fail
+pair_id: BP-003
+pair_role: fail
+difference_under_test: committed research phase has question+minimal-experiment+metric+GO/MODIFY/STOP vs "先测试…再决定"
+artifact_type: roadmap
+language: zh-CN
+holdout: false
+document: tests/corpus/cases/boundary-pairs/BP-003-fail/document.md
+source: {kind: synthetic}
+profile: {provenance_policy: controlled, evidence_requirement: key-claims, reader_test: roadmap-execution, output_mode: audit}
+expected:
+  document_quality: FAIL
+  factual_validity_allowed: [VERIFIED, PARTIALLY_VERIFIED, UNVERIFIED]
+  reader_test: FAIL
+  required_blockers: [HF-15]           # committed phases with no measurable gate ("先测试…再决定", "好就用")
+  forbidden_blockers: [HF-13, HF-14a, HF-14b]
+  required_findings: [vague-dod, no-decision-gate]
+adjudication:
+  reviewer_a:
+    verdict: FAIL
+    confidence: HIGH
+    tag: non-executable-milestone
+  reviewer_b:
+    verdict: FAIL
+    confidence: HIGH
+  consensus: FAIL
+  confidence: HIGH
+  status: gold
+  adjudicated_at: '2026-07-31T11:52:38Z'
+  notes: A/B agree and match corpus intent

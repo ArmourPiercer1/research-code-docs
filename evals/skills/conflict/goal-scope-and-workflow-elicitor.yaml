@@ -1,0 +1,34 @@
+skill: goal-scope-and-workflow-elicitor
+skill_version: "0.1.0"
+dataset_version: 1
+cases:
+  - id: gswe-conf-01
+    set: conflict
+    real: false
+    input: "Grill me relentlessly about this design until nothing is left standing."
+    expected: {decision: route, route_to: grilling}
+    notes: "conflict-matrix §3: elicitor owns AUTOMATIC questioning in flows; the manual relentless primitive is grilling."
+  - id: gswe-conf-02
+    set: conflict
+    real: false
+    input: "Before I decide my goals, I realize I don't know what's already built in this repo."
+    expected: {decision: route, route_to: project-state-reconstructor}
+    notes: "Facts before goals; reconstructor runs first, then elicitor."
+  - id: gswe-conf-03
+    set: conflict
+    real: false
+    input: "Let's settle exactly what 'convergence' means as a stable term in our project."
+    expected: {decision: route, route_to: domain-modeling}
+    notes: "Stable terminology decision is domain-modeling, not scoping."
+  - id: gswe-conf-04
+    set: conflict
+    real: false
+    input: "Take these five open questions and tag each with a status and evidence level."
+    expected: {decision: route, route_to: uncertainty-and-decision-manager}
+    notes: "Elicitor SURFACES open questions; the register/tagging is UDM's job."
+  - id: gswe-conf-05
+    set: conflict
+    real: false
+    input: "We've discussed enough — write the spec now."
+    expected: {decision: route, route_to: to-spec}
+    notes: "Elicitor elicits; producing the spec is to-spec/algorithm-technical-spec-author."

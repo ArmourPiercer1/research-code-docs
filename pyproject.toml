@@ -1,0 +1,15 @@
+[project]
+name = "research-code-dev-skills"
+version = "0.1.0"
+description = "Governance + eval harness for the research-software documentation Skills system (workspace tooling only)."
+requires-python = ">=3.10"
+dependencies = [
+    "pyyaml>=6.0",
+]
+
+[tool.uv]
+package = false
+
+# This project exists ONLY to run the deterministic eval checkers and harness
+# under evals/skills/harness/. It ships no skill logic and is never installed to
+# the live Claude Code loader.

@@ -1,0 +1,12 @@
+seed_id: SEED-ADR-MADR-TEMPLATE
+content_copied: true
+use_mode: structure-reference
+status: source-only
+artifact_type_candidate: adr-template
+repository: https://github.com/adr/madr.git
+commit: 835fc94baa37887774b1cddddb2ae874881e703b
+path: madr/template/adr-template.md
+sha256: 940d45674563e0a2c6e96b4741b2778b18fdf0d5df1f47cc2a27a841d1b5ea82
+size_bytes: 3527
+license_spdx: MIT OR CC0-1.0
+snapshotted_at: '2026-07-31T10:24:17Z'

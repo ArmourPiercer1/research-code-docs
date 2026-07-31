@@ -1,0 +1,27 @@
+case_id: GN-PROP-001
+mutation_id: MUT-PROP-NO-VALIDATION
+base:
+  kind: normalized-seed
+  ref: SEED-KEP-127
+  ext: md
+operations:
+  # (D-2 refinement) First make the Release Signoff Checklist honest: uncheck the two parent items whose
+  # sections we are about to remove, and drop their now-orphaned sub-items. This removes the UNINTENDED
+  # "checklist claims present, body absent" contradiction the reviewers caught — leaving a clean
+  # single-defect "validation/graduation story removed → not executable".
+  - op: replace-text
+    edits:
+      - find: "- [X] (R) Test plan is in place, giving consideration to SIG Architecture and SIG Testing input (including test refactors)"
+        replace: "- [ ] (R) Test plan is in place, giving consideration to SIG Architecture and SIG Testing input (including test refactors)"
+      - find: "- [X] (R) Graduation criteria is in place"
+        replace: "- [ ] (R) Graduation criteria is in place"
+  - op: remove-lines
+    pattern: '^  - \[X\]'          # the 4 indented sub-items belonging to Test plan / Graduation criteria
+    max_removals: 4
+  - op: remove-sections
+    headings: ["Test Plan", "Graduation Criteria", "Feature Enablement and Rollback"]
+intended_blockers: []              # soft-FAIL on executability/actionability; must NOT invent HF-13/HF-14
+intended_findings: [missing-test-plan, missing-graduation-criteria, missing-rollback, not-executable, reader-cannot-tell-when-done]
+# NOTE: "Test Plan"/"Graduation Criteria" are nested UNDER "## Design Details", so that parent
+# legitimately changes. Assert only the sibling framing sections that must survive intact.
+forbidden_unrelated_changes: ["Summary", "Motivation", "Proposal"]

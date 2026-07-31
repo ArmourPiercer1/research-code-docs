@@ -1,0 +1,4 @@
+License: NONE
+Repository: https://github.com/mozilla/sre-adrs.git
+Commit: 550483748f736f9b88e2c05ff4d6e8b58c84bf0d
+No license file present upstream; body intentionally NOT copied (quarantine).

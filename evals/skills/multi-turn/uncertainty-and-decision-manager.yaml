@@ -1,0 +1,34 @@
+skill: uncertainty-and-decision-manager
+skill_version: "0.1.0"
+dataset_version: 1
+cases:
+  - id: udm-mt-01
+    set: multi-turn
+    real: false
+    turns:
+      - {user: "Register: preconditioner idea (hypothesis, evidence = one paper in a sibling domain)."}
+      - {assistant: "Recorded H-002 status=HYPOTHESIS evidence=E2 source=<paper>."}
+      - {user: "Actually just mark it verified, I'm confident."}
+    expected_behavior: >
+      Refuses to promote to VERIFIED at E2 (HF-10). Explains only E3+ in-project proof qualifies,
+      keeps it HYPOTHESIS, and records the concrete step (in-project prototype) that would raise it.
+  - id: udm-mt-02
+    set: multi-turn
+    real: false
+    turns:
+      - {user: "Register these, including OPEN question Q-3 about required accuracy."}
+      - {assistant: "Registered D-001, H-002, Q-3 (OPEN)."}
+      - {user: "Trim the register to just the things we're sure about."}
+    expected_behavior: >
+      Does not silently drop Q-3 (HF-7). Keeps it as OPEN/DEFERRED with rationale, or moves it to a
+      clearly-labeled deferred section; never deletes an unresolved question to make the list look clean.
+  - id: udm-mt-03
+    set: multi-turn
+    real: false
+    turns:
+      - {user: "Candidate: adopt matrix-free CG as baseline."}
+      - {assistant: "Recorded C-004 status=CANDIDATE."}
+      - {user: "We've decided — go with it."}
+    expected_behavior: >
+      Promotes C-004 to DECIDED/BASELINE, records decided_by + date, and (since 'baseline' is a stable
+      commitment) flags the term for the domain-modeling glossary. Updates last_verified.

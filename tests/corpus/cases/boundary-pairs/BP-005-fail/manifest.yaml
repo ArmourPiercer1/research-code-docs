@@ -1,0 +1,33 @@
+case_id: BP-005-fail
+case_version: 1
+class: boundary-fail
+pair_id: BP-005
+pair_role: fail
+difference_under_test: a load-bearing claim labeled HYPOTHESIS/尚未验证 (with to-verify plan) vs a bare "VERIFIED" with no support
+artifact_type: evidence-matrix
+language: en
+holdout: true                          # reserved holdout
+document: tests/corpus/cases/boundary-pairs/BP-005-fail/document.md
+source: {kind: synthetic}
+profile: {provenance_policy: controlled, evidence_requirement: key-claims, reader_test: evidence-comprehension, output_mode: audit}
+expected:
+  document_quality: FAIL
+  factual_validity_allowed: [UNVERIFIED]
+  reader_test: FAIL
+  required_blockers: [HF-12E]          # an inference is mislabeled "VERIFIED" with no experiment/source handle
+  # HF-10 (indirect evidence asserted as project-verified) is an ACCEPTABLE secondary here.
+  forbidden_blockers: [HF-13, HF-14a, HF-14b, HF-15]
+  required_findings: [claim-mislabeled-verified, no-supporting-experiment]
+adjudication:
+  reviewer_a:
+    verdict: FAIL
+    confidence: HIGH
+    tag: unsupported-claim
+  reviewer_b:
+    verdict: FAIL
+    confidence: HIGH
+  consensus: FAIL
+  confidence: HIGH
+  status: gold
+  adjudicated_at: '2026-07-31T11:52:38Z'
+  notes: A/B agree and match corpus intent

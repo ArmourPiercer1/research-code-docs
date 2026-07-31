@@ -1,0 +1,709 @@
+{
+  "n_runs": 26,
+  "n_current": 20,
+  "bar": {
+    "golden_negative_false_pass": 2,
+    "golden_positive_false_hard_fail": 3,
+    "required_blocker_recall": 0.75,
+    "forbidden_blocker_violation_rate": 0.115,
+    "boundary_pair_ordering_accuracy": 0.6,
+    "three_run_verdict_consistency": 0.333,
+    "max_score_stddev": 6.18
+  },
+  "promotion_bar_met": false,
+  "negative_false_pass_cases": [
+    "GN-EXP-001",
+    "GN-ROADMAP-001"
+  ],
+  "positive_false_fail_cases": [
+    "BP-004-external",
+    "GP-EXP-001",
+    "BP-005-pass"
+  ],
+  "forbidden_violations": [
+    {
+      "case": "GN-PROP-001",
+      "fired": [
+        "HF-14A"
+      ]
+    },
+    {
+      "case": "BP-004-external",
+      "fired": [
+        "HF-9"
+      ]
+    },
+    {
+      "case": "BP-002-fail",
+      "fired": [
+        "HF-13",
+        "HF-14A"
+      ]
+    }
+  ],
+  "boundary_pairs": {
+    "BP-003": true,
+    "BP-001": true,
+    "BP-004": false,
+    "BP-002": true,
+    "BP-005": false
+  },
+  "stability": {
+    "GP-PROP-002": {
+      "n": 3,
+      "verdicts": [
+        "PASS",
+        "FAIL",
+        "PASS"
+      ],
+      "consistent": false,
+      "blocker_jaccard": 0.0,
+      "score_stddev": 4.84
+    },
+    "BP-001-fail": {
+      "n": 3,
+      "verdicts": [
+        "FAIL",
+        "FAIL",
+        "FAIL"
+      ],
+      "consistent": true,
+      "blocker_jaccard": 1.0,
+      "score_stddev": 2.62
+    },
+    "GN-ROADMAP-001": {
+      "n": 3,
+      "verdicts": [
+        "PASS",
+        "PASS",
+        "FAIL"
+      ],
+      "consistent": false,
+      "blocker_jaccard": 1.0,
+      "score_stddev": 6.18
+    }
+  },
+  "per_run": [
+    {
+      "case_id": "BP-003-pass",
+      "class": "boundary-pass",
+      "pair_id": "BP-003",
+      "run_kind": "current",
+      "run_idx": 1,
+      "expected": "PASS",
+      "got": "PASS",
+      "required": [],
+      "forbidden": [
+        "HF-13",
+        "HF-14A",
+        "HF-14B",
+        "HF-15"
+      ],
+      "reported": [],
+      "recall": null,
+      "forbidden_violation": [],
+      "total_score": 93,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "PASS"
+    },
+    {
+      "case_id": "GP-PROP-002",
+      "class": "golden-positive",
+      "pair_id": null,
+      "run_kind": "current",
+      "run_idx": 1,
+      "expected": "PASS",
+      "got": "PASS",
+      "required": [],
+      "forbidden": [
+        "HF-13",
+        "HF-14A",
+        "HF-14B",
+        "HF-15"
+      ],
+      "reported": [],
+      "recall": null,
+      "forbidden_violation": [],
+      "total_score": 90,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "PASS"
+    },
+    {
+      "case_id": "GP-PROP-002",
+      "class": "golden-positive",
+      "pair_id": null,
+      "run_kind": "repeat",
+      "run_idx": 2,
+      "expected": "PASS",
+      "got": "FAIL",
+      "required": [],
+      "forbidden": [
+        "HF-13",
+        "HF-14A",
+        "HF-14B",
+        "HF-15"
+      ],
+      "reported": [
+        "HF-9"
+      ],
+      "recall": null,
+      "forbidden_violation": [],
+      "total_score": 80,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "PASS"
+    },
+    {
+      "case_id": "GP-PROP-002",
+      "class": "golden-positive",
+      "pair_id": null,
+      "run_kind": "repeat",
+      "run_idx": 3,
+      "expected": "PASS",
+      "got": "PASS",
+      "required": [],
+      "forbidden": [
+        "HF-13",
+        "HF-14A",
+        "HF-14B",
+        "HF-15"
+      ],
+      "reported": [],
+      "recall": null,
+      "forbidden_violation": [],
+      "total_score": 90.5,
+      "factual_validity": "PARTIALLY_VERIFIED",
+      "reader_test": "PASS"
+    },
+    {
+      "case_id": "BP-001-fail",
+      "class": "boundary-fail",
+      "pair_id": "BP-001",
+      "run_kind": "current",
+      "run_idx": 1,
+      "expected": "FAIL",
+      "got": "FAIL",
+      "required": [
+        "HF-13"
+      ],
+      "forbidden": [
+        "HF-15"
+      ],
+      "reported": [
+        "HF-13",
+        "HF-14A",
+        "HF-14B"
+      ],
+      "recall": 1.0,
+      "forbidden_violation": [],
+      "total_score": 44,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "FAIL"
+    },
+    {
+      "case_id": "BP-001-fail",
+      "class": "boundary-fail",
+      "pair_id": "BP-001",
+      "run_kind": "repeat",
+      "run_idx": 2,
+      "expected": "FAIL",
+      "got": "FAIL",
+      "required": [
+        "HF-13"
+      ],
+      "forbidden": [
+        "HF-15"
+      ],
+      "reported": [
+        "HF-13",
+        "HF-14A",
+        "HF-14B"
+      ],
+      "recall": 1.0,
+      "forbidden_violation": [],
+      "total_score": 45,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "FAIL"
+    },
+    {
+      "case_id": "BP-001-fail",
+      "class": "boundary-fail",
+      "pair_id": "BP-001",
+      "run_kind": "repeat",
+      "run_idx": 3,
+      "expected": "FAIL",
+      "got": "FAIL",
+      "required": [
+        "HF-13"
+      ],
+      "forbidden": [
+        "HF-15"
+      ],
+      "reported": [
+        "HF-13",
+        "HF-14A",
+        "HF-14B"
+      ],
+      "recall": 1.0,
+      "forbidden_violation": [],
+      "total_score": 39,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "FAIL"
+    },
+    {
+      "case_id": "BP-001-pass",
+      "class": "boundary-pass",
+      "pair_id": "BP-001",
+      "run_kind": "current",
+      "run_idx": 1,
+      "expected": "PASS",
+      "got": "PASS",
+      "required": [],
+      "forbidden": [
+        "HF-13",
+        "HF-14A",
+        "HF-14B",
+        "HF-15"
+      ],
+      "reported": [],
+      "recall": null,
+      "forbidden_violation": [],
+      "total_score": 88,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "PASS"
+    },
+    {
+      "case_id": "GN-PROP-001",
+      "class": "golden-negative",
+      "pair_id": null,
+      "run_kind": "current",
+      "run_idx": 1,
+      "expected": "FAIL",
+      "got": "FAIL",
+      "required": [],
+      "forbidden": [
+        "HF-13",
+        "HF-14A",
+        "HF-14B",
+        "HF-15"
+      ],
+      "reported": [
+        "HF-14A",
+        "HF-6"
+      ],
+      "recall": null,
+      "forbidden_violation": [
+        "HF-14A"
+      ],
+      "total_score": 55,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "FAIL"
+    },
+    {
+      "case_id": "GN-EXP-001",
+      "class": "golden-negative",
+      "pair_id": null,
+      "run_kind": "current",
+      "run_idx": 1,
+      "expected": "FAIL",
+      "got": "PASS",
+      "required": [
+        "HF-12A"
+      ],
+      "forbidden": [
+        "HF-13",
+        "HF-14A",
+        "HF-14B",
+        "HF-15"
+      ],
+      "reported": [],
+      "recall": 0.0,
+      "forbidden_violation": [],
+      "total_score": 76.5,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "PASS"
+    },
+    {
+      "case_id": "GN-ADR-001",
+      "class": "golden-negative",
+      "pair_id": null,
+      "run_kind": "current",
+      "run_idx": 1,
+      "expected": "FAIL",
+      "got": "FAIL",
+      "required": [],
+      "forbidden": [
+        "HF-13",
+        "HF-14A",
+        "HF-14B",
+        "HF-15"
+      ],
+      "reported": [],
+      "recall": null,
+      "forbidden_violation": [],
+      "total_score": 52.5,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "FAIL"
+    },
+    {
+      "case_id": "GP-PROP-001",
+      "class": "golden-positive",
+      "pair_id": null,
+      "run_kind": "current",
+      "run_idx": 1,
+      "expected": "PASS",
+      "got": "PASS",
+      "required": [],
+      "forbidden": [
+        "HF-13",
+        "HF-14A",
+        "HF-15"
+      ],
+      "reported": [],
+      "recall": null,
+      "forbidden_violation": [],
+      "total_score": 80,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "PASS"
+    },
+    {
+      "case_id": "BP-004-external",
+      "class": "boundary-pass",
+      "pair_id": "BP-004",
+      "run_kind": "current",
+      "run_idx": 1,
+      "expected": "PASS",
+      "got": "FAIL",
+      "required": [],
+      "forbidden": [
+        "HF-9"
+      ],
+      "reported": [
+        "HF-9"
+      ],
+      "recall": null,
+      "forbidden_violation": [
+        "HF-9"
+      ],
+      "total_score": 65.5,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "PASS"
+    },
+    {
+      "case_id": "GP-EXP-001",
+      "class": "golden-positive",
+      "pair_id": null,
+      "run_kind": "current",
+      "run_idx": 1,
+      "expected": "PASS",
+      "got": "FAIL",
+      "required": [],
+      "forbidden": [
+        "HF-13",
+        "HF-14A",
+        "HF-15"
+      ],
+      "reported": [
+        "HF-9"
+      ],
+      "recall": null,
+      "forbidden_violation": [],
+      "total_score": 73.5,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "PASS"
+    },
+    {
+      "case_id": "BP-002-pass",
+      "class": "boundary-pass",
+      "pair_id": "BP-002",
+      "run_kind": "current",
+      "run_idx": 1,
+      "expected": "PASS",
+      "got": "PASS",
+      "required": [],
+      "forbidden": [
+        "HF-13",
+        "HF-14A",
+        "HF-14B",
+        "HF-15"
+      ],
+      "reported": [],
+      "recall": null,
+      "forbidden_violation": [],
+      "total_score": 84,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "PASS"
+    },
+    {
+      "case_id": "BP-004-controlled",
+      "class": "boundary-fail",
+      "pair_id": "BP-004",
+      "run_kind": "current",
+      "run_idx": 1,
+      "expected": "FAIL",
+      "got": "FAIL",
+      "required": [
+        "HF-9"
+      ],
+      "forbidden": [
+        "HF-13",
+        "HF-14A",
+        "HF-14B",
+        "HF-15"
+      ],
+      "reported": [
+        "HF-12A",
+        "HF-9"
+      ],
+      "recall": 1.0,
+      "forbidden_violation": [],
+      "total_score": 73.5,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "PASS"
+    },
+    {
+      "case_id": "GN-ADR-002",
+      "class": "golden-negative",
+      "pair_id": null,
+      "run_kind": "current",
+      "run_idx": 1,
+      "expected": "FAIL",
+      "got": "FAIL",
+      "required": [
+        "HF-13"
+      ],
+      "forbidden": [
+        "HF-14A",
+        "HF-15"
+      ],
+      "reported": [
+        "HF-12A",
+        "HF-13",
+        "HF-14B"
+      ],
+      "recall": 1.0,
+      "forbidden_violation": [],
+      "total_score": 40,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "FAIL"
+    },
+    {
+      "case_id": "BP-003-fail",
+      "class": "boundary-fail",
+      "pair_id": "BP-003",
+      "run_kind": "current",
+      "run_idx": 1,
+      "expected": "FAIL",
+      "got": "FAIL",
+      "required": [
+        "HF-15"
+      ],
+      "forbidden": [
+        "HF-13",
+        "HF-14A",
+        "HF-14B"
+      ],
+      "reported": [
+        "HF-15",
+        "HF-6"
+      ],
+      "recall": 1.0,
+      "forbidden_violation": [],
+      "total_score": 45,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "FAIL"
+    },
+    {
+      "case_id": "GN-ROADMAP-001",
+      "class": "golden-negative",
+      "pair_id": null,
+      "run_kind": "current",
+      "run_idx": 1,
+      "expected": "FAIL",
+      "got": "PASS",
+      "required": [
+        "HF-15"
+      ],
+      "forbidden": [
+        "HF-13",
+        "HF-14A",
+        "HF-14B"
+      ],
+      "reported": [],
+      "recall": 0.0,
+      "forbidden_violation": [],
+      "total_score": 88,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "PASS"
+    },
+    {
+      "case_id": "GN-ROADMAP-001",
+      "class": "golden-negative",
+      "pair_id": null,
+      "run_kind": "repeat",
+      "run_idx": 2,
+      "expected": "FAIL",
+      "got": "PASS",
+      "required": [
+        "HF-15"
+      ],
+      "forbidden": [
+        "HF-13",
+        "HF-14A",
+        "HF-14B"
+      ],
+      "reported": [],
+      "recall": 0.0,
+      "forbidden_violation": [],
+      "total_score": 86,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "PASS"
+    },
+    {
+      "case_id": "GN-ROADMAP-001",
+      "class": "golden-negative",
+      "pair_id": null,
+      "run_kind": "repeat",
+      "run_idx": 3,
+      "expected": "FAIL",
+      "got": "FAIL",
+      "required": [
+        "HF-15"
+      ],
+      "forbidden": [
+        "HF-13",
+        "HF-14A",
+        "HF-14B"
+      ],
+      "reported": [],
+      "recall": 0.0,
+      "forbidden_violation": [],
+      "total_score": 74,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "PASS"
+    },
+    {
+      "case_id": "BP-005-fail",
+      "class": "boundary-fail",
+      "pair_id": "BP-005",
+      "run_kind": "current",
+      "run_idx": 1,
+      "expected": "FAIL",
+      "got": "FAIL",
+      "required": [
+        "HF-12E"
+      ],
+      "forbidden": [
+        "HF-13",
+        "HF-14A",
+        "HF-14B",
+        "HF-15"
+      ],
+      "reported": [
+        "HF-10",
+        "HF-12E"
+      ],
+      "recall": 1.0,
+      "forbidden_violation": [],
+      "total_score": 42,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "PASS"
+    },
+    {
+      "case_id": "GP-ADR-001",
+      "class": "golden-positive",
+      "pair_id": null,
+      "run_kind": "current",
+      "run_idx": 1,
+      "expected": "PASS",
+      "got": "PASS",
+      "required": [],
+      "forbidden": [
+        "HF-13",
+        "HF-14A",
+        "HF-14B",
+        "HF-15"
+      ],
+      "reported": [],
+      "recall": null,
+      "forbidden_violation": [],
+      "total_score": 82,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "PASS"
+    },
+    {
+      "case_id": "GP-ROADMAP-001",
+      "class": "golden-positive",
+      "pair_id": null,
+      "run_kind": "current",
+      "run_idx": 1,
+      "expected": "PASS",
+      "got": "PASS",
+      "required": [],
+      "forbidden": [
+        "HF-13",
+        "HF-14A",
+        "HF-14B",
+        "HF-15"
+      ],
+      "reported": [],
+      "recall": null,
+      "forbidden_violation": [],
+      "total_score": 88,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "PASS"
+    },
+    {
+      "case_id": "BP-002-fail",
+      "class": "boundary-fail",
+      "pair_id": "BP-002",
+      "run_kind": "current",
+      "run_idx": 1,
+      "expected": "FAIL",
+      "got": "FAIL",
+      "required": [
+        "HF-14B"
+      ],
+      "forbidden": [
+        "HF-13",
+        "HF-14A",
+        "HF-15"
+      ],
+      "reported": [
+        "HF-13",
+        "HF-14A",
+        "HF-14B"
+      ],
+      "recall": 1.0,
+      "forbidden_violation": [
+        "HF-13",
+        "HF-14A"
+      ],
+      "total_score": 46,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "FAIL"
+    },
+    {
+      "case_id": "BP-005-pass",
+      "class": "boundary-pass",
+      "pair_id": "BP-005",
+      "run_kind": "current",
+      "run_idx": 1,
+      "expected": "PASS",
+      "got": "FAIL",
+      "required": [],
+      "forbidden": [
+        "HF-10",
+        "HF-12E"
+      ],
+      "reported": [
+        "HF-14A",
+        "HF-3"
+      ],
+      "recall": null,
+      "forbidden_violation": [],
+      "total_score": 61.5,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "FAIL"
+    }
+  ]
+}

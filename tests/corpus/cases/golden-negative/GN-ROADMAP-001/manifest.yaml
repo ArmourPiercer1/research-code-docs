@@ -1,0 +1,48 @@
+case_id: GN-ROADMAP-001
+case_version: 1
+class: golden-negative
+artifact_type: roadmap
+language: en
+holdout: false
+document: tests/corpus/cases/golden-negative/GN-ROADMAP-001/document.md
+
+source:
+  kind: mutation
+  base_seed: null
+  base_fixture: evals/skills/task-quality/fixtures/dqe/positive/b2-research-roadmap.md
+
+profile:
+  provenance_policy: controlled
+  evidence_requirement: key-claims
+  reader_test: roadmap-execution
+  output_mode: audit
+
+expected:
+  document_quality: FAIL
+  factual_validity_allowed: [VERIFIED, PARTIALLY_VERIFIED]
+  reader_test: FAIL
+  required_blockers: [HF-15]           # Phase 1 (committed·next) now has a vague, non-measurable DoD
+  forbidden_blockers: [HF-13, HF-14a, HF-14b]
+  required_findings:
+    - non-executable-committed-milestone
+    - vague-dod
+
+mutation:
+  base_case: GP-ROADMAP-001
+  mutation_id: MUT-HF15-VAGUE-DOD
+  difference_under_test: Phase-1's measurable GO/MODIFY/STOP gate replaced by "算例与阈值届时定"
+
+adjudication:
+  reviewer_a:
+    verdict: PARTIAL
+    confidence: MEDIUM
+    tag: non-executable-milestone
+  reviewer_b:
+    verdict: PARTIAL
+    confidence: MEDIUM
+  consensus: FAIL
+  confidence: MEDIUM
+  status: gold
+  adjudicated_at: '2026-07-31T11:52:38Z'
+  notes: 'USER DECISION D-1: gold=FAIL (reviewers A=PARTIAL/B=PARTIAL; ruling recorded,
+    not overridden by auto-queue)'

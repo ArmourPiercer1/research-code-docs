@@ -1,0 +1,36 @@
+# Reviewer A/B results -> consensus mapping (blind run adj-2026-07-31)
+#
+# A and B ran as independent isolated sub-agents (no DQE skill / hard-fail / rubric). Verbatim outputs:
+#   evals/skills/adjudication/reviewer-A-2026-07-31.md, reviewer-B-2026-07-31.md
+# Consumed by scripts/apply_adjudication.py to stamp each manifest's adjudication block.
+#
+# verdict vocabulary: PASS | FAIL | PARTIAL (reviewer-native; PARTIAL = "real defect but not a clean FAIL")
+
+blind_run: adj-2026-07-31
+reviewers: [A, B]
+
+results:
+  # case_id:            a: [verdict, conf]   b: [verdict, conf]   primary_tag
+  GP-ADR-001:      { a: [PASS, HIGH],    b: [PASS, HIGH],    tag: none }
+  GP-PROP-001:     { a: [PASS, HIGH],    b: [PASS, HIGH],    tag: none }
+  GP-PROP-002:     { a: [PASS, HIGH],    b: [PASS, HIGH],    tag: none }
+  GP-EXP-001:      { a: [PASS, HIGH],    b: [PASS, HIGH],    tag: none }
+  GP-ROADMAP-001:  { a: [PASS, HIGH],    b: [PASS, HIGH],    tag: none }
+
+  GN-ADR-001:      { a: [PARTIAL, MEDIUM], b: [PARTIAL, MEDIUM], tag: missing-rationale, user_decision: FAIL, user_decision_ref: "D-1" }
+  GN-ADR-002:      { a: [FAIL, HIGH],    b: [FAIL, HIGH],    tag: mixed-responsibilities }
+  GN-PROP-001:     { a: [PARTIAL, MEDIUM], b: [PARTIAL, MEDIUM], tag: not-actionable, user_decision: FAIL, user_decision_ref: "D-1",
+                     builder_note: "REFINED per D-2 (signoff checklist items unchecked + orphan sub-items removed); re-confirmed CONTRADICTION=NO on blind-run reconfirm-2026-07-31 — now a clean single-defect (validation/graduation/rollback removed -> not executable)." }
+  GN-EXP-001:      { a: [PARTIAL, MEDIUM], b: [PARTIAL, MEDIUM], tag: not-reproducible, user_decision: FAIL, user_decision_ref: "D-1" }
+  GN-ROADMAP-001:  { a: [PARTIAL, MEDIUM], b: [PARTIAL, MEDIUM], tag: non-executable-milestone, user_decision: FAIL, user_decision_ref: "D-1" }
+
+  BP-001-pass:     { a: [PASS, HIGH],    b: [PASS, HIGH],    tag: none }
+  BP-001-fail:     { a: [FAIL, HIGH],    b: [FAIL, HIGH],    tag: mixed-responsibilities }
+  BP-002-pass:     { a: [PASS, HIGH],    b: [PASS, HIGH],    tag: none }
+  BP-002-fail:     { a: [FAIL, MEDIUM],  b: [FAIL, MEDIUM],  tag: volatile-in-stable }
+  BP-003-pass:     { a: [PASS, HIGH],    b: [PASS, HIGH],    tag: none }
+  BP-003-fail:     { a: [FAIL, HIGH],    b: [FAIL, HIGH],    tag: non-executable-milestone }
+  BP-004-external: { a: [PASS, HIGH],    b: [PASS, HIGH],    tag: none }
+  BP-004-controlled: { a: [PARTIAL, HIGH], b: [PARTIAL, HIGH], tag: missing-frontmatter, user_decision: FAIL, user_decision_ref: "D-1" }
+  BP-005-pass:     { a: [PASS, HIGH],    b: [PASS, HIGH],    tag: none }
+  BP-005-fail:     { a: [FAIL, HIGH],    b: [FAIL, HIGH],    tag: unsupported-claim }

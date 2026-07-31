@@ -1,0 +1,52 @@
+# Mutation catalog — controlled single-defect transforms for DQE golden-negatives
+#
+# generated_by_skill: (manual, Phase-1 corpus build) · skill_version: n/a
+# source_documents: docs/documentation-quality-evaluator_测试语料自动准备与评测流程.md §6.1
+# status: DECIDED (v0)
+# last_verified: 2026-07-31
+#
+# This file is the TAXONOMY. Each first-batch negative instantiates one entry onto a concrete base in
+# tests/corpus/mutations/plans/<case-id>.yaml. `expected_blockers` here is the *intended* hard gate;
+# the authoritative per-case expectation (incl. forbidden_blockers) lives in the case manifest.
+
+schema: mutation-catalog/v1
+
+operations_supported:
+  - remove-sections     # delete a heading + its body up to the next same-or-higher heading
+  - append-file         # append a literal payload block at end of document
+  - delete-substrings   # delete exact ASCII substrings (assert each present first)
+  - remove-lines        # delete lines matching a regex (ASCII-safe for unicode-bearing lines)
+  - insert-after        # insert text after the first line matching a regex
+
+mutations:
+  - id: MUT-ADR-NO-RATIONALE
+    target_types: [adr]
+    expected_effect: decision/spec without rationale or context
+    operation: remove-sections
+    note: On a Backstage-log ADR the rationale IS Background/Inspiration/Core-Concepts; remove that.
+    expected_blockers: []            # soft-FAIL via ADR rationale anchor (non-compensatory), not a hard gate
+
+  - id: MUT-HF13-MIX-ROLES
+    target_types: [adr, roadmap, architecture-doc]
+    expected_effect: mixed artifact responsibilities + volatile state embedded
+    operation: append-file
+    expected_blockers: [HF-13, HF-14b]
+
+  - id: MUT-PROP-NO-VALIDATION
+    target_types: [technical-proposal]
+    expected_effect: proposal loses test plan + graduation criteria + rollback (not executable)
+    operation: remove-sections
+    expected_blockers: []            # soft-FAIL on actionability; must NOT invent HF-13/14
+
+  - id: MUT-EXP-NO-PROVENANCE
+    target_types: [experiment-report, reproducibility-guide]
+    expected_effect: result claim kept but code commit / env / versions stripped (unreproducible)
+    operation: delete-substrings
+    expected_blockers: [HF-12A]
+
+  - id: MUT-HF15-VAGUE-DOD
+    target_types: [roadmap, technical-proposal]
+    expected_effect: a committed phase's measurable GO/STOP gate replaced by a vague DoD
+    operation: [remove-lines, insert-after]
+    replacement: "与基线对照，效果达标即可，具体算例与阈值届时定。"
+    expected_blockers: [HF-15]

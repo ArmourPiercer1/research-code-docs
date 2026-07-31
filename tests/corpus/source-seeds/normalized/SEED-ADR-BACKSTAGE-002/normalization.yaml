@@ -1,0 +1,15 @@
+normalization:
+  source_seed: SEED-ADR-BACKSTAGE-002
+  tool: custom-script
+  rst_to_markdown: false
+  operations:
+  - line-ending-normalization(->LF)
+  - utf-8-reencode
+  - single-trailing-newline
+  semantic_changes: false
+  diff_review_required: true
+  bytes_before: 8994
+  bytes_after: 8781
+  sha256_before: ceb810ec7420cec0fa70bf07ce48dcaa43bb46eea7593515ba190f9ccf60b3ee
+  sha256_after: 8c762010e8610f7f1b1d96ca24a57ceb2b446653e6a42a1b000bae56ade5c72d
+  normalized_at: '2026-07-31T10:25:29Z'

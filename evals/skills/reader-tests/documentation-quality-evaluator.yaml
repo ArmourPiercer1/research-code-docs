@@ -1,0 +1,55 @@
+skill: documentation-quality-evaluator
+skill_version: "0.3.0"
+dataset_version: 1
+# Reader-test cases. A FRESH reader gets ONLY the target document (no rubric, no hard-fail, no chat,
+# no author intent — see make_grading_injection.py --role reader). The value is what the reader
+# CANNOT answer: an unanswerable core question is a document defect, not reader error.
+protocol:
+  layer1_comprehension:
+    - "What is the goal/target of this work?"
+    - "What is the SINGLE primary responsibility of this document? Who is its target reader?"
+    - "What is the current state (FACT vs UNKNOWN), and WHERE is the canonical source of that state?"
+    - "Where are key terms defined? Where do related ADR/spec/experiment reports live?"
+    - "What are the open questions?"
+  layer2_execution_refutation:
+    - "What is the NEXT immediately-executable work, and how will we know it is done (DoD)?"
+    - "Which methods/algorithms are DECIDED vs merely CANDIDATE?"
+    - "Which load-bearing claims LACK support?"
+    - "Which facts will go STALE fastest?"
+    - "Which sections do NOT serve the document's stated goal?"
+    - "If the gating/precondition experiment FAILS, how does the route change?"
+  scoring:
+    hf8_fail_if: "reader cannot answer Layer-1 Q1–Q4 from the artifact alone"
+    reader_actionability_fail_if: "reader cannot answer Layer-2 Q6 (next+DoD), Q7 (decided-vs-candidate), or Q11 (fallback)"
+    reconcile: "contract-misread on a CORE question is >= MAJOR; if about state-source or DoD -> feeds non-compensatory FAIL"
+
+cases:
+  - id: dqe-reader-anchor
+    real: true
+    artifact: evals/skills/task-quality/fixtures/dqe/negative/messy-hybrid-roadmap.md
+    expected_reader_failures:
+      - q: 3   # canonical source of current state
+        outcome: CANNOT-ANSWER
+        why: "current test count is 59 in four places and 69 in another; no single canonical source named."
+      - q: 6   # next step + DoD
+        outcome: WEAK
+        why: "next work is 阶段3 first-round adapters, but DoD is '算例届时定' — not answerable as a completion test."
+      - q: 7   # decided vs candidate
+        outcome: WEAK
+        why: "阶段3 commits 4 families but 家族③ GA is 'blueprint TBD'; DECIDED vs CANDIDATE is blurred."
+      - q: 11  # fallback if gating experiment fails
+        outcome: CANNOT-ANSWER
+        why: "the 前置地基小实验 is named as gating but no GO/STOP/route-change is stated."
+      - q: 10  # sections not serving the goal
+        outcome: ANSWERABLE
+        why: "a reader CAN point at '用户决定（本轮 AskUserQuestion）' and HANDOVER refs as not serving a design doc — itself the HF-13 evidence."
+    notes: >
+      The reader test corroborates HF-13/HF-14a/HF-15: the unanswerable core questions (canonical
+      state source; committed DoD; fallback) are exactly the non-compensatory dimensions the v0.2
+      evaluator scored as fine. Run this reader IN A SEPARATE fresh sub-agent from the evaluator.
+
+  - id: dqe-reader-good-negative-control
+    real: false
+    artifact: evals/skills/task-quality/fixtures/dqe/good-state-report.md
+    expected_reader_failures: []   # a clean doc: the reader CAN answer the core questions
+    notes: "Control: a fresh reader should answer Q1–Q4 and the Layer-2 core questions on the good state report."

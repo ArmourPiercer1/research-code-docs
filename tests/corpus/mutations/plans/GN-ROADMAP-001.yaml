@@ -1,0 +1,19 @@
+case_id: GN-ROADMAP-001
+mutation_id: MUT-HF15-VAGUE-DOD
+base:
+  kind: fixture                    # reuse the existing (frozen) positive as the minimal-difference base
+  ref: evals/skills/task-quality/fixtures/dqe/positive/b2-research-roadmap.md
+  ext: md
+# Phase 1 is "committed · next". Remove its measurable GO/MODIFY/STOP gate and replace with a vague DoD.
+# (Phase 2's combined "GO / MODIFY / STOP:" line is NOT matched by the regex, so it keeps its gate ->
+#  clean single-phase HF-15 defect.)
+operations:
+  - op: remove-lines
+    pattern: '^\s*\*\*(GO|MODIFY|STOP):\*\*'
+    max_removals: 3
+  - op: insert-after
+    anchor: '^- \*\*Metric:\*\* time-averaged'
+    text: "- **验收（committed · next）：** 与基线对照，效果达标即可，具体算例与阈值届时定。"
+intended_blockers: [HF-15]         # a committed phase's acceptance is now non-measurable/vague
+intended_findings: [non-executable-committed-milestone, vague-dod]
+forbidden_unrelated_changes: []

@@ -1,0 +1,7 @@
+blind_id: acf40c450dc7
+artifact_type: experiment-report
+profile:
+  provenance_policy: external
+  evidence_requirement: key-claims
+  reader_test: reproducibility-execution
+  output_mode: audit

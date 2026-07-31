@@ -1,0 +1,33 @@
+case_id: BP-004-controlled
+case_version: 1
+class: boundary-fail
+pair_id: BP-004
+pair_role: fail
+difference_under_test: SAME document (no local front-matter) judged under provenance_policy external vs controlled
+artifact_type: adr
+language: en
+holdout: false
+document: tests/corpus/cases/boundary-pairs/BP-004-shared/document.md
+source: {kind: synthetic}
+profile: {provenance_policy: controlled, evidence_requirement: key-claims, reader_test: adr-comprehension, output_mode: audit}
+expected:
+  document_quality: FAIL
+  factual_validity_allowed: [VERIFIED, PARTIALLY_VERIFIED, UNVERIFIED]
+  reader_test: PASS                    # content is readable; the failure is purely the controlled-provenance HF-9
+  required_blockers: [HF-9]            # under CONTROLLED profile, missing traceability front-matter DOES hard-fail
+  forbidden_blockers: [HF-13, HF-14a, HF-14b, HF-15]
+  required_findings: [missing-traceability-front-matter]
+adjudication:
+  reviewer_a:
+    verdict: PARTIAL
+    confidence: HIGH
+    tag: missing-frontmatter
+  reviewer_b:
+    verdict: PARTIAL
+    confidence: HIGH
+  consensus: FAIL
+  confidence: HIGH
+  status: gold
+  adjudicated_at: '2026-07-31T11:52:38Z'
+  notes: 'USER DECISION D-1: gold=FAIL (reviewers A=PARTIAL/B=PARTIAL; ruling recorded,
+    not overridden by auto-queue)'

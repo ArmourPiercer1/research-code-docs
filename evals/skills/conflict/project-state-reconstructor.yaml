@@ -1,0 +1,35 @@
+skill: project-state-reconstructor
+skill_version: "0.1.0"
+dataset_version: 1
+# 5 conflict cases: input superficially looks project-level but a neighbor should lead.
+cases:
+  - id: psr-conf-01
+    set: conflict
+    real: false
+    input: "This codebase is messy — restructure the modules into deep modules with clean seams."
+    expected: {decision: route, route_to: improve-codebase-architecture}
+    notes: "conflict-matrix §4: reconstruction (read-only) precedes refactor; the RESTRUCTURING lead is improve-codebase-architecture. Reconstructor recovers facts, then hands off."
+  - id: psr-conf-02
+    set: conflict
+    real: false
+    input: "Diagnose why the solver crashes on large inputs."
+    expected: {decision: route, route_to: diagnosing-bugs}
+    notes: "A specific defect to fix, not fact recovery."
+  - id: psr-conf-03
+    set: conflict
+    real: false
+    input: "Decide what our next milestone should be."
+    expected: {decision: route, route_to: [goal-scope-and-workflow-elicitor, research-software-roadmap-author]}
+    notes: "Goals/milestones come after facts; the DECISION is not PSR's job. Either the elicitor (goal/scope) or the roadmap-author (milestone/phase) is a valid owner — the point is PSR defers."
+  - id: psr-conf-04
+    set: conflict
+    real: false
+    input: "Pin down and standardize our domain vocabulary and record the key architectural decision."
+    expected: {decision: route, route_to: domain-modeling}
+    notes: "Stable terminology + ADR is domain-modeling, not state recovery."
+  - id: psr-conf-05
+    set: conflict
+    real: false
+    input: "Build the CSV export feature per the attached spec."
+    expected: {decision: route, route_to: implement}
+    notes: "A stable implementation need, not a fact-recovery task."

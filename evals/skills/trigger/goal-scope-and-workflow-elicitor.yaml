@@ -1,0 +1,32 @@
+skill: goal-scope-and-workflow-elicitor
+skill_version: "0.1.0"
+dataset_version: 1
+cases:
+  # ---------- should-trigger (engage) ----------
+  - {id: gswe-trig-01, set: should-trigger, real: false, input: "I have a vague idea for an optimization tool but I'm not sure what I actually want. Help me scope it."}
+  - {id: gswe-trig-02, set: should-trigger, real: false, input: "[numerical-research-software-design] elicit the goals, non-goals, and workflow before we frame the problem."}
+  - {id: gswe-trig-03, set: should-trigger, real: false, input: "There are three directions I could take this project. Help me pin down which one and why, one decision at a time."}
+  - {id: gswe-trig-04, set: should-trigger, real: false, input: "I haven't defined my non-goals here. Let's establish the scope boundaries."}
+  - {id: gswe-trig-05, set: should-trigger, real: false, input: "Before we design anything, figure out my real dev-test-experiment workflow."}
+  - {id: gswe-trig-06, set: should-trigger, real: false, input: "My goal keeps shifting. Help me nail down what's in scope now and what to defer."}
+  - {id: gswe-trig-07, set: should-trigger, real: false, input: "What decisions do I need to settle before this could be turned into a spec? Walk me through them."}
+  - {id: gswe-trig-08, set: should-trigger, real: false, input: "Clarify the scope and intended workflow now that we have the reconstructed state report."}
+  - {id: gswe-trig-09, set: should-trigger, real: false, input: "Help me separate what I want to build now from what comes later, and record the open questions."}
+  - {id: gswe-trig-10, set: should-trigger, real: false, input: "Interview me to clarify what success looks like for this solver, but only ask real decisions."}
+
+  # ---------- should-not (decline or route) ----------
+  - {id: gswe-not-01, set: should-not, real: false, input: "Add a logout button to the settings page.", expected: {decision: decline}, notes: "simple, well-specified -> just do it, do not interview"}
+  - {id: gswe-not-02, set: should-not, real: false, input: "What's the capital of France?", expected: {decision: decline}}
+  - {id: gswe-not-03, set: should-not, real: false, input: "Run the test suite.", expected: {decision: decline}}
+  - {id: gswe-not-04, set: should-not, real: false, input: "Give me a relentless grilling session on my startup idea.", expected: {route_to: grilling}, notes: "user wants the manual primitive"}
+  - {id: gswe-not-05, set: should-not, real: false, input: "Fix the import error in main.py.", expected: {route_to: diagnosing-bugs}}
+  - {id: gswe-not-06, set: should-not, real: false, input: "Format this file with the project's formatter.", expected: {decision: decline}}
+  - {id: gswe-not-07, set: should-not, real: false, input: "Pin down what 'account' means in our domain and record it in the glossary.", expected: {route_to: domain-modeling}}
+  - {id: gswe-not-08, set: should-not, real: false, input: "What files are in src/?", expected: {decision: decline}, notes: "lookable fact -> look it up, don't ask"}
+  - {id: gswe-not-09, set: should-not, real: false, input: "Turn this finished discussion into a spec.", expected: {route_to: to-spec}}
+  - {id: gswe-not-10, set: should-not, real: false, input: "Reconstruct what's actually built in this repo.", expected: {route_to: project-state-reconstructor}}
+
+  # ---------- short-ambiguous ----------
+  - {id: gswe-amb-01, set: short-ambiguous, real: false, input: "help me plan", expected: {decision: engage-with-clarify}, notes: "clarify which effort before interviewing"}
+  - {id: gswe-amb-02, set: short-ambiguous, real: false, input: "scope this", context: "attached task is a one-line, fully-specified chore", expected: {decision: decline}, notes: "too simple -> decline/route to doer"}
+  - {id: gswe-amb-03, set: short-ambiguous, real: false, input: "what do I actually want here?", expected: {decision: engage}, notes: "engage: this is the elicitor's core question"}

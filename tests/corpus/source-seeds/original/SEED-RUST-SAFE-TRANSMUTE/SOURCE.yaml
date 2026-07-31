@@ -1,0 +1,12 @@
+seed_id: SEED-RUST-SAFE-TRANSMUTE
+content_copied: true
+use_mode: structure-reference
+status: source-only
+artifact_type_candidate: technical-proposal
+repository: https://github.com/rust-lang/project-safe-transmute.git
+commit: 6eae89825568a3c7a0e7b05bd853492aa3edc9ac
+path: rust-safe-transmute/rfcs/0000-safe-transmute.md
+sha256: a59c67275554e482449fb4b32e52dfcce0822ec756bbc3b73236a30c857db3b7
+size_bytes: 94280
+license_spdx: Apache-2.0 OR MIT
+snapshotted_at: '2026-07-31T10:24:17Z'

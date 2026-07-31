@@ -1,0 +1,43 @@
+case_id: GP-EXP-001
+case_version: 1
+class: golden-positive
+artifact_type: experiment-report
+language: en
+holdout: false
+document: tests/corpus/source-seeds/normalized/SEED-EXP-YAHOO-RESNET/document.md
+
+source:
+  kind: upstream-seed
+  seed_id: SEED-EXP-YAHOO-RESNET
+  upstream_repo: https://github.com/yahoo/ml-reproducibility-guidelines.git
+  upstream_commit: ff931bf844c1238073e6781e1d7e440914903fc9
+  license_spdx: MIT
+
+profile:
+  provenance_policy: external
+  evidence_requirement: key-claims
+  reader_test: reproducibility-execution
+  output_mode: audit
+
+expected:
+  document_quality: PASS
+  factual_validity_allowed: [VERIFIED, PARTIALLY_VERIFIED, UNVERIFIED]
+  reader_test: PASS
+  required_blockers: []
+  forbidden_blockers: [HF-13, HF-14a, HF-15]   # experiment report OWNS live numbers -> HF-14b type-exempt
+  required_findings: []
+
+mutation: null
+adjudication:
+  reviewer_a:
+    verdict: PASS
+    confidence: HIGH
+    tag: none
+  reviewer_b:
+    verdict: PASS
+    confidence: HIGH
+  consensus: PASS
+  confidence: HIGH
+  status: gold
+  adjudicated_at: '2026-07-31T11:52:38Z'
+  notes: A/B agree and match corpus intent

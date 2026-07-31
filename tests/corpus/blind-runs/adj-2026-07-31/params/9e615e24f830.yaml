@@ -1,0 +1,7 @@
+blind_id: 9e615e24f830
+artifact_type: architecture-doc
+profile:
+  provenance_policy: controlled
+  evidence_requirement: key-claims
+  reader_test: architecture-comprehension
+  output_mode: audit

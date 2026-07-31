@@ -1,0 +1,12 @@
+seed_id: SEED-ADR-MOZILLA-0003
+content_copied: false
+use_mode: reference-only
+status: quarantine
+reason: copy_permitted=false (see cautions)
+repository: https://github.com/mozilla/sre-adrs.git
+commit: 550483748f736f9b88e2c05ff4d6e8b58c84bf0d
+path: mozilla-sre-adrs/decisions/websre/0003-use-eks-cluster-as-default-container-platform.md
+sha256_upstream: 58e79b471ed3a234388674235838af933717fd98c56e6419fdce54596190ee93
+size_bytes: 2040
+license_spdx: NONE
+snapshotted_at: '2026-07-31T10:24:17Z'

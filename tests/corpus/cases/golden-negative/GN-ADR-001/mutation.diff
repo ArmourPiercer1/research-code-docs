@@ -1,0 +1,46 @@
+--- base:D:/AI_Coworking/skill-build/research-code-dev/tests/corpus/source-seeds/normalized/SEED-ADR-BACKSTAGE-002/document.md
++++ mutated:GN-ADR-001
+@@ -3,43 +3,6 @@
+ title: 'ADR002: Default Software Catalog File Format'
+ description: Architecture Decision Record (ADR) log on Default Software Catalog File Format
+ ---
+-
+-## Background
+-
+-Backstage comes with software catalog functionality that you can use to track
+-all your software components and more. It can be powered by data from various
+-sources, and one of them that is included with the package is a custom database
+-backed catalog. It has the ability to keep itself updated automatically based on
+-the contents of little descriptor files in your version control system of
+-choice. Developers create these files and maintain them side by side with their
+-code, and the catalog system reacts accordingly.
+-
+-This ADR describes the default format of these descriptor files.
+-
+-### Inspiration
+-
+-Internally at Spotify, a homegrown software catalog system is used heavily and
+-forms a core part of Backstage and other important pieces of the infrastructure.
+-The user experience, learnings, and certain pieces of metadata from that catalog
+-are being carried over to the open source effort.
+-
+-The file format described herein also draws heavy inspiration from the
+-[kubernetes object format](https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/).
+-
+-### Core Concepts
+-
+-There are a number of descriptor files, all of whose locations (e.g., within a
+-version control system) are registered with the software catalog. The method of
+-registration is not covered in this document; it could happen either manually
+-inside Backstage, or by push events from a CI/CD pipelines, or by webhook
+-triggers from the version control system, etc.
+-
+-Each file describes one or more entities in accordance with the
+-[Backstage System Model](https://github.com/backstage/backstage/issues/390). All
+-of these entities have a common structure and nomenclature, and they are stored
+-in the software catalog from which they then can be queried.
+-
+-Entities have distinct names, and they may reference each other by those names.
+ 
+ ## Format
+ 

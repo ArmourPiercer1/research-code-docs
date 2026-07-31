@@ -1,0 +1,12 @@
+seed_id: SEED-KEP-127
+content_copied: true
+use_mode: snapshot
+status: source-only
+artifact_type_candidate: technical-proposal
+repository: https://github.com/kubernetes/enhancements.git
+commit: b175ab3f86ee0cb30f7557df699f52f8eee8ef67
+path: enhancements/keps/sig-node/127-user-namespaces/README.md
+sha256: b205c49ae493cc3cdab3fdfcdb70208663aaaafcc27fe9ce692f314e07b03dea
+size_bytes: 65084
+license_spdx: Apache-2.0
+snapshotted_at: '2026-07-31T10:24:17Z'

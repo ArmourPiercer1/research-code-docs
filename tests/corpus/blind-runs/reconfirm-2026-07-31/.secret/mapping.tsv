@@ -1,0 +1,3 @@
+blind_id	case_id	manifest	pair_id
+3eb13b904668	GN-PROP-001	tests/corpus/cases/golden-negative/GN-PROP-001/manifest.yaml	
+1a3d1fa7bc89	BP-001-fail	tests/corpus/cases/boundary-pairs/BP-001-fail/manifest.yaml	BP-001

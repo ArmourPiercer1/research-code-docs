@@ -1,0 +1,23 @@
+mutation_result:
+  case_id: GN-ADR-001
+  mutation_id: MUT-ADR-NO-RATIONALE
+  base_kind: normalized-seed
+  base_ref: SEED-ADR-BACKSTAGE-002
+  base_path: D:/AI_Coworking/skill-build/research-code-dev/tests/corpus/source-seeds/normalized/SEED-ADR-BACKSTAGE-002/document.md
+  base_sha256: 8c762010e8610f7f1b1d96ca24a57ceb2b446653e6a42a1b000bae56ade5c72d
+  mutated_sha256: 6277bf64a3a8d5fab72c744e9ba8ea7bfecbc82228499500797ba4a3f4a218a9
+  changed_ranges:
+  - section: Background
+    action: removed
+  intended_blockers: []
+  intended_findings:
+  - missing-rationale
+  - missing-context
+  - decision-without-justification
+  forbidden_unrelated_changes:
+  - Format
+  - Envelope
+  - Metadata
+  - Component
+  forbidden_changes_verified: true
+  generated_at: '2026-07-31T10:32:32Z'

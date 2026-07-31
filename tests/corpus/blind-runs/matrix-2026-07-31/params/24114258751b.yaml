@@ -1,0 +1,7 @@
+blind_id: 24114258751b
+artifact_type: technical-proposal
+profile:
+  provenance_policy: external
+  evidence_requirement: key-claims
+  reader_test: proposal-comprehension
+  output_mode: audit

@@ -1,0 +1,50 @@
+case_id: GN-EXP-001
+case_version: 1
+class: golden-negative
+artifact_type: experiment-report
+language: en
+holdout: false
+document: tests/corpus/cases/golden-negative/GN-EXP-001/document.md
+
+source:
+  kind: mutation
+  base_seed: SEED-EXP-YAHOO-RESNET
+  upstream_repo: https://github.com/yahoo/ml-reproducibility-guidelines.git
+  upstream_commit: ff931bf844c1238073e6781e1d7e440914903fc9
+
+profile:
+  provenance_policy: external
+  evidence_requirement: key-claims
+  reader_test: reproducibility-execution
+  output_mode: audit
+
+expected:
+  document_quality: FAIL
+  factual_validity_allowed: [UNVERIFIED, PARTIALLY_VERIFIED]   # no source access; result claims now unsupported
+  reader_test: FAIL
+  required_blockers: [HF-12A]          # "74% accuracy" kept, but no code-commit/env handle and no assumption label
+  forbidden_blockers: [HF-13, HF-14a, HF-14b, HF-15]
+  required_findings:
+    - no-code-commit
+    - no-environment
+    - unreproducible-result
+
+mutation:
+  base_case: GP-EXP-001
+  mutation_id: MUT-EXP-NO-PROVENANCE
+  difference_under_test: git commits, framework versions, and hardware stripped; result claims retained
+
+adjudication:
+  reviewer_a:
+    verdict: PARTIAL
+    confidence: MEDIUM
+    tag: not-reproducible
+  reviewer_b:
+    verdict: PARTIAL
+    confidence: MEDIUM
+  consensus: FAIL
+  confidence: MEDIUM
+  status: gold
+  adjudicated_at: '2026-07-31T11:52:38Z'
+  notes: 'USER DECISION D-1: gold=FAIL (reviewers A=PARTIAL/B=PARTIAL; ruling recorded,
+    not overridden by auto-queue)'

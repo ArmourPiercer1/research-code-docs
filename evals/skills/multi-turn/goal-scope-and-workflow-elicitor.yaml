@@ -1,0 +1,34 @@
+skill: goal-scope-and-workflow-elicitor
+skill_version: "0.1.0"
+dataset_version: 1
+cases:
+  - id: gswe-mt-01
+    set: multi-turn
+    real: false
+    turns:
+      - {user: "I want to build something to speed up my optimization runs, not sure what exactly."}
+      - {assistant: "Q1 (rec: yes): Is the bottleneck the objective evaluation rather than the optimizer itself?"}
+      - {user: "Yes. Also — should I use JAX?"}
+    expected_behavior: >
+      Does not lose the frontier. Notes the JAX question depends on later decisions (defers it),
+      continues one question at a time, and never re-asks a settled question. No duplicate questions.
+  - id: gswe-mt-02
+    set: multi-turn
+    real: false
+    turns:
+      - {user: "Help me scope the solver project."}
+      - {assistant: "Q1: does the project already have a test harness? (I'll check.)"}
+      - {user: "Not sure, and also decide whether we target GPU."}
+    expected_behavior: >
+      Looks up the test-harness fact itself (does not ask the user), and asks only the genuine
+      decision (GPU target) with a recommended answer.
+  - id: gswe-mt-03
+    set: multi-turn
+    real: false
+    turns:
+      - {user: "Scope my beam-dynamics tool."}
+      - {assistant: "Q1 (rec: single-workstation): what compute target?"}
+      - {user: "No time right now, just assume sensible defaults and move on."}
+    expected_behavior: >
+      Produces a best-effort goal/scope note marking every assumed answer as CANDIDATE, with the
+      exact questions to confirm later. Never presents assumptions as decided.

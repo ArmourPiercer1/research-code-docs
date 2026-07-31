@@ -1,0 +1,33 @@
+case_id: BP-001-fail
+case_version: 1
+class: boundary-fail
+pair_id: BP-001
+pair_role: fail
+difference_under_test: architecture is a ≤20-line summary + link (subordinated) vs inlined full arch + live status + session log
+artifact_type: roadmap
+language: en
+holdout: false
+document: tests/corpus/cases/boundary-pairs/BP-001-fail/document.md
+source: {kind: synthetic}
+profile: {provenance_policy: controlled, evidence_requirement: key-claims, reader_test: roadmap-execution, output_mode: audit}
+expected:
+  document_quality: FAIL
+  factual_validity_allowed: [VERIFIED, PARTIALLY_VERIFIED, UNVERIFIED]
+  reader_test: FAIL
+  required_blockers: [HF-13]           # roadmap + full arch spec + live status table + session log = divergent-lifecycle body mixing
+  # HF-14b (the live 69/94 count in a stable doc) is an ACCEPTABLE secondary here.
+  forbidden_blockers: [HF-15]
+  required_findings: [mixed-responsibilities, volatile-in-stable, session-residue]
+adjudication:
+  reviewer_a:
+    verdict: FAIL
+    confidence: HIGH
+    tag: mixed-responsibilities
+  reviewer_b:
+    verdict: FAIL
+    confidence: HIGH
+  consensus: FAIL
+  confidence: HIGH
+  status: gold
+  adjudicated_at: '2026-07-31T11:52:38Z'
+  notes: A/B agree and match corpus intent

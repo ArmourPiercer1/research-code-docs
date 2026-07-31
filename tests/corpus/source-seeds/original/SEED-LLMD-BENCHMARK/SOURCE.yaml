@@ -1,0 +1,12 @@
+seed_id: SEED-LLMD-BENCHMARK
+content_copied: true
+use_mode: structure-reference
+status: source-only
+artifact_type_candidate: architecture-doc
+repository: https://github.com/llm-d/llm-d-benchmark.git
+commit: 1c8f481bbc4a86217ee4fb99aa99a15212984e90
+path: llm-d-benchmark/README.md
+sha256: 78c0c4cc830707aa9077c6e9d07187e8eb5032cbce8cc64f5f3e22f9b363b725
+size_bytes: 49501
+license_spdx: Apache-2.0
+snapshotted_at: '2026-07-31T10:24:17Z'

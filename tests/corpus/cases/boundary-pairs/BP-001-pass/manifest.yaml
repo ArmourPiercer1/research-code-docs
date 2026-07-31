@@ -1,0 +1,32 @@
+case_id: BP-001-pass
+case_version: 1
+class: boundary-pass
+pair_id: BP-001
+pair_role: pass
+difference_under_test: architecture is a ≤20-line summary + link (subordinated) vs inlined full arch + live status + session log
+artifact_type: roadmap
+language: en
+holdout: false
+document: tests/corpus/cases/boundary-pairs/BP-001-pass/document.md
+source: {kind: synthetic}
+profile: {provenance_policy: controlled, evidence_requirement: key-claims, reader_test: roadmap-execution, output_mode: audit}
+expected:
+  document_quality: PASS
+  factual_validity_allowed: [VERIFIED, PARTIALLY_VERIFIED]
+  reader_test: PASS
+  required_blockers: []
+  forbidden_blockers: [HF-13, HF-14a, HF-14b, HF-15]   # roles subordinated + linked -> NOT a hybrid defect
+  required_findings: ["architecture summarized + linked, not embedded"]
+adjudication:
+  reviewer_a:
+    verdict: PASS
+    confidence: HIGH
+    tag: none
+  reviewer_b:
+    verdict: PASS
+    confidence: HIGH
+  consensus: PASS
+  confidence: HIGH
+  status: gold
+  adjudicated_at: '2026-07-31T11:52:38Z'
+  notes: A/B agree and match corpus intent

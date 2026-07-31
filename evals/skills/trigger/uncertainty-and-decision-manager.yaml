@@ -1,0 +1,32 @@
+skill: uncertainty-and-decision-manager
+skill_version: "0.1.0"
+dataset_version: 1
+cases:
+  # ---------- should-trigger (engage) ----------
+  - {id: udm-trig-01, set: should-trigger, real: false, input: "Track this: CG is our baseline (works in-project), while the incomplete-Cholesky preconditioner is still just a hypothesis."}
+  - {id: udm-trig-02, set: should-trigger, real: false, input: "[numerical-research-software-design] record all open questions and candidate algorithms with their evidence levels."}
+  - {id: udm-trig-03, set: should-trigger, real: false, input: "This design doc mixes proven facts with guesses — separate them and tag each with a status."}
+  - {id: udm-trig-04, set: should-trigger, real: false, input: "Is it fair to call the preconditioner 'verified'? Check its evidence level against our threshold."}
+  - {id: udm-trig-05, set: should-trigger, real: false, input: "Maintain a register of what's decided vs candidate vs open for this project."}
+  - {id: udm-trig-06, set: should-trigger, real: false, input: "This paper suggests method X works — record it, but don't mark it proven for our project."}
+  - {id: udm-trig-07, set: should-trigger, real: false, input: "We changed our mind about the solver: update the decision status and mark the old choice rejected with a reason."}
+  - {id: udm-trig-08, set: should-trigger, real: false, input: "Keep the unresolved research questions alive and tracked as we draft the roadmap."}
+  - {id: udm-trig-09, set: should-trigger, real: false, input: "Assign status and evidence levels to these five claims before the architect commits to any of them."}
+  - {id: udm-trig-10, set: should-trigger, real: false, input: "[wayfinder] back these decision tickets with an inline evidence register."}
+
+  # ---------- should-not (decline or route) ----------
+  - {id: udm-not-01, set: should-not, real: false, input: "Add the finalized term 'flux' to our canonical glossary.", expected: {route_to: domain-modeling}}
+  - {id: udm-not-02, set: should-not, real: false, input: "What does the CG solver do, conceptually?", expected: {decision: decline}}
+  - {id: udm-not-03, set: should-not, real: false, input: "Fix the crash in the preconditioner code.", expected: {route_to: diagnosing-bugs}}
+  - {id: udm-not-04, set: should-not, real: false, input: "Just decide for me whether we should target GPU.", expected: {decision: decline}, notes: "records decisions; does not make the user's decision"}
+  - {id: udm-not-05, set: should-not, real: false, input: "Write the project roadmap.", expected: {route_to: research-software-roadmap-author}}
+  - {id: udm-not-06, set: should-not, real: false, input: "Summarize this paper.", expected: {route_to: paper-fetch-skill}}
+  - {id: udm-not-07, set: should-not, real: false, input: "Review my code diff.", expected: {route_to: code-review}}
+  - {id: udm-not-08, set: should-not, real: false, input: "Rename this module.", expected: {decision: decline}}
+  - {id: udm-not-09, set: should-not, real: false, input: "Build the export feature from the spec.", expected: {route_to: implement}}
+  - {id: udm-not-10, set: should-not, real: false, input: "Does src/solver.py import numpy? (a fact I can check)", expected: {route_to: project-state-reconstructor}, notes: "code fact belongs in the state report, not the uncertainty register"}
+
+  # ---------- short-ambiguous ----------
+  - {id: udm-amb-01, set: short-ambiguous, real: false, input: "track this", expected: {decision: engage-with-clarify}, notes: "clarify which item/decision to track"}
+  - {id: udm-amb-02, set: short-ambiguous, real: false, input: "is this verified?", context: "about an in-project capability with a prototype", expected: {decision: engage}, notes: "engage: check evidence level"}
+  - {id: udm-amb-03, set: short-ambiguous, real: false, input: "record the decision", expected: {decision: engage}, notes: "engage: capture status + evidence + source"}

@@ -1,0 +1,29 @@
+mutation_result:
+  case_id: GN-EXP-001
+  mutation_id: MUT-EXP-NO-PROVENANCE
+  base_kind: normalized-seed
+  base_ref: SEED-EXP-YAHOO-RESNET
+  base_path: D:/AI_Coworking/skill-build/research-code-dev/tests/corpus/source-seeds/normalized/SEED-EXP-YAHOO-RESNET/document.md
+  base_sha256: 98f0bcebc66c6f1c8626a1c07abbfaf029c4b3f31905f371d637aac9148c250a
+  mutated_sha256: 5d54a32de304cbb325a54ac0f00aa00ae085e24f92c7d3ec31fa684dede7c2ff
+  changed_ranges:
+  - substring: We ran the code using commit `bd56a06d2815e3dc2914fc8ce2fa1ea60e19d324`.
+    action: deleted
+  - substring: We ran our experiments using git commit `24b236fdb6ca449eb52e8f816e039e0d634015a5`.
+    action: deleted
+  - substring: We use version `v1.10.0`.
+    action: deleted
+  - substring: We used a p3.2xlarge instance on AWS which has an NVIDIA GPU V100.
+    action: deleted
+  - substring: We use TensorFlow v1.8.
+    action: deleted
+  intended_blockers:
+  - HF-12A
+  intended_findings:
+  - no-code-commit
+  - no-environment
+  - no-framework-version
+  - unreproducible-result
+  forbidden_unrelated_changes: []
+  forbidden_changes_verified: true
+  generated_at: '2026-07-31T10:32:32Z'

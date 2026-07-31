@@ -1,0 +1,47 @@
+case_id: GP-ADR-001
+case_version: 1
+class: golden-positive
+artifact_type: adr
+language: en
+holdout: false
+document: tests/corpus/source-seeds/normalized/SEED-ADR-BACKSTAGE-002/document.md
+
+source:
+  kind: upstream-seed
+  seed_id: SEED-ADR-BACKSTAGE-002
+  upstream_repo: https://github.com/backstage/backstage.git
+  upstream_commit: 04f25e440b36498647d50129b9f82d7dda928ae2
+  license_spdx: Apache-2.0
+
+profile:
+  provenance_policy: external          # external ADR — local traceability front-matter NOT required
+  evidence_requirement: key-claims
+  reader_test: adr-comprehension
+  output_mode: audit
+
+expected:
+  document_quality: PASS
+  factual_validity_allowed: [VERIFIED, PARTIALLY_VERIFIED, UNVERIFIED]
+  reader_test: PASS
+  required_blockers: []
+  forbidden_blockers: [HF-13, HF-14a, HF-14b, HF-15]
+  required_findings: []
+
+mutation: null
+
+# BORDERLINE ON PURPOSE (see seed cautions): a lightweight Backstage-log ADR is a format spec with no
+# explicit "Decision/Consequences/Alternatives" heading. Under the EXTERNAL profile it should pass as a
+# competent, self-contained ADR; a reviewer who wants those headings may dissent -> queue, don't force.
+adjudication:
+  reviewer_a:
+    verdict: PASS
+    confidence: HIGH
+    tag: none
+  reviewer_b:
+    verdict: PASS
+    confidence: HIGH
+  consensus: PASS
+  confidence: HIGH
+  status: gold
+  adjudicated_at: '2026-07-31T11:52:38Z'
+  notes: A/B agree and match corpus intent

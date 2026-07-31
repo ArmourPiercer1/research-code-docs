@@ -1,0 +1,34 @@
+skill: uncertainty-and-decision-manager
+skill_version: "0.1.0"
+dataset_version: 1
+cases:
+  - id: udm-conf-01
+    set: conflict
+    real: false
+    input: "The term 'residual tolerance' is finalized — put it in the canonical glossary."
+    expected: {decision: route, route_to: domain-modeling}
+    notes: "conflict-matrix §3: a DECIDED, stable term graduates to the domain-modeling glossary. UDM holds only unstable items."
+  - id: udm-conf-02
+    set: conflict
+    real: false
+    input: "Record that the solver works and passes its tests."
+    expected: {decision: route, route_to: project-state-reconstructor}
+    notes: "Code-behavior FACT belongs in the state report/tests, not the uncertainty register."
+  - id: udm-conf-03
+    set: conflict
+    real: false
+    input: "Build the evidence matrix from these ten papers."
+    expected: {decision: route, route_to: research-evidence-synthesizer}
+    notes: "UDM consumes the evidence matrix; it doesn't synthesize it from papers."
+  - id: udm-conf-04
+    set: conflict
+    real: false
+    input: "Turn our decided items into roadmap phases with milestones."
+    expected: {decision: route, route_to: research-software-roadmap-author}
+    notes: "UDM supplies statuses; the roadmap author builds phases."
+  - id: udm-conf-05
+    set: conflict
+    real: false
+    input: "Define and lock the architectural decision about module boundaries as an ADR."
+    expected: {decision: route, route_to: domain-modeling}
+    notes: "ADR authoring for decided architecture is domain-modeling; UDM tracks it only while OPEN/CANDIDATE."

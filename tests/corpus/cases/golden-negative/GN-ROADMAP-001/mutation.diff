@@ -1,0 +1,13 @@
+--- base:D:/AI_Coworking/skill-build/research-code-dev/evals/skills/task-quality/fixtures/dqe/positive/b2-research-roadmap.md
++++ mutated:GN-ROADMAP-001
+@@ -20,9 +20,8 @@
+   on the periodic-hill case?
+ - **Minimal experiment:** train on 2 Reynolds numbers, test on a 3rd; compare to the baseline.
+ - **Metric:** time-averaged velocity-profile L2 error at 4 stations.
++- **验收（committed · next）：** 与基线对照，效果达标即可，具体算例与阈值届时定。
+ - **GO:** ≥ 20% error reduction on the held-out Re → proceed to Phase 2.
+-  **MODIFY:** 5–20% → revisit features before scaling.
+-  **STOP:** < 5% or unstable a-posteriori → abandon the MLP route, record why.
+ - **Downstream impact:** GO unlocks Phase 2 (architecture search); STOP reroutes to the algebraic
+   refinement track in the decision register (D-12).
+ 

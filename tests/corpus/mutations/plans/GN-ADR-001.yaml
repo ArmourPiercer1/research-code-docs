@@ -1,0 +1,12 @@
+case_id: GN-ADR-001
+mutation_id: MUT-ADR-NO-RATIONALE
+base:
+  kind: normalized-seed
+  ref: SEED-ADR-BACKSTAGE-002
+  ext: md
+operations:
+  - op: remove-sections
+    headings: ["Background"]        # removes Background + Inspiration + Core Concepts (the whole rationale/context)
+intended_blockers: []              # soft-FAIL: ADR rationale anchor (non-compensatory), no hard gate invented
+intended_findings: [missing-rationale, missing-context, decision-without-justification]
+forbidden_unrelated_changes: ["Format", "Envelope", "Metadata", "Component"]   # must stay byte-identical

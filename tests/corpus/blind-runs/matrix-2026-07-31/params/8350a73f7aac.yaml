@@ -1,0 +1,7 @@
+blind_id: 8350a73f7aac
+artifact_type: adr
+profile:
+  provenance_policy: external
+  evidence_requirement: key-claims
+  reader_test: adr-comprehension
+  output_mode: audit

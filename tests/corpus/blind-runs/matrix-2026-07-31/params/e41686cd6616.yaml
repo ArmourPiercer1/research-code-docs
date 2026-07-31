@@ -1,0 +1,7 @@
+blind_id: e41686cd6616
+artifact_type: evidence-matrix
+profile:
+  provenance_policy: controlled
+  evidence_requirement: key-claims
+  reader_test: evidence-comprehension
+  output_mode: audit

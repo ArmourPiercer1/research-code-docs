@@ -1,0 +1,32 @@
+case_id: BP-002-pass
+case_version: 1
+class: boundary-pass
+pair_id: BP-002
+pair_role: pass
+difference_under_test: state is a dated frozen snapshot + pointer to status/current.md vs a bare live "当前 69 项测试全部通过"
+artifact_type: architecture-doc
+language: en
+holdout: false
+document: tests/corpus/cases/boundary-pairs/BP-002-pass/document.md
+source: {kind: synthetic}
+profile: {provenance_policy: controlled, evidence_requirement: key-claims, reader_test: architecture-comprehension, output_mode: audit}
+expected:
+  document_quality: PASS
+  factual_validity_allowed: [VERIFIED, PARTIALLY_VERIFIED]
+  reader_test: PASS
+  required_blockers: []
+  forbidden_blockers: [HF-13, HF-14a, HF-14b, HF-15]   # dated freeze + single dynamic-source pointer -> NOT contamination
+  required_findings: ["state is a dated snapshot pointing to a single dynamic source"]
+adjudication:
+  reviewer_a:
+    verdict: PASS
+    confidence: HIGH
+    tag: none
+  reviewer_b:
+    verdict: PASS
+    confidence: HIGH
+  consensus: PASS
+  confidence: HIGH
+  status: gold
+  adjudicated_at: '2026-07-31T11:52:38Z'
+  notes: A/B agree and match corpus intent

@@ -1,0 +1,49 @@
+case_id: GN-ADR-001
+case_version: 1
+class: golden-negative
+artifact_type: adr
+language: en
+holdout: false
+document: tests/corpus/cases/golden-negative/GN-ADR-001/document.md
+
+source:
+  kind: mutation
+  base_seed: SEED-ADR-BACKSTAGE-002
+  upstream_repo: https://github.com/backstage/backstage.git
+  upstream_commit: 04f25e440b36498647d50129b9f82d7dda928ae2
+
+profile:
+  provenance_policy: external
+  evidence_requirement: key-claims
+  reader_test: adr-comprehension
+  output_mode: audit
+
+expected:
+  document_quality: FAIL
+  factual_validity_allowed: [VERIFIED, PARTIALLY_VERIFIED, UNVERIFIED]
+  reader_test: FAIL
+  required_blockers: []                # soft-FAIL via the ADR rationale anchor (non-compensatory) — NOT a hard gate
+  forbidden_blockers: [HF-13, HF-14a, HF-14b, HF-15]
+  required_findings:
+    - missing-rationale
+    - decision-without-justification
+
+mutation:
+  base_case: GP-ADR-001
+  mutation_id: MUT-ADR-NO-RATIONALE
+  difference_under_test: rationale/context (Background+Inspiration+Core-Concepts) removed; only the bare spec remains
+
+adjudication:
+  reviewer_a:
+    verdict: PARTIAL
+    confidence: MEDIUM
+    tag: missing-rationale
+  reviewer_b:
+    verdict: PARTIAL
+    confidence: MEDIUM
+  consensus: FAIL
+  confidence: MEDIUM
+  status: gold
+  adjudicated_at: '2026-07-31T11:52:38Z'
+  notes: 'USER DECISION D-1: gold=FAIL (reviewers A=PARTIAL/B=PARTIAL; ruling recorded,
+    not overridden by auto-queue)'

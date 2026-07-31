@@ -1,0 +1,12 @@
+seed_id: SEED-ROADMAP-OPEN-DESIGN
+content_copied: true
+use_mode: structure-reference
+status: source-only
+artifact_type_candidate: roadmap
+repository: https://github.com/nexu-io/open-design.git
+commit: 0c5f98e17b81ae529d0a703878ac613c47760057
+path: open-design/docs/roadmap.md
+sha256: 4a9298eed228a089841fab6d603de9702dc2c6393494f415d34d0b05f815e169
+size_bytes: 13971
+license_spdx: Apache-2.0
+snapshotted_at: '2026-07-31T10:24:17Z'

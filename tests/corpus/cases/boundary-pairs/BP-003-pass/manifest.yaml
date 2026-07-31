@@ -1,0 +1,32 @@
+case_id: BP-003-pass
+case_version: 1
+class: boundary-pass
+pair_id: BP-003
+pair_role: pass
+difference_under_test: committed research phase has question+minimal-experiment+metric+GO/MODIFY/STOP vs "先测试…再决定"
+artifact_type: roadmap
+language: zh-CN
+holdout: false
+document: tests/corpus/cases/boundary-pairs/BP-003-pass/document.md
+source: {kind: synthetic}
+profile: {provenance_policy: controlled, evidence_requirement: key-claims, reader_test: roadmap-execution, output_mode: audit}
+expected:
+  document_quality: PASS
+  factual_validity_allowed: [VERIFIED, PARTIALLY_VERIFIED]
+  reader_test: PASS
+  required_blockers: []
+  forbidden_blockers: [HF-13, HF-14a, HF-14b, HF-15]   # HF-15 research-phase escape APPLIES -> no false FAIL
+  required_findings: ["research decision gate is complete (question + experiment + metric + GO/MODIFY/STOP)"]
+adjudication:
+  reviewer_a:
+    verdict: PASS
+    confidence: HIGH
+    tag: none
+  reviewer_b:
+    verdict: PASS
+    confidence: HIGH
+  consensus: PASS
+  confidence: HIGH
+  status: gold
+  adjudicated_at: '2026-07-31T11:52:38Z'
+  notes: A/B agree and match corpus intent

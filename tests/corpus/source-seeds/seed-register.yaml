@@ -1,0 +1,247 @@
+# Seed register — DQE test corpus
+#
+# generated_by_skill: (manual, Phase-1 corpus build) · skill_version: n/a
+# source_commit: see per-seed source.commit + tests/corpus/upstream/UPSTREAM-COMMITS.tsv
+# source_documents: docs/documentation-quality-evaluator_测试语料自动准备与评测流程.md §4.3, §5.1
+# status: DECIDED (source registration only — NO pass/fail judgement here)
+# last_verified: 2026-07-31
+#
+# Every seed is `source-only`: registration does NOT confer a gold label (see docs/testing/corpus-policy.md §1).
+# sha256 + size are of the EXACT upstream file at source.commit. copy_permitted=false => body is NOT copied
+# into original/ (quarantine / license-restricted); only this reference is kept.
+
+dataset_version: 3
+schema: seed-register/v1
+
+seeds:
+  - seed_id: SEED-ADR-BACKSTAGE-002
+    artifact_type_candidate: adr
+    source:
+      repository: https://github.com/backstage/backstage.git
+      commit: 04f25e440b36498647d50129b9f82d7dda928ae2
+      path: backstage/docs/architecture-decisions/adr002-default-catalog-file-format.md
+      sha256: ceb810ec7420cec0fa70bf07ce48dcaa43bb46eea7593515ba190f9ccf60b3ee
+      size_bytes: 8994
+      license_spdx: Apache-2.0
+    status: source-only
+    copy_permitted: true
+    use_mode: snapshot
+    candidate_uses:
+      - GP-ADR-001 golden-positive under external-ADR profile
+      - base for GN-ADR-001 (remove rationale/context) and GN-ADR-002 (append runbook/live-state)
+    cautions:
+      - Lightweight Backstage-log ADR — spec-style, NO explicit "Decision/Consequences/Alternatives"
+        headings; its Background/Inspiration/Core-Concepts IS its rationale. Borderline positive on
+        purpose → must be adjudicated, not rubber-stamped.
+
+  - seed_id: SEED-ADR-MADR-TEMPLATE
+    artifact_type_candidate: adr-template
+    source:
+      repository: https://github.com/adr/madr.git
+      commit: 835fc94baa37887774b1cddddb2ae874881e703b
+      path: madr/template/adr-template.md
+      sha256: 940d45674563e0a2c6e96b4741b2778b18fdf0d5df1f47cc2a27a841d1b5ea82
+      size_bytes: 3527
+      license_spdx: MIT OR CC0-1.0
+    status: source-only
+    copy_permitted: true
+    use_mode: structure-reference
+    candidate_uses:
+      - synthesis reference for controlled ADR shape; NOT a positive itself (a template is not a document)
+
+  - seed_id: SEED-KEP-127
+    artifact_type_candidate: technical-proposal
+    source:
+      repository: https://github.com/kubernetes/enhancements.git
+      commit: b175ab3f86ee0cb30f7557df699f52f8eee8ef67
+      path: enhancements/keps/sig-node/127-user-namespaces/README.md
+      sha256: b205c49ae493cc3cdab3fdfcdb70208663aaaafcc27fe9ce692f314e07b03dea
+      size_bytes: 65084
+      license_spdx: Apache-2.0
+    status: source-only
+    copy_permitted: true
+    use_mode: snapshot
+    candidate_uses:
+      - GP-PROP-001 golden-positive under technical-proposal profile (goals/non-goals, test plan,
+        graduation criteria, rollback, PRR)
+      - base for GN-PROP-001 (strip test-plan/graduation/rollback → executability)
+    cautions:
+      - Real content lives in the `enhancements/` full clone, NOT the empty `kubernetes-enhancements/`
+        sparse stub (same commit).
+      - 65 KB — large but authentic.
+
+  - seed_id: SEED-KEP-555
+    artifact_type_candidate: technical-proposal
+    source:
+      repository: https://github.com/kubernetes/enhancements.git
+      commit: b175ab3f86ee0cb30f7557df699f52f8eee8ef67
+      path: enhancements/keps/sig-api-machinery/555-server-side-apply/README.md
+      sha256: 1cdc21d8c086c90ea00a1b176e9cdb712fec0a3ae964fa17d7e1a78ca0fb846d
+      size_bytes: 39610
+      license_spdx: Apache-2.0
+    status: source-only
+    copy_permitted: true
+    use_mode: structure-reference
+    candidate_uses:
+      - reserve — older/large KEP; optional historical-doc boundary case
+
+  - seed_id: SEED-PEP-2026
+    artifact_type_candidate: technical-proposal
+    source:
+      repository: https://github.com/python/peps.git
+      commit: f245405682574595cbb0b9dfa0ca554417b99062
+      path: peps/peps/pep-2026.rst
+      sha256: 09f39cb1a1af00ac9b5ac5bbea601a5b48181fd44d1863927fa05aa3e300e75d
+      size_bytes: 28513
+      license_spdx: LicenseRef-Python-PEP-public-domain
+    status: source-only
+    copy_permitted: true
+    use_mode: snapshot
+    candidate_uses:
+      - GP-PROP-002 golden-positive — Status is "Rejected" yet the document quality is high
+        (tests "Rejected decision != low document quality")
+    cautions:
+      - reStructuredText, not Markdown. Kept as .rst (normalization tool=none) to avoid semantic drift;
+        evaluator reads RST as plain text. See normalized/ log.
+      - external-proposal provenance rules apply (no local traceability front-matter expected).
+
+  - seed_id: SEED-RUST-SAFE-TRANSMUTE
+    artifact_type_candidate: technical-proposal
+    source:
+      repository: https://github.com/rust-lang/project-safe-transmute.git
+      commit: 6eae89825568a3c7a0e7b05bd853492aa3edc9ac
+      path: rust-safe-transmute/rfcs/0000-safe-transmute.md
+      sha256: a59c67275554e482449fb4b32e52dfcce0822ec756bbc3b73236a30c857db3b7
+      size_bytes: 94280
+      license_spdx: Apache-2.0 OR MIT
+    status: source-only
+    copy_permitted: true
+    use_mode: structure-reference
+    candidate_uses:
+      - reserve — RFC draft with strong technical body but unresolved-questions/metadata boundary
+    cautions:
+      - 94 KB — very large; keep as reference unless a small unresolved-questions excerpt is needed.
+
+  - seed_id: SEED-EXP-YAHOO-README
+    artifact_type_candidate: reproducibility-guide
+    source:
+      repository: https://github.com/yahoo/ml-reproducibility-guidelines.git
+      commit: ff931bf844c1238073e6781e1d7e440914903fc9
+      path: yahoo-ml-reproducibility/README.md
+      sha256: 4ed9c6e3f833dc1e17cadfde842843e0bc1616b46d2eea47e9be45a409b07ad0
+      size_bytes: 7226
+      license_spdx: MIT
+    status: source-only
+    copy_permitted: true
+    use_mode: structure-reference
+    candidate_uses:
+      - rubric source for the experiment/reproducibility acceptance fields (it is a guideline, not a report)
+
+  - seed_id: SEED-EXP-YAHOO-RESNET
+    artifact_type_candidate: experiment-report
+    source:
+      repository: https://github.com/yahoo/ml-reproducibility-guidelines.git
+      commit: ff931bf844c1238073e6781e1d7e440914903fc9
+      path: yahoo-ml-reproducibility/recipe_resnet50_imagenet.md
+      sha256: f100b8919de07accef9c05c3be571b6104896795493c31e64adec06f1f4809f5
+      size_bytes: 5790
+      license_spdx: MIT
+    status: source-only
+    copy_permitted: true
+    use_mode: snapshot
+    candidate_uses:
+      - GP-EXP-001 golden-positive under reproducibility profile (git commits, env, hyperparams, target metric)
+      - base for GN-EXP-001 (redact commit/env/target-metric → not reproducible)
+    cautions:
+      - Has code_commit + environment + target-metric but NO explicit random_seed / tolerance fields
+        (so the reproducibility mutation is a targeted provenance redaction, not whole-section removal).
+
+  - seed_id: SEED-AE-CHECKLIST
+    artifact_type_candidate: reproducibility-checklist
+    source:
+      repository: https://github.com/ctuning/artifact-evaluation.git
+      commit: dfb0228b5ed42ed743d7c61d5dbfe41fbdd300b0
+      path: artifact-evaluation/docs/checklist.md
+      sha256: 1fa63821b9c74325fc12c79ee8cc5310d978e18cef8a05d424f2698672e7ee54
+      size_bytes: 10962
+      license_spdx: LicenseRef-cTuning-BSD
+    status: source-only
+    copy_permitted: true
+    use_mode: reference
+    candidate_uses:
+      - acceptance-field reference for experiment docs; NOT a target-type positive
+    cautions:
+      - Repo `docs/` is BSD-style (cTuning); repo `xml/` data files are ACM-copyrighted → never copy xml/.
+
+  - seed_id: SEED-LLMD-BENCHMARK
+    artifact_type_candidate: architecture-doc
+    source:
+      repository: https://github.com/llm-d/llm-d-benchmark.git
+      commit: 1c8f481bbc4a86217ee4fb99aa99a15212984e90
+      path: llm-d-benchmark/README.md
+      sha256: 78c0c4cc830707aa9077c6e9d07187e8eb5032cbce8cc64f5f3e22f9b363b725
+      size_bytes: 49501
+      license_spdx: Apache-2.0
+    status: source-only
+    copy_permitted: true
+    use_mode: structure-reference
+    candidate_uses:
+      - reserve — composite dev/test/experiment workspace doc; structure reference for HF-13 boundary
+
+  - seed_id: SEED-LLMD-REPRO
+    artifact_type_candidate: reproducibility-guide
+    source:
+      repository: https://github.com/llm-d/llm-d-benchmark.git
+      commit: 1c8f481bbc4a86217ee4fb99aa99a15212984e90
+      path: llm-d-benchmark/docs/reproducibility.md
+      sha256: 289cf30bb5ee91300cafc99e03546cf651a3351b9c80e5b9b98cc70ca012a754
+      size_bytes: 1539
+      license_spdx: Apache-2.0
+    status: source-only
+    copy_permitted: true
+    use_mode: reference
+
+  - seed_id: SEED-LLMD-DOE
+    artifact_type_candidate: experiment-design
+    source:
+      repository: https://github.com/llm-d/llm-d-benchmark.git
+      commit: 1c8f481bbc4a86217ee4fb99aa99a15212984e90
+      path: llm-d-benchmark/docs/doe.md
+      sha256: 09d94e3192b9a8bbd62ea6f36f573b8ae386886f9d4b509f4eb639308d089331
+      size_bytes: 9053
+      license_spdx: Apache-2.0
+    status: source-only
+    copy_permitted: true
+    use_mode: reference
+
+  - seed_id: SEED-ROADMAP-OPEN-DESIGN
+    artifact_type_candidate: roadmap
+    source:
+      repository: https://github.com/nexu-io/open-design.git
+      commit: 0c5f98e17b81ae529d0a703878ac613c47760057
+      path: open-design/docs/roadmap.md
+      sha256: 4a9298eed228a089841fab6d603de9702dc2c6393494f415d34d0b05f815e169
+      size_bytes: 13971
+      license_spdx: Apache-2.0
+    status: source-only
+    copy_permitted: true
+    use_mode: structure-reference
+    candidate_uses:
+      - structure reference + potential negative/boundary source; NEVER an auto-positive (guide §4 note)
+
+  - seed_id: SEED-ADR-MOZILLA-0003
+    artifact_type_candidate: adr
+    source:
+      repository: https://github.com/mozilla/sre-adrs.git
+      commit: 550483748f736f9b88e2c05ff4d6e8b58c84bf0d
+      path: mozilla-sre-adrs/decisions/websre/0003-use-eks-cluster-as-default-container-platform.md
+      sha256: 58e79b471ed3a234388674235838af933717fd98c56e6419fdce54596190ee93
+      size_bytes: 2040
+      license_spdx: NONE
+    status: quarantine
+    copy_permitted: false
+    use_mode: reference-only
+    candidate_uses:
+      - none — QUARANTINE. Repo carries no license file; keep only this clone reference, copy no body.
+    cautions:
+      - docs/testing/corpus-policy.md §4 — no license => body must not enter the publishable corpus.

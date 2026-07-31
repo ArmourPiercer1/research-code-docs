@@ -1,0 +1,35 @@
+--- base:D:/AI_Coworking/skill-build/research-code-dev/tests/corpus/source-seeds/normalized/SEED-ADR-BACKSTAGE-002/document.md
++++ mutated:GN-ADR-002
+@@ -212,3 +212,32 @@
+ | ------ | ------ | -------- | -------------------------------------- |
+ | `type` | String | Yes      | The type of component, e.g. `service`. |
+ 
++## Deployment Runbook & Live Rollout Status
++
++> Added inline to this ADR so everything is "in one place".
++
++### Current rollout status
++
++As of today, the catalog file-format parser is deployed to prod-eu and prod-us. **47 of 47**
++integration tests are green and the format has been rolled out to **312** repositories this week (up
++from 268 last week). Staging is on `v1alpha1`; prod is pinned to the same. The migration is **68%
++complete**.
++
++### Deploy steps
++
++1. `kubectl apply -f catalog-parser/deploy.yaml` to the target cluster.
++2. Bump the `backstage.io/catalog-parser` image tag and wait for the rollout to finish.
++3. Run `./scripts/smoke_catalog_format.sh` and confirm all 47 checks pass before flipping traffic.
++4. If error rate exceeds 2% for 5 minutes, roll back with `kubectl rollout undo`.
++
++### On-call runbook
++
++- **Symptom:** entities stop appearing. **Check:** parser pod logs for `YAMLParseError`.
++- **Escalation:** page the #catalog-oncall rotation; the current primary is the author of this ADR.
++- Last incident: 3 days ago, caused by an unescaped tab; fixed in the smoke script.
++
++### Session note
++
++We decided in today's discussion (本轮讨论决定) to keep the deploy steps and the live rollout numbers
++in this same ADR file for now, and to revisit whether to split them out later.
++

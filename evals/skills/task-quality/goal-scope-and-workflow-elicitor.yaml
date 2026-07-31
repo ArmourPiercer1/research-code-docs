@@ -1,0 +1,35 @@
+skill: goal-scope-and-workflow-elicitor
+skill_version: "0.1.0"
+dataset_version: 1
+rubric: evals/skills/harness/rubric.md
+hard_fail_catalog: evals/skills/harness/hard-fail.md
+own_hard_fails: [HF-7, HF-8, HF-9]   # note must keep open questions, be self-contained, carry front-matter
+cases:
+  - id: gswe-tq-01
+    set: task-quality
+    real: false
+    grounded_in_env: true
+    input: >
+      A researcher says: "I want to make my GPT beam-dynamics optimization faster and more reliable,
+      but I'm not sure whether the problem is the space-charge model, the optimizer, or the workflow."
+      Elicit goals, non-goals, and the intended dev-test-experiment workflow; classify every
+      unresolved branch (repo-verifiable / needs-literature / needs-prototype / user-preference / deferred).
+    expected:
+      hard_fails_guarded: [HF-7, HF-8, HF-9]
+      must_demonstrate: ["one-question-at-a-time with recommended answers", "facts looked up not asked", "explicit non-goals", "every open branch classified", "stops at the decidable boundary"]
+    notes: "Grounded in the installed `gpt` domain. Not a verbatim transcript."
+  - id: gswe-tq-02
+    set: task-quality
+    real: false
+    grounded_in_env: true
+    input: >
+      Given a just-produced state report of a messy analysis workspace, elicit the intended FUTURE
+      workflow (where code should live, how experiments should be logged, what 'done' means) and the
+      near-term scope versus deferred work.
+    expected:
+      hard_fails_guarded: [HF-7, HF-9]
+      must_demonstrate: ["reads state report first", "no duplicate/lookable questions", "goal/scope note readable with no chat context"]
+    notes: "Representative reconstruction handoff. Not a verbatim transcript."
+real_task_gap:
+  status: OPEN
+  note: "User to supply 2 real historical scoping conversations to replace/augment tq-01/tq-02. Do not fabricate (D.8)."

@@ -1,0 +1,12 @@
+seed_id: SEED-LLMD-DOE
+content_copied: true
+use_mode: reference
+status: source-only
+artifact_type_candidate: experiment-design
+repository: https://github.com/llm-d/llm-d-benchmark.git
+commit: 1c8f481bbc4a86217ee4fb99aa99a15212984e90
+path: llm-d-benchmark/docs/doe.md
+sha256: 09d94e3192b9a8bbd62ea6f36f573b8ae386886f9d4b509f4eb639308d089331
+size_bytes: 9053
+license_spdx: Apache-2.0
+snapshotted_at: '2026-07-31T10:24:17Z'

@@ -1,0 +1,262 @@
+[
+  {
+    "case_id": "BP-003-pass",
+    "pair_id": "BP-003",
+    "blind_id": "1919e93ad117",
+    "input_path": "tests/corpus/blind-runs/matrix-2026-07-31/inputs/1919e93ad117.md",
+    "artifact_type": "roadmap",
+    "provenance_policy": "controlled",
+    "run_kind": "current",
+    "run_idx": 1
+  },
+  {
+    "case_id": "GP-PROP-002",
+    "pair_id": null,
+    "blind_id": "24114258751b",
+    "input_path": "tests/corpus/blind-runs/matrix-2026-07-31/inputs/24114258751b.rst",
+    "artifact_type": "technical-proposal",
+    "provenance_policy": "external",
+    "run_kind": "current",
+    "run_idx": 1
+  },
+  {
+    "case_id": "GP-PROP-002",
+    "pair_id": null,
+    "blind_id": "24114258751b",
+    "input_path": "tests/corpus/blind-runs/matrix-2026-07-31/inputs/24114258751b.rst",
+    "artifact_type": "technical-proposal",
+    "provenance_policy": "external",
+    "run_kind": "repeat",
+    "run_idx": 2
+  },
+  {
+    "case_id": "GP-PROP-002",
+    "pair_id": null,
+    "blind_id": "24114258751b",
+    "input_path": "tests/corpus/blind-runs/matrix-2026-07-31/inputs/24114258751b.rst",
+    "artifact_type": "technical-proposal",
+    "provenance_policy": "external",
+    "run_kind": "repeat",
+    "run_idx": 3
+  },
+  {
+    "case_id": "BP-001-fail",
+    "pair_id": "BP-001",
+    "blind_id": "5071950eadec",
+    "input_path": "tests/corpus/blind-runs/matrix-2026-07-31/inputs/5071950eadec.md",
+    "artifact_type": "roadmap",
+    "provenance_policy": "controlled",
+    "run_kind": "current",
+    "run_idx": 1
+  },
+  {
+    "case_id": "BP-001-fail",
+    "pair_id": "BP-001",
+    "blind_id": "5071950eadec",
+    "input_path": "tests/corpus/blind-runs/matrix-2026-07-31/inputs/5071950eadec.md",
+    "artifact_type": "roadmap",
+    "provenance_policy": "controlled",
+    "run_kind": "repeat",
+    "run_idx": 2
+  },
+  {
+    "case_id": "BP-001-fail",
+    "pair_id": "BP-001",
+    "blind_id": "5071950eadec",
+    "input_path": "tests/corpus/blind-runs/matrix-2026-07-31/inputs/5071950eadec.md",
+    "artifact_type": "roadmap",
+    "provenance_policy": "controlled",
+    "run_kind": "repeat",
+    "run_idx": 3
+  },
+  {
+    "case_id": "BP-001-pass",
+    "pair_id": "BP-001",
+    "blind_id": "59001ac94063",
+    "input_path": "tests/corpus/blind-runs/matrix-2026-07-31/inputs/59001ac94063.md",
+    "artifact_type": "roadmap",
+    "provenance_policy": "controlled",
+    "run_kind": "current",
+    "run_idx": 1
+  },
+  {
+    "case_id": "GN-PROP-001",
+    "pair_id": null,
+    "blind_id": "5b4c8012ede7",
+    "input_path": "tests/corpus/blind-runs/matrix-2026-07-31/inputs/5b4c8012ede7.md",
+    "artifact_type": "technical-proposal",
+    "provenance_policy": "external",
+    "run_kind": "current",
+    "run_idx": 1
+  },
+  {
+    "case_id": "GN-EXP-001",
+    "pair_id": null,
+    "blind_id": "7608d9425d11",
+    "input_path": "tests/corpus/blind-runs/matrix-2026-07-31/inputs/7608d9425d11.md",
+    "artifact_type": "experiment-report",
+    "provenance_policy": "external",
+    "run_kind": "current",
+    "run_idx": 1
+  },
+  {
+    "case_id": "GN-ADR-001",
+    "pair_id": null,
+    "blind_id": "8350a73f7aac",
+    "input_path": "tests/corpus/blind-runs/matrix-2026-07-31/inputs/8350a73f7aac.md",
+    "artifact_type": "adr",
+    "provenance_policy": "external",
+    "run_kind": "current",
+    "run_idx": 1
+  },
+  {
+    "case_id": "GP-PROP-001",
+    "pair_id": null,
+    "blind_id": "864fa3f3eab0",
+    "input_path": "tests/corpus/blind-runs/matrix-2026-07-31/inputs/864fa3f3eab0.md",
+    "artifact_type": "technical-proposal",
+    "provenance_policy": "external",
+    "run_kind": "current",
+    "run_idx": 1
+  },
+  {
+    "case_id": "BP-004-external",
+    "pair_id": "BP-004",
+    "blind_id": "89be9c1c8eb5",
+    "input_path": "tests/corpus/blind-runs/matrix-2026-07-31/inputs/89be9c1c8eb5.md",
+    "artifact_type": "adr",
+    "provenance_policy": "external",
+    "run_kind": "current",
+    "run_idx": 1
+  },
+  {
+    "case_id": "GP-EXP-001",
+    "pair_id": null,
+    "blind_id": "90624fe36b82",
+    "input_path": "tests/corpus/blind-runs/matrix-2026-07-31/inputs/90624fe36b82.md",
+    "artifact_type": "experiment-report",
+    "provenance_policy": "external",
+    "run_kind": "current",
+    "run_idx": 1
+  },
+  {
+    "case_id": "BP-002-pass",
+    "pair_id": "BP-002",
+    "blind_id": "93550840067f",
+    "input_path": "tests/corpus/blind-runs/matrix-2026-07-31/inputs/93550840067f.md",
+    "artifact_type": "architecture-doc",
+    "provenance_policy": "controlled",
+    "run_kind": "current",
+    "run_idx": 1
+  },
+  {
+    "case_id": "BP-004-controlled",
+    "pair_id": "BP-004",
+    "blind_id": "b766ff10b437",
+    "input_path": "tests/corpus/blind-runs/matrix-2026-07-31/inputs/b766ff10b437.md",
+    "artifact_type": "adr",
+    "provenance_policy": "controlled",
+    "run_kind": "current",
+    "run_idx": 1
+  },
+  {
+    "case_id": "GN-ADR-002",
+    "pair_id": null,
+    "blind_id": "b91dddd91389",
+    "input_path": "tests/corpus/blind-runs/matrix-2026-07-31/inputs/b91dddd91389.md",
+    "artifact_type": "adr",
+    "provenance_policy": "external",
+    "run_kind": "current",
+    "run_idx": 1
+  },
+  {
+    "case_id": "BP-003-fail",
+    "pair_id": "BP-003",
+    "blind_id": "bef7e268ffe9",
+    "input_path": "tests/corpus/blind-runs/matrix-2026-07-31/inputs/bef7e268ffe9.md",
+    "artifact_type": "roadmap",
+    "provenance_policy": "controlled",
+    "run_kind": "current",
+    "run_idx": 1
+  },
+  {
+    "case_id": "GN-ROADMAP-001",
+    "pair_id": null,
+    "blind_id": "cd73de0081a0",
+    "input_path": "tests/corpus/blind-runs/matrix-2026-07-31/inputs/cd73de0081a0.md",
+    "artifact_type": "roadmap",
+    "provenance_policy": "controlled",
+    "run_kind": "current",
+    "run_idx": 1
+  },
+  {
+    "case_id": "GN-ROADMAP-001",
+    "pair_id": null,
+    "blind_id": "cd73de0081a0",
+    "input_path": "tests/corpus/blind-runs/matrix-2026-07-31/inputs/cd73de0081a0.md",
+    "artifact_type": "roadmap",
+    "provenance_policy": "controlled",
+    "run_kind": "repeat",
+    "run_idx": 2
+  },
+  {
+    "case_id": "GN-ROADMAP-001",
+    "pair_id": null,
+    "blind_id": "cd73de0081a0",
+    "input_path": "tests/corpus/blind-runs/matrix-2026-07-31/inputs/cd73de0081a0.md",
+    "artifact_type": "roadmap",
+    "provenance_policy": "controlled",
+    "run_kind": "repeat",
+    "run_idx": 3
+  },
+  {
+    "case_id": "BP-005-fail",
+    "pair_id": "BP-005",
+    "blind_id": "d9090b890655",
+    "input_path": "tests/corpus/blind-runs/matrix-2026-07-31/inputs/d9090b890655.md",
+    "artifact_type": "evidence-matrix",
+    "provenance_policy": "controlled",
+    "run_kind": "current",
+    "run_idx": 1
+  },
+  {
+    "case_id": "GP-ADR-001",
+    "pair_id": null,
+    "blind_id": "de0279e17f9a",
+    "input_path": "tests/corpus/blind-runs/matrix-2026-07-31/inputs/de0279e17f9a.md",
+    "artifact_type": "adr",
+    "provenance_policy": "external",
+    "run_kind": "current",
+    "run_idx": 1
+  },
+  {
+    "case_id": "GP-ROADMAP-001",
+    "pair_id": null,
+    "blind_id": "e01c683e99a4",
+    "input_path": "tests/corpus/blind-runs/matrix-2026-07-31/inputs/e01c683e99a4.md",
+    "artifact_type": "roadmap",
+    "provenance_policy": "controlled",
+    "run_kind": "current",
+    "run_idx": 1
+  },
+  {
+    "case_id": "BP-002-fail",
+    "pair_id": "BP-002",
+    "blind_id": "e4163207d094",
+    "input_path": "tests/corpus/blind-runs/matrix-2026-07-31/inputs/e4163207d094.md",
+    "artifact_type": "architecture-doc",
+    "provenance_policy": "controlled",
+    "run_kind": "current",
+    "run_idx": 1
+  },
+  {
+    "case_id": "BP-005-pass",
+    "pair_id": "BP-005",
+    "blind_id": "e41686cd6616",
+    "input_path": "tests/corpus/blind-runs/matrix-2026-07-31/inputs/e41686cd6616.md",
+    "artifact_type": "evidence-matrix",
+    "provenance_policy": "controlled",
+    "run_kind": "current",
+    "run_idx": 1
+  }
+]

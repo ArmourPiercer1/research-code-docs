@@ -1,0 +1,35 @@
+skill: documentation-quality-evaluator
+skill_version: "0.1.0"
+dataset_version: 1
+# 5 conflict cases. Correct behavior = defer/route per conflict-matrix.md.
+cases:
+  - id: dqe-conf-01
+    set: conflict
+    real: false
+    input: "Review the diff on this feature branch and tell me if the code is good."
+    expected: {decision: route, route_to: code-review}
+    notes: "conflict-matrix §3: DQE judges documents, code-review judges code diffs. Different objects."
+  - id: dqe-conf-02
+    set: conflict
+    real: false
+    input: "This doc fails your gates — go ahead and fix all the problems you find."
+    expected: {decision: route, route_to: technical-document-rewriter}
+    notes: "DQE judges, it does not rewrite. Fix -> rewriter (or the owning flow)."
+  - id: dqe-conf-03
+    set: conflict
+    real: false
+    input: "Evaluate the project state report — actually it doesn't exist yet, so produce it and grade it."
+    expected: {decision: route, route_to: project-state-reconstructor}
+    notes: "No artifact -> the producer runs first; DQE gates afterward."
+  - id: dqe-conf-04
+    set: conflict
+    real: false
+    input: "Check the numerical/math correctness of the solver implementation in src/solver.py."
+    expected: {decision: route, route_to: scientific-validity-review}
+    notes: "Math correctness of CODE is scientific-validity-review/code-review, not doc evaluation."
+  - id: dqe-conf-05
+    set: conflict
+    real: false
+    input: "Are the domain terms in our glossary the right canonical choices?"
+    expected: {decision: route, route_to: domain-modeling}
+    notes: "DQE can grade a glossary DOC's quality, but the terminology DECISIONS belong to domain-modeling."

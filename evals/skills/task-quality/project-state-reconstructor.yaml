@@ -1,0 +1,35 @@
+skill: project-state-reconstructor
+skill_version: "0.1.0"
+dataset_version: 1
+rubric: evals/skills/harness/rubric.md
+hard_fail_catalog: evals/skills/harness/hard-fail.md
+own_hard_fails: [HF-1, HF-8, HF-9]   # state report must not fabricate, must be self-contained, must carry front-matter
+cases:
+  - id: psr-tq-01
+    set: task-quality
+    real: false
+    grounded_in_env: true
+    input: >
+      Reconstruct the state of a GPT (General Particle Tracer) study workspace containing several
+      .in decks, .gdf outputs, a few analysis scripts, and a half-written README claiming 'scan
+      complete'. Produce a state report separating what actually ran (which decks produced .gdf,
+      which scripts reproduce a figure) from unknowns.
+    expected:
+      hard_fails_guarded: [HF-1, HF-8, HF-9]
+      must_demonstrate: ["FACT vs UNKNOWN separation", "README 'scan complete' marked STALE unless outputs confirm", "evidence cited per claim"]
+    notes: "Grounded in the installed `gpt` skill's real domain (.in/.gdf). Not a verbatim transcript."
+  - id: psr-tq-02
+    set: task-quality
+    real: false
+    grounded_in_env: true
+    input: >
+      Reconstruct a messy dev-test-experiment workspace: mixed notebooks, a src/ package, a data/
+      dir, and results/ with figures. Determine the true entry point, what is tested, and which
+      results are reproducible from current code.
+    expected:
+      hard_fails_guarded: [HF-1, HF-9]
+      must_demonstrate: ["bounded inventory (no raw whole-repo dump)", "reproducibility marked with evidence level", "UNKNOWNs each have a how-to-resolve"]
+    notes: "Representative research workspace. Not a verbatim historical transcript."
+real_task_gap:
+  status: OPEN
+  note: "User to supply 2 real historical workspaces to replace/augment tq-01/tq-02. Do not fabricate (D.8)."

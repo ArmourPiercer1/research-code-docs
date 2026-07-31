@@ -1,0 +1,12 @@
+seed_id: SEED-AE-CHECKLIST
+content_copied: true
+use_mode: reference
+status: source-only
+artifact_type_candidate: reproducibility-checklist
+repository: https://github.com/ctuning/artifact-evaluation.git
+commit: dfb0228b5ed42ed743d7c61d5dbfe41fbdd300b0
+path: artifact-evaluation/docs/checklist.md
+sha256: 1fa63821b9c74325fc12c79ee8cc5310d978e18cef8a05d424f2698672e7ee54
+size_bytes: 10962
+license_spdx: LicenseRef-cTuning-BSD
+snapshotted_at: '2026-07-31T10:24:17Z'

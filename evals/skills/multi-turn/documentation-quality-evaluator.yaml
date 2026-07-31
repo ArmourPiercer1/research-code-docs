@@ -1,0 +1,36 @@
+skill: documentation-quality-evaluator
+skill_version: "0.1.0"
+dataset_version: 1
+# 3 multi-turn cases. Each 'turns' entry is (speaker, text); 'expected_behavior' describes
+# the correct DQE response at the final turn. Scored by a grader sub-agent, not score_trigger.
+cases:
+  - id: dqe-mt-01
+    set: multi-turn
+    real: false
+    turns:
+      - {user: "Evaluate this state report (pasted)."}
+      - {assistant: "VERDICT=FAIL; blocker HF-8 (needs chat context) at §3."}
+      - {user: "OK so just fix the HF-8 problem for me."}
+    expected_behavior: >
+      Stays in lane: declines to rewrite, hands the fix (make §3 self-contained) to the
+      rewriter/owning flow, and offers to RE-evaluate once fixed. Does not silently edit the doc.
+  - id: dqe-mt-02
+    set: multi-turn
+    real: false
+    turns:
+      - {user: "[flow] Gate the rewritten roadmap. It returned FAIL with 3 blockers."}
+      - {assistant: "Blockers: HF-6 (phase 2 no acceptance), HF-7 (dropped OPEN Q-3), HF-9 (missing front-matter)."}
+      - {user: "We fixed only HF-9. Re-gate."}
+    expected_behavior: >
+      Re-runs checkers + hard gates, reports HF-9 now passes but HF-6 and HF-7 still FAIL,
+      verdict remains FAIL. Does not mark the doc passed on a partial fix.
+  - id: dqe-mt-03
+    set: multi-turn
+    real: false
+    turns:
+      - {user: "Evaluate architecture-A.md."}
+      - {assistant: "VERDICT=PASS total=82."}
+      - {user: "Now also evaluate architecture-B.md and check the two are consistent with each other."}
+    expected_behavior: >
+      Evaluates B on its own, then runs a corpus-level consistency pass across A and B,
+      flagging any contradicting FACT/DECIDED claims. Declares coverage.

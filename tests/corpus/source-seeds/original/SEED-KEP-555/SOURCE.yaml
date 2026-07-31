@@ -1,0 +1,12 @@
+seed_id: SEED-KEP-555
+content_copied: true
+use_mode: structure-reference
+status: source-only
+artifact_type_candidate: technical-proposal
+repository: https://github.com/kubernetes/enhancements.git
+commit: b175ab3f86ee0cb30f7557df699f52f8eee8ef67
+path: enhancements/keps/sig-api-machinery/555-server-side-apply/README.md
+sha256: 1cdc21d8c086c90ea00a1b176e9cdb712fec0a3ae964fa17d7e1a78ca0fb846d
+size_bytes: 39610
+license_spdx: Apache-2.0
+snapshotted_at: '2026-07-31T10:24:17Z'

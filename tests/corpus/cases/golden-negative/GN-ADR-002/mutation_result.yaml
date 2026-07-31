@@ -1,0 +1,26 @@
+mutation_result:
+  case_id: GN-ADR-002
+  mutation_id: MUT-HF13-MIX-ROLES
+  base_kind: normalized-seed
+  base_ref: SEED-ADR-BACKSTAGE-002
+  base_path: D:/AI_Coworking/skill-build/research-code-dev/tests/corpus/source-seeds/normalized/SEED-ADR-BACKSTAGE-002/document.md
+  base_sha256: 8c762010e8610f7f1b1d96ca24a57ceb2b446653e6a42a1b000bae56ade5c72d
+  mutated_sha256: 63e2d817fa6962a0ac0e1a284d2fafb9e6a5aa3c9dc39cd90b277c6e8812a615
+  changed_ranges:
+  - section: '## Deployment Runbook & Live Rollout Status'
+    action: appended
+  intended_blockers:
+  - HF-13
+  - HF-14b
+  intended_findings:
+  - mixed-responsibilities
+  - volatile-in-stable
+  - operational-content-in-decision-record
+  forbidden_unrelated_changes:
+  - Background
+  - Format
+  - Envelope
+  - Metadata
+  - Component
+  forbidden_changes_verified: true
+  generated_at: '2026-07-31T10:32:32Z'

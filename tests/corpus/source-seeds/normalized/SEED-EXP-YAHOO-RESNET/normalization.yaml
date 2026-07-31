@@ -1,0 +1,15 @@
+normalization:
+  source_seed: SEED-EXP-YAHOO-RESNET
+  tool: custom-script
+  rst_to_markdown: false
+  operations:
+  - line-ending-normalization(->LF)
+  - utf-8-reencode
+  - single-trailing-newline
+  semantic_changes: false
+  diff_review_required: true
+  bytes_before: 5790
+  bytes_after: 5683
+  sha256_before: f100b8919de07accef9c05c3be571b6104896795493c31e64adec06f1f4809f5
+  sha256_after: 98f0bcebc66c6f1c8626a1c07abbfaf029c4b3f31905f371d637aac9148c250a
+  normalized_at: '2026-07-31T10:25:29Z'

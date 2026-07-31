@@ -1,0 +1,12 @@
+seed_id: SEED-PEP-2026
+content_copied: true
+use_mode: snapshot
+status: source-only
+artifact_type_candidate: technical-proposal
+repository: https://github.com/python/peps.git
+commit: f245405682574595cbb0b9dfa0ca554417b99062
+path: peps/peps/pep-2026.rst
+sha256: 09f39cb1a1af00ac9b5ac5bbea601a5b48181fd44d1863927fa05aa3e300e75d
+size_bytes: 28513
+license_spdx: LicenseRef-Python-PEP-public-domain
+snapshotted_at: '2026-07-31T10:24:17Z'

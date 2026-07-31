@@ -1,0 +1,1 @@
+Declared license (no file found in repo root): LicenseRef-Python-PEP-public-domain

@@ -1,0 +1,21 @@
+blind_id	case_id	manifest	pair_id
+1919e93ad117	BP-003-pass	tests/corpus/cases/boundary-pairs/BP-003-pass/manifest.yaml	BP-003
+e4163207d094	BP-002-fail	tests/corpus/cases/boundary-pairs/BP-002-fail/manifest.yaml	BP-002
+5071950eadec	BP-001-fail	tests/corpus/cases/boundary-pairs/BP-001-fail/manifest.yaml	BP-001
+59001ac94063	BP-001-pass	tests/corpus/cases/boundary-pairs/BP-001-pass/manifest.yaml	BP-001
+5b4c8012ede7	GN-PROP-001	tests/corpus/cases/golden-negative/GN-PROP-001/manifest.yaml	
+bef7e268ffe9	BP-003-fail	tests/corpus/cases/boundary-pairs/BP-003-fail/manifest.yaml	BP-003
+b91dddd91389	GN-ADR-002	tests/corpus/cases/golden-negative/GN-ADR-002/manifest.yaml	
+89be9c1c8eb5	BP-004-external	tests/corpus/cases/boundary-pairs/BP-004-external/manifest.yaml	BP-004
+24114258751b	GP-PROP-002	tests/corpus/cases/golden-positive/GP-PROP-002/manifest.yaml	
+b766ff10b437	BP-004-controlled	tests/corpus/cases/boundary-pairs/BP-004-controlled/manifest.yaml	BP-004
+d9090b890655	BP-005-fail	tests/corpus/cases/boundary-pairs/BP-005-fail/manifest.yaml	BP-005
+7608d9425d11	GN-EXP-001	tests/corpus/cases/golden-negative/GN-EXP-001/manifest.yaml	
+e41686cd6616	BP-005-pass	tests/corpus/cases/boundary-pairs/BP-005-pass/manifest.yaml	BP-005
+de0279e17f9a	GP-ADR-001	tests/corpus/cases/golden-positive/GP-ADR-001/manifest.yaml	
+cd73de0081a0	GN-ROADMAP-001	tests/corpus/cases/golden-negative/GN-ROADMAP-001/manifest.yaml	
+e01c683e99a4	GP-ROADMAP-001	tests/corpus/cases/golden-positive/GP-ROADMAP-001/manifest.yaml	
+864fa3f3eab0	GP-PROP-001	tests/corpus/cases/golden-positive/GP-PROP-001/manifest.yaml	
+90624fe36b82	GP-EXP-001	tests/corpus/cases/golden-positive/GP-EXP-001/manifest.yaml	
+8350a73f7aac	GN-ADR-001	tests/corpus/cases/golden-negative/GN-ADR-001/manifest.yaml	
+93550840067f	BP-002-pass	tests/corpus/cases/boundary-pairs/BP-002-pass/manifest.yaml	BP-002

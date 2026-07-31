@@ -1,0 +1,43 @@
+case_id: GP-PROP-001
+case_version: 1
+class: golden-positive
+artifact_type: technical-proposal
+language: en
+holdout: false
+document: tests/corpus/source-seeds/normalized/SEED-KEP-127/document.md
+
+source:
+  kind: upstream-seed
+  seed_id: SEED-KEP-127
+  upstream_repo: https://github.com/kubernetes/enhancements.git
+  upstream_commit: b175ab3f86ee0cb30f7557df699f52f8eee8ef67
+  license_spdx: Apache-2.0
+
+profile:
+  provenance_policy: external
+  evidence_requirement: key-claims
+  reader_test: proposal-execution
+  output_mode: audit
+
+expected:
+  document_quality: PASS
+  factual_validity_allowed: [VERIFIED, PARTIALLY_VERIFIED, UNVERIFIED]
+  reader_test: PASS
+  required_blockers: []
+  forbidden_blockers: [HF-13, HF-14a, HF-15]     # HF-14b left open (KEP carries a Release Signoff Checklist)
+  required_findings: []
+
+mutation: null
+adjudication:
+  reviewer_a:
+    verdict: PASS
+    confidence: HIGH
+    tag: none
+  reviewer_b:
+    verdict: PASS
+    confidence: HIGH
+  consensus: PASS
+  confidence: HIGH
+  status: gold
+  adjudicated_at: '2026-07-31T11:52:38Z'
+  notes: A/B agree and match corpus intent

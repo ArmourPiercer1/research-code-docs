@@ -1,0 +1,32 @@
+skill: project-state-reconstructor
+skill_version: "0.1.0"
+dataset_version: 1
+cases:
+  # ---------- should-trigger (engage) ----------
+  - {id: psr-trig-01, set: should-trigger, real: false, input: "I inherited this repo and have no idea what actually works. Reconstruct the real state."}
+  - {id: psr-trig-02, set: should-trigger, real: false, input: "What's the true current status of this project? The README is almost certainly out of date."}
+  - {id: psr-trig-03, set: should-trigger, real: false, input: "[scientific-workspace-reconstruction] recover the project facts before we design anything."}
+  - {id: psr-trig-04, set: should-trigger, real: false, input: "Figure out what actually runs here versus what's only half-written."}
+  - {id: psr-trig-05, set: should-trigger, real: false, input: "Before we refactor, establish what's genuinely tested and what isn't, with evidence."}
+  - {id: psr-trig-06, set: should-trigger, real: false, input: "The roadmap claims phase 2 is done — verify that against the actual code and tests."}
+  - {id: psr-trig-07, set: should-trigger, real: false, input: "Give me an evidence-based state report of this workspace, separating facts from unknowns."}
+  - {id: psr-trig-08, set: should-trigger, real: false, input: "I've been away six months. What's the real progress versus what the docs claim?"}
+  - {id: psr-trig-09, set: should-trigger, real: false, input: "Audit which parts of src/ are actually implemented versus described in the design doc."}
+  - {id: psr-trig-10, set: should-trigger, real: false, input: "Reconstruct which experiments in this folder actually reproduce and which are just leftover scripts."}
+
+  # ---------- should-not (decline or route) ----------
+  - {id: psr-not-01, set: should-not, real: false, input: "Add a --verbose flag to the CLI.", expected: {route_to: implement}}
+  - {id: psr-not-02, set: should-not, real: false, input: "Fix this one failing test in test_solver.py.", expected: {route_to: diagnosing-bugs}}
+  - {id: psr-not-03, set: should-not, real: false, input: "The state is already captured in a fresh, verified status.md from yesterday — just proceed.", expected: {decision: decline}}
+  - {id: psr-not-04, set: should-not, real: false, input: "Review my pull request.", expected: {route_to: code-review}}
+  - {id: psr-not-05, set: should-not, real: false, input: "What does line 42 of solver.py do?", expected: {decision: decline}, notes: "single-line question; answer directly"}
+  - {id: psr-not-06, set: should-not, real: false, input: "Summarize this paper for me.", expected: {route_to: paper-fetch-skill}}
+  - {id: psr-not-07, set: should-not, real: false, input: "Write unit tests for the parser module.", expected: {route_to: tdd}}
+  - {id: psr-not-08, set: should-not, real: false, input: "Rename this variable across the codebase.", expected: {decision: decline}}
+  - {id: psr-not-09, set: should-not, real: false, input: "Explain how conjugate gradient works conceptually.", expected: {decision: decline}}
+  - {id: psr-not-10, set: should-not, real: false, input: "Design a new caching layer for the API.", expected: {route_to: scientific-software-architect}}
+
+  # ---------- short-ambiguous ----------
+  - {id: psr-amb-01, set: short-ambiguous, real: false, input: "status?", expected: {decision: engage-with-clarify}, notes: "clarify scope: whole project state report, or a quick status line?"}
+  - {id: psr-amb-02, set: short-ambiguous, real: false, input: "what's actually here?", context: "cwd is an unfamiliar multi-script repo", expected: {decision: engage}, notes: "engage: inventory + state"}
+  - {id: psr-amb-03, set: short-ambiguous, real: false, input: "is this done?", expected: {decision: engage-with-clarify}, notes: "clarify what 'this' is before reconstructing"}

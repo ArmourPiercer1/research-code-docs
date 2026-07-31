@@ -1,0 +1,32 @@
+case_id: BP-002-fail
+case_version: 1
+class: boundary-fail
+pair_id: BP-002
+pair_role: fail
+difference_under_test: state is a dated frozen snapshot + pointer to status/current.md vs a bare live "当前 69 项测试全部通过"
+artifact_type: architecture-doc
+language: en
+holdout: true                          # reserved holdout
+document: tests/corpus/cases/boundary-pairs/BP-002-fail/document.md
+source: {kind: synthetic}
+profile: {provenance_policy: controlled, evidence_requirement: key-claims, reader_test: architecture-comprehension, output_mode: audit}
+expected:
+  document_quality: FAIL
+  factual_validity_allowed: [VERIFIED, PARTIALLY_VERIFIED, UNVERIFIED]
+  reader_test: FAIL
+  required_blockers: [HF-14b]          # a stable design doc embeds a bare live count with no dynamic-source pointer
+  forbidden_blockers: [HF-13, HF-14a, HF-15]
+  required_findings: [volatile-in-stable-no-pointer]
+adjudication:
+  reviewer_a:
+    verdict: FAIL
+    confidence: MEDIUM
+    tag: volatile-in-stable
+  reviewer_b:
+    verdict: FAIL
+    confidence: MEDIUM
+  consensus: FAIL
+  confidence: MEDIUM
+  status: gold
+  adjudicated_at: '2026-07-31T11:52:38Z'
+  notes: A/B agree and match corpus intent

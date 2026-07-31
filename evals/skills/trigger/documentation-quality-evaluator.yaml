@@ -1,0 +1,35 @@
+skill: documentation-quality-evaluator
+skill_version: "0.1.0"
+dataset_version: 1
+# 10 should-trigger + 10 should-not + 3 short-ambiguous. Manual-only skill: "should-trigger"
+# means "when explicitly invoked on this input, engage and grade"; "should-not" means
+# "when invoked on this out-of-scope input, decline or route away".
+cases:
+  # ---------- should-trigger (engage) ----------
+  - {id: dqe-trig-01, set: should-trigger, real: false, input: "Evaluate the quality of docs/status/state-report.md before I hand it off to the design flow."}
+  - {id: dqe-trig-02, set: should-trigger, real: false, input: "Grade docs/roadmap.md against our documentation rubric and tell me if it passes."}
+  - {id: dqe-trig-03, set: should-trigger, real: false, input: "The documentation-refactor flow just finished; run the terminal quality gate on the rewritten architecture doc."}
+  - {id: dqe-trig-04, set: should-trigger, real: false, input: "Is this algorithm specification good enough to build from? Score it on evidence traceability and actionability."}
+  - {id: dqe-trig-05, set: should-trigger, real: false, input: "Check whether this decision register meets our hard gates (status/evidence tags, no candidate-as-fact)."}
+  - {id: dqe-trig-06, set: should-trigger, real: false, input: "Run a no-context reader test on this state report and tell me what a fresh reader can't answer."}
+  - {id: dqe-trig-07, set: should-trigger, real: false, input: "Critique this evidence matrix for quality — especially whether every claim cites a source and level."}
+  - {id: dqe-trig-08, set: should-trigger, real: false, input: "Does this ADR pass our documentation quality bar? Give me a verdict and a fix list."}
+  - {id: dqe-trig-09, set: should-trigger, real: false, input: "Review my experiment report doc for quality issues before I circulate it to the group."}
+  - {id: dqe-trig-10, set: should-trigger, real: false, input: "Gate the roadmap: confirm every phase has explicit acceptance criteria, and flag any that don't."}
+
+  # ---------- should-not (decline or route away) ----------
+  - {id: dqe-not-01, set: should-not, real: false, input: "Review the code changes in this branch since main.", expected: {route_to: code-review}}
+  - {id: dqe-not-02, set: should-not, real: false, input: "Fix the typos and tighten the prose in my personal blog post.", expected: {decision: decline}}
+  - {id: dqe-not-03, set: should-not, real: false, input: "This architecture doc is bad — rewrite it to be clear.", expected: {route_to: technical-document-rewriter}}
+  - {id: dqe-not-04, set: should-not, real: false, input: "Write me a roadmap for the solver project.", expected: {route_to: research-software-roadmap-author}}
+  - {id: dqe-not-05, set: should-not, real: false, input: "Is my Python function returning the right value? Here's the code.", expected: {route_to: diagnosing-bugs}}
+  - {id: dqe-not-06, set: should-not, real: false, input: "Summarize this paper for me.", expected: {route_to: paper-fetch-skill}}
+  - {id: dqe-not-07, set: should-not, real: false, input: "Grade my essay for my English literature class.", expected: {decision: decline}}
+  - {id: dqe-not-08, set: should-not, real: false, input: "What's my test coverage percentage?", expected: {decision: decline}}
+  - {id: dqe-not-09, set: should-not, real: false, input: "Which of these two algorithms runs faster? Benchmark them.", expected: {route_to: scientific-prototype-experiment}}
+  - {id: dqe-not-10, set: should-not, real: false, input: "I have an idea but no document yet — tell me if the idea is good.", expected: {decision: decline}, notes: "no artifact to evaluate; route to elicitor/framer instead"}
+
+  # ---------- short-ambiguous ----------
+  - {id: dqe-amb-01, set: short-ambiguous, real: false, input: "quality check", expected: {decision: engage-with-clarify}, notes: "no artifact attached -> ask which document"}
+  - {id: dqe-amb-02, set: short-ambiguous, real: false, input: "is this good?", context: "user pasted a 2-page state report above", expected: {decision: engage}, notes: "artifact present -> engage"}
+  - {id: dqe-amb-03, set: short-ambiguous, real: false, input: "review this", expected: {decision: engage-with-clarify}, notes: "ambiguous doc-vs-code -> clarify before engaging"}

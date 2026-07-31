@@ -1,0 +1,175 @@
+You are evaluating the TRIGGERING behaviour of ONE skill (defined below). For each CASE, decide
+whether THIS skill should handle it, as if it sat among the many skills in the roster. Do NOT
+perform any task. Use the skill's own Trigger / Do-not-trigger sections and the trigger-priority
+ladder (safety/forensics > explicit invocation > router > control flows > specialized atoms >
+existing domain skills > general help).
+
+Return ONLY a JSON array, one object per case, in order:
+[{"id": "...", "decision": "engage|decline|route|engage-with-clarify", "route_to": "<skill or null>",
+  "justification": "<=30 words citing the skill's trigger/do-not-trigger"}]
+Decisions:
+- engage: trigger matches and nothing higher-priority pre-empts.
+- decline: out of scope; no named skill needed (or a trivially-direct answer).
+- route: out of scope for THIS skill; name the owner in route_to.
+- engage-with-clarify: borderline/underspecified; you would ask exactly one routing question first.
+
+Other skills available for routing (name — one-line role):
+- code-review — review a code diff (Standards + Spec).
+- diagnosing-bugs — diagnose a specific broken/failing/slow behaviour.
+- tdd — build a behaviour test-first.
+- implement — build a stable, specified feature.
+- to-spec — synthesize a finished discussion into a spec.
+- to-tickets — split a spec into tickets.
+- domain-modeling — define STABLE domain terms + ADRs (the glossary).
+- paper-fetch-skill — read/summarize/verify a single KNOWN paper.
+- lit-review — survey an open literature topic (retrieval).
+- wos-research / deep-research — heavier literature/web retrieval.
+- grilling — the user-invoked relentless manual interview primitive.
+- improve-codebase-architecture — restructure code into deep modules (AFTER facts recovered).
+- scientific-software-architect — overall scientific system architecture (planned).
+- scientific-prototype-experiment — numerical prototype answering a convergence/noise question (planned).
+- research-evidence-synthesizer — build an evidence matrix from retrieved papers (planned).
+- research-software-roadmap-author — build roadmap phases with acceptance criteria (planned).
+- technical-document-rewriter — rewrite a document (never overwrites originals) (planned).
+- scientific-validity-review — math/units/stability/RNG review of code (planned).
+- project-state-reconstructor — recover verifiable project facts into a state report.
+- goal-scope-and-workflow-elicitor — interview for goals/scope/workflow (automatic, in-flow).
+- uncertainty-and-decision-manager — tag items with status + evidence level; the decision register.
+- documentation-quality-evaluator — grade a documentation artifact against gates + rubric.
+
+===== SKILL UNDER TEST (injected SKILL.md) =====
+---
+name: goal-scope-and-workflow-elicitor
+description: Structured interview that pins down a user's real goals, scope boundaries, non-goals, and intended workflow before design work begins — asking only genuine decisions (looking up facts itself), one question at a time with a recommended answer, stopping at the current decidable boundary and classifying every unresolved branch. Use when a control flow needs goals/scope clarified or a request is ambiguous across multiple paths. NOT for simple well-specified tasks, and NOT the manual grilling primitive.
+disable-model-invocation: true
+---
+
+<!--
+skill_version: 0.2.0
+status: experimental (orchestrator-only; no auto-trigger until evals pass)
+generated_by_skill: manual authoring; v0.2 upgraded from real references
+source_commit: mattpocock/skills@snapshot(v1.2.0); addyosmani/agent-skills@7829ffd (MIT)
+source_documents:
+  - references/agent-skills/skills/interview-me/SKILL.md (MIT)
+  - references/agent-skills/skills/idea-refine/SKILL.md (MIT)
+  - references/agent-skills/skills/spec-driven-development/SKILL.md (MIT)
+  - references/mattpocock-skills/skills/productivity/grilling/SKILL.md (MIT)
+  - docs/研究软件文档Skills系统_设计与创建指南.md §6.3
+  - references/documentation-methodology/upstream-method-matrix.md §2.3 (per-method attribution)
+last_verified: 2026-07-30T09:47:06Z
+-->
+
+# Goal, Scope & Workflow Elicitor
+
+> **Experimental · orchestrator-only.** Owns *automatic* questioning inside the control flows. The manual, user-invoked interview is `grilling` — this skill must never auto-run in parallel with it.
+> **v0.2** integrates real elicitation methods (interview-me, idea-refine, spec-driven-development — all MIT). Every adopted rule is attributed in `upstream-method-matrix.md` §2.3; the spec/task/ideation machinery of those skills is deliberately left downstream.
+
+## Purpose
+
+Convert a fuzzy or multi-path request into a **goal/scope note** and an **open-decision list**, by interviewing the user efficiently: look up every fact yourself, put only real **decisions** to the user, one at a time, each with a recommended answer — and **stop as soon as understanding is shared**, not after every question is closed.
+
+## Trigger conditions
+
+Engage when:
+- A control flow needs goals/scope/non-goals/workflow clarified before it can proceed, **or**
+- The request is **genuinely ambiguous** across multiple valid directions and the ambiguity blocks progress, **or**
+- The user explicitly asks to "figure out what I actually want / scope this."
+
+## Do-not-trigger conditions
+
+- The task is **simple and well-specified** → just do it; interviewing would be noise. (Primary should-not; when invoked on such input, **decline and route** to the doer.) The confidence check in Workflow §2 makes this call explicit.
+- The goal is **already clear** from the request + state report.
+- The answer is a **fact that can be looked up** (filesystem, tests, docs) → look it up, don't ask.
+- The user wants a **manual, relentless grilling** → that's `grilling` (a separate, user-invoked primitive).
+- **Stable domain terminology** needs defining → `domain-modeling`.
+
+## Inputs
+
+- The user's initial ask.
+- The **state report** from `project-state-reconstructor` (read this first — facts before questions).
+
+## Workflow
+
+1. **Read the state report first.** Never ask what the facts already answer.
+2. **State a one-line goal hypothesis + confidence (0–100%).** Write your current best read of the goal in one sentence with an honest confidence. *(interview-me)* If confidence is already high and you can name no missing piece → this **is** the too-simple signal: decline/route per Do-not-trigger. If confidence < ~70%, append **what specifically is missing** (who / why-now / success / binding constraint); the gap list seeds the questions.
+3. **Present a correctable brief before asking.** *(spec-driven-development)* List, as a "correct me or I proceed with these" bullet list: the facts you looked up **and** the assumptions you're riding on them. One bulk correction replaces a string of questions. Only decisions the user changes or can't rule on become questions.
+4. **Ask the frontier, one question at a time**, each with a **recommended answer**; wait before the next. *(grilling)* Order questions by the design tree's frontier; never dump them all at once.
+5. **Look up, don't ask, for facts.** Only genuine decisions go to the user. When an answer is a **buzzword or convention** ("modern", "scalable", "robust", "best practice") rather than a concrete outcome, probe once — *"if you didn't have to justify this to anyone, what would you actually want?"* — before recording it as the goal. *(interview-me)* When the goal or its success is vague ("faster", "cleaner"), propose 1–2 **concrete, checkable success conditions** and ask "are these the right targets?"; record the confirmed criteria. Stop at the criterion — do not draft a spec (that is `to-spec`/`algorithm-technical-spec-author`, downstream).
+6. **Stop — two independent tests, whichever fires first:**
+   - **(a) decidable-boundary** — remaining questions depend on research / experiments / facts not yet available; stop and classify them.
+   - **(b) sufficiency** — before asking the next question, check: *can you already predict the user's answer to it and the next two?* If yes, understanding is shared → stop and restate. *(interview-me)*
+7. **Classify every unresolved branch** as one of: `repo-verifiable` · `needs-literature` · `needs-prototype` · `user-preference` · `deferred`.
+8. **Restate in fixed fields, in the user's own words**, and confirm: **Outcome / User / Why-now / Success / Constraint / Non-goals**. *(interview-me)* "Out of scope" is mandatory — half of misalignment is silent disagreement about what is *not* being built. Confirm by an **explicit yes**: "sounds good"/silence is not a yes, and "whatever you think" is a delegation → re-ask as two concrete options, don't record it as decided.
+9. **Emit** the goal/scope note + open-decision list.
+
+**Bounds.** *(idea-refine)* Floor: don't emit the note until who-it's-for, success, the binding constraint, and non-goals are each answered or classified. Ceiling: if the genuine-decision frontier exceeds ~5–6, you are over-decomposing — freeze the rest as `deferred`.
+
+## Quality gates
+
+- Opened with an explicit **goal hypothesis + confidence**; every < 70% confidence named the missing piece.
+- Presented a **correctable brief** (looked-up facts + assumptions) before questioning.
+- **No duplicate questions**; no question whose answer is a known/lookable fact.
+- **Did not interview a simple task** — on out-of-scope simple input, it declined/routed.
+- Every question carried a recommended answer; every unresolved branch is classified (§7).
+- Restate has **explicit Non-goals** and was confirmed by an explicit yes (or, no live user, marked `CANDIDATE`).
+- Goal/scope note is readable with **no chat context** — else HF-8.
+
+## Outputs
+
+- `goal-scope-note.md` — fixed fields (Outcome / User / Why-now / Success / Constraint / **Non-goals**) + intended dev–test–experiment workflow + confirmed constraints. Template: `references/templates/goal-scope-note.template.md`.
+- `open-decision-list.md` — unresolved branches, each classified + recommended next action.
+
+## Handoff rules
+
+- Open decisions → `uncertainty-and-decision-manager` (it tags status + evidence).
+- `needs-literature` branches → `research-question-and-literature-planner` (later) → `lit-review`/`wos-research`.
+- `needs-prototype` branches → `scientific-prototype-experiment` (later) / `prototype`.
+- Confirmed **stable** terms → `domain-modeling`; unstable ones stay in the open-decision list.
+
+## Failure modes
+
+- **User unavailable** → best-effort note marking every assumed answer as `CANDIDATE`, with the exact questions to confirm later. Never present assumptions as decided. (Overrides the explicit-yes gate — mark, don't block.)
+- **Cannot converge** — after ~3 rounds without the goal getting sharper, stop and surface "something foundational is missing — want to step back?" rather than grinding. *(interview-me floor)*
+- **Scope keeps expanding** → freeze the current frontier, record the rest as `deferred`.
+
+## References to load
+
+- `references/agent-skills/skills/interview-me/SKILL.md` (MIT — hypothesis+confidence, sufficiency stop, buzzword probe, fixed-field restate). Method-borrowed; see matrix §2.3.
+- `references/mattpocock-skills/skills/productivity/grilling/SKILL.md` (MIT — one-at-a-time, recommend-an-answer, look-up-facts).
+- `docs/skill-development/system-architecture.md` §7 (status vocabulary for the open-decision list).
+
+## Scripts to run
+
+- `evals/skills/harness/checkers/run_checks.py <goal-scope-note>` — front-matter + no-empty-section check before handoff.
+
+===== CASES =====
+- id: gswe-trig-01 | set: should-trigger | input: I have a vague idea for an optimization tool but I'm not sure what I actually want. Help me scope it.
+- id: gswe-trig-02 | set: should-trigger | input: [numerical-research-software-design] elicit the goals, non-goals, and workflow before we frame the problem.
+- id: gswe-trig-03 | set: should-trigger | input: There are three directions I could take this project. Help me pin down which one and why, one decision at a time.
+- id: gswe-trig-04 | set: should-trigger | input: I haven't defined my non-goals here. Let's establish the scope boundaries.
+- id: gswe-trig-05 | set: should-trigger | input: Before we design anything, figure out my real dev-test-experiment workflow.
+- id: gswe-trig-06 | set: should-trigger | input: My goal keeps shifting. Help me nail down what's in scope now and what to defer.
+- id: gswe-trig-07 | set: should-trigger | input: What decisions do I need to settle before this could be turned into a spec? Walk me through them.
+- id: gswe-trig-08 | set: should-trigger | input: Clarify the scope and intended workflow now that we have the reconstructed state report.
+- id: gswe-trig-09 | set: should-trigger | input: Help me separate what I want to build now from what comes later, and record the open questions.
+- id: gswe-trig-10 | set: should-trigger | input: Interview me to clarify what success looks like for this solver, but only ask real decisions.
+- id: gswe-not-01 | set: should-not | input: Add a logout button to the settings page.
+- id: gswe-not-02 | set: should-not | input: What's the capital of France?
+- id: gswe-not-03 | set: should-not | input: Run the test suite.
+- id: gswe-not-04 | set: should-not | input: Give me a relentless grilling session on my startup idea.
+- id: gswe-not-05 | set: should-not | input: Fix the import error in main.py.
+- id: gswe-not-06 | set: should-not | input: Format this file with the project's formatter.
+- id: gswe-not-07 | set: should-not | input: Pin down what 'account' means in our domain and record it in the glossary.
+- id: gswe-not-08 | set: should-not | input: What files are in src/?
+- id: gswe-not-09 | set: should-not | input: Turn this finished discussion into a spec.
+- id: gswe-not-10 | set: should-not | input: Reconstruct what's actually built in this repo.
+- id: gswe-amb-01 | set: short-ambiguous | input: help me plan
+- id: gswe-amb-02 | set: short-ambiguous | input: scope this | context: attached task is a one-line, fully-specified chore
+- id: gswe-amb-03 | set: short-ambiguous | input: what do I actually want here?
+- id: gswe-conf-01 | set: conflict | input: Grill me relentlessly about this design until nothing is left standing.
+- id: gswe-conf-02 | set: conflict | input: Before I decide my goals, I realize I don't know what's already built in this repo.
+- id: gswe-conf-03 | set: conflict | input: Let's settle exactly what 'convergence' means as a stable term in our project.
+- id: gswe-conf-04 | set: conflict | input: Take these five open questions and tag each with a status and evidence level.
+- id: gswe-conf-05 | set: conflict | input: We've discussed enough — write the spec now.
+
+Return the JSON array for all 28 cases now.

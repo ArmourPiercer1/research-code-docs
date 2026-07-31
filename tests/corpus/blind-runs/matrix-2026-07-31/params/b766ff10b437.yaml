@@ -1,0 +1,7 @@
+blind_id: b766ff10b437
+artifact_type: adr
+profile:
+  provenance_policy: controlled
+  evidence_requirement: key-claims
+  reader_test: adr-comprehension
+  output_mode: audit

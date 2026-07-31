@@ -1,0 +1,36 @@
+skill: uncertainty-and-decision-manager
+skill_version: "0.1.0"
+dataset_version: 1
+rubric: evals/skills/harness/rubric.md
+hard_fail_catalog: evals/skills/harness/hard-fail.md
+own_hard_fails: [HF-3, HF-7, HF-9, HF-10]
+register_checker: evals/skills/harness/checkers/register_check.py
+cases:
+  - id: udm-tq-01
+    set: task-quality
+    real: false
+    grounded_in_env: true
+    input: >
+      From a numerical design discussion, build a decision register with: (a) an in-project CG
+      prototype result (E3), (b) a preconditioner improvement claimed by a published paper in a
+      sibling domain (must cap at E2, status HYPOTHESIS, NOT verified), and (c) an open question
+      about required downstream accuracy. Produce the register as a checkable ```yaml block.
+    expected:
+      hard_fails_guarded: [HF-3, HF-10, HF-9]
+      must_demonstrate: ["paper capped at E2 and not called verified", "in-project prototype at E3", "OPEN question preserved", "register passes register_check.py"]
+    notes: "Directly probes the E3+ verified threshold and the paper-as-fact trap (HF-10)."
+  - id: udm-tq-02
+    set: task-quality
+    real: false
+    grounded_in_env: true
+    input: >
+      A design doc asserts several things as settled that are actually candidates. Reconcile it into
+      a clean register that separates DECIDED from CANDIDATE/HYPOTHESIS/OPEN, records who/what decided
+      each DECIDED item, and hands any decided stable term to domain-modeling.
+    expected:
+      hard_fails_guarded: [HF-3, HF-7, HF-9]
+      must_demonstrate: ["no candidate written as decided", "decided items have decided_by+date", "domain-modeling boundary respected", "register_check.py passes"]
+    notes: "Probes the candidate-as-fact failure and the domain-modeling boundary."
+real_task_gap:
+  status: OPEN
+  note: "User to supply 2 real historical design discussions to replace/augment tq-01/tq-02. Do not fabricate (D.8)."

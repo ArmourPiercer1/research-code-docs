@@ -1,0 +1,19 @@
+case_id: GN-EXP-001
+mutation_id: MUT-EXP-NO-PROVENANCE
+base:
+  kind: normalized-seed
+  ref: SEED-EXP-YAHOO-RESNET
+  ext: md
+# Keep the RESULT claims (74.0% accuracy, 11ms latency) but strip every reproduction handle
+# (code commits, framework versions, hardware). The kept claims become load-bearing-but-unsupported.
+operations:
+  - op: delete-substrings
+    substrings:
+      - "We ran the code using commit `bd56a06d2815e3dc2914fc8ce2fa1ea60e19d324`."
+      - "We ran our experiments using git commit `24b236fdb6ca449eb52e8f816e039e0d634015a5`."
+      - "We use version `v1.10.0`."
+      - "We used a p3.2xlarge instance on AWS which has an NVIDIA GPU V100."
+      - "We use TensorFlow v1.8."
+intended_blockers: [HF-12A]        # kept "74% accuracy" claim now has no handle / no assumption label
+intended_findings: [no-code-commit, no-environment, no-framework-version, unreproducible-result]
+forbidden_unrelated_changes: []    # (redaction spans lines across sections; no whole-section invariant asserted)
