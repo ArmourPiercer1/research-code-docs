@@ -1,0 +1,623 @@
+[
+ {
+  "case_id": "BP-004-external",
+  "run_kind": "current",
+  "run_idx": 1,
+  "verdict": {
+   "quality_band": "PASS",
+   "gate_decision": "ALLOW",
+   "document_quality": "PASS",
+   "blockers": [],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED — SOURCE_COVERAGE=0/0 (ADR cites no external sources); empirical claims (~40ms/task cost, scheduler computes key before dispatch, mtimes not preserved) are not verifiable against code/tests/benchmarks in isolation. Non-blocking under external+audit per the terminal-gate contract (ALLOW + UNVERIFIED = structurally sound, facts not verifiable here).",
+   "reader_test": "PASS — self-contained ADR; a no-context reader answers Layer-1 Q1–Q4 (goal=portable content-addressed cache keys; primary responsibility=record the decision + rationale; decision is DECIDED with formula given inline; alternatives REJECTED with reasons) and Layer-2 decided-vs-candidate. HF-8 does not fire. Only soft spot: ~40ms estimate lacks a benchmark handle (MINOR, not a core misread).",
+   "checker_status": "COMPLETE — run_checks.py executed on the target; hard.frontmatter pass=false (raw HF-9 finding, no YAML/HTML-comment header), status_vocab pass=true; advisory clean; all signals clear except a benign single-role note (role_mixing: adr@L1). hard_fail=true reflects only the raw front-matter finding, which external policy maps to N/A."
+  }
+ },
+ {
+  "case_id": "BP-004-external",
+  "run_kind": "repeat",
+  "run_idx": 2,
+  "verdict": {
+   "quality_band": "PASS",
+   "gate_decision": "ALLOW",
+   "document_quality": "PASS",
+   "blockers": [],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "PASS",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "BP-004-external",
+  "run_kind": "repeat",
+  "run_idx": 3,
+  "verdict": {
+   "quality_band": "PARTIAL",
+   "gate_decision": "ALLOW",
+   "document_quality": "PASS",
+   "blockers": [],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "PASS",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "BP-004-controlled",
+  "run_kind": "current",
+  "run_idx": 1,
+  "verdict": {
+   "quality_band": "PARTIAL",
+   "gate_decision": "BLOCK",
+   "document_quality": "FAIL",
+   "blockers": [
+    "HF-9"
+   ],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "PASS",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "BP-004-controlled",
+  "run_kind": "repeat",
+  "run_idx": 2,
+  "verdict": {
+   "quality_band": "PARTIAL",
+   "gate_decision": "BLOCK",
+   "document_quality": "FAIL",
+   "blockers": [
+    "HF-9"
+   ],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED — no external sources cited or opened (SOURCE_COVERAGE=0/0); the load-bearing ~40ms/task cost estimate, the mtime-non-portability premise, and sha256 collision-negligibility are unverifiable in this read-only staged context (hard floor: 0 opened => UNVERIFIED). HF-12B/C/D are UNVERIFIED, not passed.",
+   "reader_test": "PASS — self-contained ADR; Layer-1 Q1-Q4 answerable cold so HF-8 does not fire. Only reader-relevant weakness (cannot confirm ACCEPTED-vs-draft status) is the HF-9 metadata gap, not a comprehension failure.",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "BP-004-controlled",
+  "run_kind": "repeat",
+  "run_idx": 3,
+  "verdict": {
+   "quality_band": "PARTIAL",
+   "gate_decision": "BLOCK",
+   "document_quality": "FAIL",
+   "blockers": [
+    "HF-9"
+   ],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "PASS",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "GP-EXP-001",
+  "run_kind": "current",
+  "run_idx": 1,
+  "verdict": {
+   "quality_band": "PASS",
+   "gate_decision": "ALLOW",
+   "document_quality": "PASS",
+   "blockers": [],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "PASS",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "GP-EXP-001",
+  "run_kind": "repeat",
+  "run_idx": 2,
+  "verdict": {
+   "quality_band": "PASS",
+   "gate_decision": "ALLOW",
+   "document_quality": "PASS",
+   "blockers": [],
+   "profile_echoed": true,
+   "checker_status": "COMPLETE (run_checks.py on tests/corpus/cases/golden-positive/GP-EXP-001/document.md returned hard_fail=false, files_checked=0, results=[]; no script-level findings — model-level HF-1..HF-15 adjudicated from the fully-inlined target)",
+   "factual_validity": "UNVERIFIED (SOURCE_COVERAGE=0/6; external experiment report — He2016 CVPR paper, TF/Caffe/Inception repos, DAWN benchmark, and embedded loss/accuracy figures not opened under strict isolation; HF-12B/C/D remain unverified, not PASS)",
+   "reader_test": "PASS (HF-8 clear; self-contained ResNet-50 training recipe; Layer-1 Q1-Q4 answerable — goal, primary responsibility, current state/canonical source, term/artifact locations; Layer-2 core Q6 next-step+DoD and Q7 decided-vs-future answerable; Q11 fallback N/A for an experiment report; no core-question contract-misread)"
+  }
+ },
+ {
+  "case_id": "GP-EXP-001",
+  "run_kind": "repeat",
+  "run_idx": 3,
+  "verdict": {
+   "quality_band": "PASS",
+   "gate_decision": "ALLOW",
+   "document_quality": "PASS",
+   "blockers": [],
+   "profile_echoed": true,
+   "checker_status": "PARTIAL — run_checks.py executed and returned {files_checked:0, hard_fail:false, results:[]}; the named path tests/corpus/cases/golden-positive/GP-EXP-001/document.md did not resolve to a materialized file, so the deterministic layer inspected 0 files. Target judged from the inline injected content; script-detectable HF-9/HF-3/HF-10 re-assessed at the model layer (none fire).",
+   "factual_validity": "UNVERIFIED — SOURCE_COVERAGE=0/6 load-bearing cited sources opened (CVPR ResNet paper, TF models repo, Caffe repo, Inception guide, DAWN benchmark, and the in-repo figures/notebook). HF-12B/C/D are UNVERIFIED, not passed; not reported as HF-12 verified/PASS.",
+   "reader_test": "PASS — self-contained experiment report; a no-context ML practitioner answers Layer-1 Q1-Q4 (goal=train ResNet-50 to ~74% on ImageNet; role=reproduction recipe; state=trained, 74.0% @500K iters; refs given) and Layer-2 core questions (decided recipe vs hedged future work). HF-8 does not fire."
+  }
+ },
+ {
+  "case_id": "GN-EXP-REPRO-001",
+  "run_kind": "current",
+  "run_idx": 1,
+  "verdict": {
+   "quality_band": "PARTIAL",
+   "gate_decision": "ALLOW",
+   "document_quality": "PASS",
+   "blockers": [],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "PASS",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "GN-EXP-REPRO-001",
+  "run_kind": "repeat",
+  "run_idx": 2,
+  "verdict": {
+   "quality_band": "PARTIAL",
+   "gate_decision": "ALLOW",
+   "document_quality": "PASS",
+   "blockers": [],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED — SOURCE_COVERAGE=0/6 load-bearing cited sources opened (strict isolation). The 2 relative refs (figures/accuracy3.png, inference.ipynb) and 6 external citations are unreachable here; HF-12B/C/D UNVERIFIED. Per terminal-gate contract, ALLOW+UNVERIFIED is NOT a green terminal gate.",
+   "reader_test": "PASS — Layer-1 Q1-Q4 answerable from artifact alone (goal, primary responsibility, state+source, related pointers) so no HF-8; Layer-2 core Q6 (next-step+DoD: run TF-models code to locate the 2% discrepancy) and Q7 (decided-vs-candidate) answerable, Q11 low-applicability for an experiment report. MAJOR note: no training hyperparameters and 'contact author' HDFS data limit full reproducibility.",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "GN-EXP-REPRO-001",
+  "run_kind": "repeat",
+  "run_idx": 3,
+  "verdict": {
+   "quality_band": "PARTIAL",
+   "gate_decision": "ALLOW",
+   "document_quality": "PASS",
+   "blockers": [],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED — 0 of the load-bearing cited sources (ResNet paper, TF/Caffe repos, Inception guide, DAWN benchmark, accuracy figure, inference notebook) opened; empirical claims (74.0/74.05% acc, 11ms latency, 2%-below-published) unverifiable here. HF-12B/C/D UNVERIFIED; HF-12 not reported as PASS. This makes the ALLOW a non-green terminal gate (structurally sound, facts not verifiable here), not a proceed signal.",
+   "reader_test": "PASS — Layer-1 Q1–Q4 answerable from the artifact alone (goal: train ResNet-50 to ~74% ImageNet val acc; role: training recipe/experiment report; state + open questions locatable) so HF-8 does not fire; core Layer-2 (next-step, decided-vs-candidate) mostly answerable. Reproducibility gaps (missing hyperparameters/seed/versions, internal-only HDFS data, broken figure/notebook links) are MAJOR quality findings but do not fail the core reader questions.",
+   "checker_status": "COMPLETE — run_checks.py executed; hard_fail:true is the raw frontmatter finding only, severity-remapped by profile. status_vocab pass; advisory markdown_links fail (2 dangling links = link-integrity, NOT HF-14a); all signals clear (role_mixing only mention-level 'validation')."
+  }
+ },
+ {
+  "case_id": "GN-EVIDENCE-BARE-CLAIM-001",
+  "run_kind": "current",
+  "run_idx": 1,
+  "verdict": {
+   "quality_band": "FAIL",
+   "gate_decision": "BLOCK",
+   "document_quality": "FAIL",
+   "blockers": [
+    "HF-12A",
+    "HF-12E"
+   ],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "FAIL",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "GN-EVIDENCE-BARE-CLAIM-001",
+  "run_kind": "repeat",
+  "run_idx": 2,
+  "verdict": {
+   "quality_band": "FAIL",
+   "gate_decision": "BLOCK",
+   "document_quality": "FAIL",
+   "blockers": [
+    "HF-12A",
+    "HF-12E"
+   ],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "FAIL",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "GN-EVIDENCE-BARE-CLAIM-001",
+  "run_kind": "repeat",
+  "run_idx": 3,
+  "verdict": {
+   "quality_band": "FAIL",
+   "gate_decision": "BLOCK",
+   "document_quality": "FAIL",
+   "blockers": [
+    "HF-12A",
+    "HF-12E"
+   ],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "FAIL",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "GN-ROADMAP-001",
+  "run_kind": "current",
+  "run_idx": 1,
+  "verdict": {
+   "quality_band": "PARTIAL",
+   "gate_decision": "BLOCK",
+   "document_quality": "FAIL",
+   "blockers": [
+    "HF-15"
+   ],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "FAIL",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "GN-ROADMAP-001",
+  "run_kind": "repeat",
+  "run_idx": 2,
+  "verdict": {
+   "quality_band": "PARTIAL",
+   "gate_decision": "BLOCK",
+   "document_quality": "FAIL",
+   "blockers": [
+    "HF-15"
+   ],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "FAIL",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "GN-ROADMAP-001",
+  "run_kind": "repeat",
+  "run_idx": 3,
+  "verdict": {
+   "quality_band": "PARTIAL",
+   "gate_decision": "BLOCK",
+   "document_quality": "FAIL",
+   "blockers": [
+    "HF-15"
+   ],
+   "profile_echoed": true,
+   "checker_status": "COMPLETE",
+   "factual_validity": "UNVERIFIED — 0/N load-bearing cited sources opened under strict isolation (status.md, state-report.md, references/turbulence-closure-review.md not read); HF-12B/C/D remain UNVERIFIED. The verdict rests on doc-only structural gate HF-15, which stands independent of source access; factual-validity state cannot rescue or alter it.",
+   "reader_test": "FAIL — Layer-1 Q1–Q4 answerable (self-contained; no HF-8). Layer-2 core Q6 fails: the next committed phase (Phase 1) has no measurable DoD ('与基线对照，效果达标即可，具体算例与阈值届时定'), so a no-context roadmap-execution reader cannot name how Phase 1 is 'done'. Reader-actionability [NC] fails and substantiates HF-15."
+  }
+ },
+ {
+  "case_id": "GP-PROP-CONTROLLED-001",
+  "run_kind": "current",
+  "run_idx": 1,
+  "verdict": {
+   "quality_band": "PASS",
+   "gate_decision": "ALLOW",
+   "document_quality": "PASS",
+   "blockers": [],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "PASS",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "GP-PROP-CONTROLLED-001",
+  "run_kind": "repeat",
+  "run_idx": 2,
+  "verdict": {
+   "quality_band": "PASS",
+   "gate_decision": "ALLOW",
+   "document_quality": "PASS",
+   "blockers": [],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "PASS",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "GP-PROP-CONTROLLED-001",
+  "run_kind": "repeat",
+  "run_idx": 3,
+  "verdict": {
+   "quality_band": "PASS",
+   "gate_decision": "ALLOW",
+   "document_quality": "PASS",
+   "blockers": [],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "PASS",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "GN-PROP-VALIDATION-001",
+  "run_kind": "current",
+  "run_idx": 1,
+  "verdict": {
+   "quality_band": "PARTIAL",
+   "gate_decision": "INCOMPLETE",
+   "document_quality": "INCOMPLETE_EVALUATION",
+   "blockers": [],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "FAIL",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "GN-PROP-VALIDATION-001",
+  "run_kind": "repeat",
+  "run_idx": 2,
+  "verdict": {
+   "quality_band": "PARTIAL",
+   "gate_decision": "INCOMPLETE",
+   "document_quality": "INCOMPLETE_EVALUATION",
+   "blockers": [],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "FAIL",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "GN-PROP-VALIDATION-001",
+  "run_kind": "repeat",
+  "run_idx": 3,
+  "verdict": {
+   "quality_band": "PARTIAL",
+   "gate_decision": "INCOMPLETE",
+   "document_quality": "INCOMPLETE_EVALUATION",
+   "blockers": [],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "FAIL",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "BP-002-fail",
+  "run_kind": "current",
+  "run_idx": 1,
+  "verdict": {
+   "quality_band": "PARTIAL",
+   "gate_decision": "BLOCK",
+   "document_quality": "FAIL",
+   "blockers": [
+    "HF-14b"
+   ],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "PASS",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "BP-002-fail",
+  "run_kind": "repeat",
+  "run_idx": 2,
+  "verdict": {
+   "quality_band": "PARTIAL",
+   "gate_decision": "BLOCK",
+   "document_quality": "FAIL",
+   "blockers": [
+    "HF-14b"
+   ],
+   "profile_echoed": true,
+   "checker_status": "COMPLETE",
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "FAIL"
+  }
+ },
+ {
+  "case_id": "BP-002-fail",
+  "run_kind": "repeat",
+  "run_idx": 3,
+  "verdict": {
+   "quality_band": "PARTIAL",
+   "gate_decision": "BLOCK",
+   "document_quality": "FAIL",
+   "blockers": [
+    "HF-14b"
+   ],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "PASS",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "BP-002-pass",
+  "run_kind": "current",
+  "run_idx": 1,
+  "verdict": {
+   "quality_band": "PASS",
+   "gate_decision": "ALLOW",
+   "document_quality": "PASS",
+   "blockers": [],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "PASS",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "BP-002-pass",
+  "run_kind": "repeat",
+  "run_idx": 2,
+  "verdict": {
+   "quality_band": "PASS",
+   "gate_decision": "ALLOW",
+   "document_quality": "PASS",
+   "blockers": [],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "PASS",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "BP-002-pass",
+  "run_kind": "repeat",
+  "run_idx": 3,
+  "verdict": {
+   "quality_band": "PASS",
+   "gate_decision": "ALLOW",
+   "document_quality": "PASS",
+   "blockers": [],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "PASS",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "BP-002-audit",
+  "run_kind": "current",
+  "run_idx": 1,
+  "verdict": {
+   "quality_band": "PARTIAL",
+   "gate_decision": "ALLOW",
+   "document_quality": "PASS",
+   "blockers": [],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "PASS",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "BP-002-audit",
+  "run_kind": "repeat",
+  "run_idx": 2,
+  "verdict": {
+   "quality_band": "PARTIAL",
+   "gate_decision": "ALLOW",
+   "document_quality": "PASS",
+   "blockers": [],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED (SOURCE_COVERAGE=0/2; meshkit@f7a1b20 and status/current.md not opened under strict isolation; hard floor: 0 opened -> UNVERIFIED. HF-12B/C/D unverified, HF-12A/E doc-only pass.)",
+   "reader_test": "PASS",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "BP-002-audit",
+  "run_kind": "repeat",
+  "run_idx": 3,
+  "verdict": {
+   "quality_band": "PARTIAL",
+   "gate_decision": "ALLOW",
+   "document_quality": "PASS",
+   "blockers": [],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "PASS",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "BP-005-pass",
+  "run_kind": "current",
+  "run_idx": 1,
+  "verdict": {
+   "quality_band": "PASS",
+   "gate_decision": "ALLOW",
+   "document_quality": "PASS",
+   "blockers": [],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "PASS",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "BP-005-pass",
+  "run_kind": "repeat",
+  "run_idx": 2,
+  "verdict": {
+   "quality_band": "PASS",
+   "gate_decision": "ALLOW",
+   "document_quality": "PASS",
+   "blockers": [],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "PASS",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "BP-005-pass",
+  "run_kind": "repeat",
+  "run_idx": 3,
+  "verdict": {
+   "quality_band": "PASS",
+   "gate_decision": "ALLOW",
+   "document_quality": "PASS",
+   "blockers": [],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED — 0 of the cited sources opened under strict isolation (SOURCE_COVERAGE=0/1). HF-12A/E pass doc-only; HF-12B/C/D are unverified but not breached because the sole load-bearing claim is a self-labeled project-inference/hypothesis resting on an explicitly-labeled analogy, not on cited-source verification. Does not block ALLOW (structurally sound, facts not verifiable here).",
+   "reader_test": "PASS — Layer 1 (goal, single primary responsibility, state=unverified hypothesis, open question) and Layer 2 (next executable step + measurable DoD ≥15 pts over baseline at σ=0.2, nothing DECIDED vs CANDIDATE since explicitly a hypothesis, GO-gate fallback) all answerable from the artifact alone.",
+   "checker_status": "COMPLETE — hard_fail=false; frontmatter PASS, status_vocab PASS; all signal checkers (state_numbers, completion_open, roadmap_fields, session_residue, role_mixing) clear."
+  }
+ },
+ {
+  "case_id": "BP-005-fail",
+  "run_kind": "current",
+  "run_idx": 1,
+  "verdict": {
+   "quality_band": "FAIL",
+   "gate_decision": "BLOCK",
+   "document_quality": "FAIL",
+   "blockers": [
+    "HF-10",
+    "HF-12E"
+   ],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "FAIL",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "BP-005-fail",
+  "run_kind": "repeat",
+  "run_idx": 2,
+  "verdict": {
+   "quality_band": "FAIL",
+   "gate_decision": "BLOCK",
+   "document_quality": "FAIL",
+   "blockers": [
+    "HF-10",
+    "HF-12E"
+   ],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED",
+   "reader_test": "FAIL",
+   "checker_status": "COMPLETE"
+  }
+ },
+ {
+  "case_id": "BP-005-fail",
+  "run_kind": "repeat",
+  "run_idx": 3,
+  "verdict": {
+   "quality_band": "FAIL",
+   "gate_decision": "BLOCK",
+   "document_quality": "FAIL",
+   "blockers": [
+    "HF-10",
+    "HF-12E"
+   ],
+   "profile_echoed": true,
+   "factual_validity": "UNVERIFIED — the sole load-bearing source (references/noise-robustness-notes.md) was not opened under strict isolation; SOURCE_COVERAGE=0/1. Source-needing sub-gates HF-12B/C/D are UNVERIFIED, not PASS; HF-12 is not reported verified.",
+   "reader_test": "FAIL — reasoned from the artifact under strict isolation (independent reader sub-agent not spawnable). The doc stamps an analytically/notes-supported prediction as VERIFIED/DECIDED and \"settled; downstream phases can rely\", so a no-context reader is misled about evidence strength (Layer-2 Q8 core: a load-bearing claim lacks project-level support yet is unflagged).",
+   "checker_status": "COMPLETE — run_checks.py ran on the target: hard_fail=false (frontmatter pass, status_vocab pass), all 5 signals clear. Raw-clean checker does NOT clear the model-judged gates; HF-10 and HF-12E fire on the sole over-claimed conclusion."
+  }
+ }
+]

@@ -23,7 +23,8 @@ REQUIRED = {
     "skill_version": ("skill_version", "version"),
     "source_commit": ("source_commit",),
     "source_documents": ("source_documents", "source_document", "source_doc"),
-    "status": ("status",),
+    # doc-level state: a legacy `status:` OR the v0.4 `document_lifecycle:` (ADR-DQE-001 D-14) satisfies it
+    "status": ("status", "document_lifecycle"),
     "last_verified": ("last_verified", "last_updated"),
 }
 

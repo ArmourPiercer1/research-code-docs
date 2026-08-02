@@ -14,6 +14,7 @@ source:
 
 profile:
   provenance_policy: external
+  decision_mode: audit
   evidence_requirement: key-claims
   reader_test: reproducibility-execution
   output_mode: audit

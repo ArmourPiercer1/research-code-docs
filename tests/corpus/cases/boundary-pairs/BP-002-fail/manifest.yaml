@@ -9,7 +9,7 @@ language: en
 holdout: true                          # reserved holdout
 document: tests/corpus/cases/boundary-pairs/BP-002-fail/document.md
 source: {kind: synthetic}
-profile: {provenance_policy: controlled, evidence_requirement: key-claims, reader_test: architecture-comprehension, output_mode: audit}
+profile: {provenance_policy: controlled, decision_mode: release-gate, evidence_requirement: key-claims, reader_test: architecture-comprehension, output_mode: gate}
 expected:
   document_quality: FAIL
   quality_band: PARTIAL                 # a clean stable design doc except one volatile fact lacks a pointer
@@ -26,15 +26,16 @@ expected:
 # open question) leaving HF-14b (bare live count, no pointer) as the LONE defect.
 
 adjudication:
-  status: disputed                      # quality agrees (PARTIAL) but the GATE axis splits -> user must rule
-  method: two-axis blind Reviewer A/B (adjudication-v4, isolated, no DQE skill)
+  status: gold                          # USER RULING D-7=A_QUALIFIED (2026-08-02): dispute resolved -> FAIL/BLOCK
+  method: two-axis blind Reviewer A/B (adjudication-v4) + user ruling D-7
   reviewer_a: {quality_band: PARTIAL, gate: BLOCK, defect_tags: [volatile-in-stable], confidence: MEDIUM}
   reviewer_b: {quality_band: PARTIAL, gate: ALLOW, defect_tags: [volatile-in-stable], confidence: MEDIUM}
-  consensus: pending                    # UNRESOLVED — excluded from any live metric until the user rules
-  confidence: MEDIUM
-  adjudicated_at: '2026-07-31'
-  dispute: 'Both reviewers see the volatile-in-stable defect (a bare "当前 69 项测试全部通过" in a doc that
-    declares itself the stable/BASELINE design) and rate quality PARTIAL, but split on the gate: A=BLOCK
-    (a baseline reference must not carry a live count), B=ALLOW (architecture comprehension is intact; one
-    line does not block). Corpus intent = FAIL/BLOCK (required HF-14b). USER DECISION NEEDED
-    (decisions-pending D7): does a single volatile-in-stable line BLOCK a baseline architecture doc?'
+  consensus: FAIL                       # user ruling: under controlled + release-gate, HF-14b BLOCKS
+  confidence: HIGH
+  adjudicated_at: '2026-08-02'
+  ruling: >-
+    D-7=A_QUALIFIED. QUALITY_BAND=PARTIAL, GATE_DECISION=BLOCK, required_blockers=[HF-14b]. The HF-14b
+    BLOCK is QUALIFIED to controlled + release-gate + stable-canonical-doc + bare-current-volatile-fact +
+    no-pointer — ALL true here (see profile). It is NOT "any test count auto-fails": external/legacy/audit,
+    dated snapshots with a pointer, and status/experiment reports do NOT get this BLOCK (see the
+    BP-002-audit / BP-002-external siblings). Reviewer B's ALLOW is preserved as the audit-mode reading.

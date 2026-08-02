@@ -4,22 +4,24 @@ skill_version: n/a (contract ADR)
 source_documents:
   - docs/third-party-suggestions/DQE_v0.4_测试修正与最小升级计划.md (§5)
   - docs/skill-development/reports/dqe-blind-matrix-investigation-2026-07-31.md (§4X, §7)
-  - docs/skill-development/reports/dqe-v0.4-defect-ledger.md (D-06, D-10, D-11)
-status: PROPOSED — corpus aligns to this target contract now; SKILL implementation DEFERRED
-last_verified: 2026-07-31
+  - docs/skill-development/reports/dqe-v0.4-defect-ledger.md (D-06, D-10, D-11, D-14, D-15)
+  - docs/third-party-suggestions/DQE_v4_待决策项回复与下一阶段开发计划.md (Phase B: B1, B2; D-7)
+status: ACCEPTED 2026-08-02 — corpus aligned; skill implements this contract in the v0.4 round (Phase C)
+last_verified: 2026-08-02
 -->
 
 # ADR-DQE-001 — Evaluation profile, verdict axes, and lifecycle-vs-claim status
 
-- **Status:** PROPOSED (target contract). The **test corpus** is being aligned to this ADR now
-  (dataset_version 4). The **skill** (`documentation-quality-evaluator`) is **NOT** changed in this
-  round — implementing this contract in `SKILL.md` / `hard-fail.md` / `frontmatter_check.py` is deferred
-  to a separately-approved v0.4 skill pass. Until then the skill keeps its v0.3 behavior and stays
-  `experimental, manual-orchestrator-only, terminal_gate_authority: false, auto_trigger: false`.
-- **Deciders:** corpus owner (user) + this session (test upgrade).
+- **Status:** **ACCEPTED (2026-08-02)** — superseding the PROPOSED draft. The test corpus is aligned to
+  this contract (dataset_version 4, all decisions D-6/D-7 resolved). The skill implements it in the v0.4
+  round (Phase C of `DQE_v4_待决策项回复与下一阶段开发计划.md`): profile-aware HF-9, two-axis verdict,
+  lifecycle vocabulary, HF-14b profile severity. Even after v0.4, DQE stays
+  `disable-model-invocation: true, auto_trigger: false`; promotion to `provisional-gate` is gated on the
+  admission matrix (Phase E).
+- **Deciders:** corpus owner (user, via the D-6/D-7 reply + next-phase plan) + this session.
 - **Context:** the 2026-07-31 blind matrix + §4X re-check found that several failures stem from *undefined
-  evaluator contract* (defect-ledger D-06/D-10/D-11), not just from skill logic. Before any hard gate is
-  changed, the input/output contract must be pinned so fixtures and reviewers have a stable target.
+  evaluator contract* (defect-ledger D-06/D-10/D-11), not just from skill logic. This ADR pins the
+  input/output contract so fixtures, reviewers, and the v0.4 skill share one target.
 
 ---
 
@@ -57,6 +59,24 @@ checker shape (for the deferred skill change):
 
 → evaluator: `controlled → HF-9 BLOCKER · legacy → MAJOR · external → MINOR/NA`.
 
+### B1 — how the profile reaches DQE (ACCEPTED)
+
+The **caller** (terminal-gate orchestrator / eval harness) MUST pass `evaluation_profile` explicitly. DQE
+**must not silently infer** `provenance_policy` or `decision_mode` — mis-inference is exactly what caused
+the HF-9 false-fails (D-01). `artifact_type` MAY be inferred from the document when unspecified.
+
+When the profile (or `provenance_policy` / `decision_mode`) is absent:
+
+```text
+- DQE may still run a general audit and report findings,
+- but it MUST NOT emit a terminal ALLOW,
+- GATE_DECISION = INCOMPLETE,
+- and the report must name the missing profile fields.
+```
+
+The evaluator echoes the profile it actually used (`EVALUATION_PROFILE={...}` in the verdict block) so a
+reader can see which severities were applied. (Resolves OQ-2.)
+
 ## Decision 2 — Split document lifecycle from claim status (D-11)
 
 Retire the overloaded `status: DECIDED` document header. Use two distinct vocabularies:
@@ -76,6 +96,24 @@ Rules:
 - An `ACCEPTED` evidence note **may** contain a `HYPOTHESIS` — "the document is accepted" ≠ "every claim
   in it is verified". (This is exactly why BP-005-pass must PASS.)
 - The evaluator must not read a document-level `ACCEPTED`/`DECIDED` as a claim-level verification.
+
+### D-14 — vocabulary reconciliation (ACCEPTED)
+
+Two lifecycle vocabularies must not collide (discovered when `status: ACCEPTED` tripped the v0.3
+`status_vocab` checker):
+
+- **Authored-document lifecycle** (this ADR): `document_lifecycle: DRAFT | IN_REVIEW | ACCEPTED | DEPRECATED`.
+- **Skill/registry lifecycle** (system-architecture §11, unchanged): `experimental | active | planned |
+  deprecated | replaced | retired | reference-only | in-progress` — used in `SKILL.md` provenance and the
+  skill registry, NOT for authored research docs.
+- **Claim status** (unchanged): `FACT | VERIFIED | DECIDED | BASELINE | HYPOTHESIS | CANDIDATE | OPEN |
+  DEFERRED | REJECTED | STALE`.
+
+v0.4 changes (Phase C3): `status_vocab_check.py` accepts `document_lifecycle` values on a
+`document_lifecycle:` field; `frontmatter_check.py` accepts `document_lifecycle` as satisfying the
+doc-level status requirement (so a doc need not also carry a legacy `status:`). Transition: a legacy
+`status:` field is still accepted but emits a **deprecation warning**, and a document-level `status:
+DECIDED` must NOT be read as "all claims decided".
 
 ## Decision 3 — Two verdict axes; keep `DOCUMENT_QUALITY` as compat map (D-10)
 
@@ -102,6 +140,13 @@ Example — a mostly-good doc with one blocking gap:
 QUALITY_BAND=PARTIAL · GATE_DECISION=BLOCK · BLOCKERS=[HF-15]   (=> DOCUMENT_QUALITY=FAIL)
 ```
 
+**BLOCK vs INCOMPLETE (clarified 2026-08-02):** `BLOCK` = a present, identifiable defect must be fixed
+before proceeding. `INCOMPLETE` = a **required section/input is missing**, so the gate cannot approve —
+"can't-approve-yet", not "wrong". Both are **non-ALLOW**. Example: a release-gate technical proposal with
+no validation/acceptance/rollback → `GATE_DECISION=INCOMPLETE` (this is the adjudicated gold for
+`GN-PROP-VALIDATION-001`; both blind reviewers reached INCOMPLETE, not BLOCK). A golden-negative is
+satisfied by **any non-ALLOW** gate.
+
 Corpus impact THIS round: manifests gain **additive** `expected.quality_band` + `expected.gate_decision`;
 `expected.document_quality` is retained as the compat mapping so no scorer needs rewriting.
 
@@ -114,10 +159,11 @@ handle" (HF-12A). It is evaluated via dedicated `required_findings`:
 required_findings: [missing-code-version, missing-environment, missing-execution-entry, missing-reproduction-tolerance]
 ```
 
-Whether reproducibility deserves its own **hard gate** (e.g. HF-REPRO) is **OPEN** — deferred to the
-skill round, decided only if the clean `GN-EXP-REPRO-001` fixture shows v0.3 cannot flag it via existing
-gates. This ADR only fixes that the *corpus* separates "bare claim" (`GN-EVIDENCE-BARE-CLAIM-001`, pure
-HF-12A) from "not reproducible" (`GN-EXP-REPRO-001`, findings-based).
+Whether reproducibility deserves its own **hard gate** (e.g. HF-REPRO) is **`OQ-REPRO=DEFER` (B2,
+ACCEPTED)** — no HF-REPRO is added in v0.4. The v0.3 spot-check already BLOCKed `GN-EXP-REPRO-001` via
+HF-12A/HF-12E; a dedicated gate is only designed if the v0.4 diagnostic matrix shows that case wrongly
+ALLOWed after the HF-9 profile fix. This ADR fixes that the *corpus* separates "bare claim"
+(`GN-EVIDENCE-BARE-CLAIM-001`, pure HF-12A) from "not reproducible" (`GN-EXP-REPRO-001`, findings-based).
 
 ## Decision 5 — Hard-gate tightening targets (for the deferred skill round; recorded here as contract)
 
@@ -135,6 +181,34 @@ Recorded so the corpus can encode the intended behavior as `forbidden_blockers` 
   architecture with a non-blocking open question; a historical snapshot next to a clearly-dated current
   value. Dangling TOC ⇒ **link/navigation integrity**, not state contradiction.
 
+## Decision 6 — HF-14b is profile-qualified (D-7 = A_QUALIFIED, D-15)
+
+HF-14b (a volatile fact embedded in a stable/canonical doc) is **narrowed**, not expanded. It is a
+release **BLOCKER only** when ALL hold:
+
+1. `artifact_type` is a stable-design type (architecture / roadmap / ADR / algorithm-spec / vision-baseline);
+2. `provenance_policy: controlled` AND `decision_mode: release-gate`;
+3. the doc is a declared canonical / BASELINE / ACCEPTED design;
+4. a dynamic fact is written as a bare **current** claim ("当前"/"目前"/"现有 N 项测试通过"/undated active progress);
+5. NO escape hatch is present (an `as-of` date · a canonical dynamic-source pointer · an auto-update
+   mechanism · an explicit "historical snapshot" label · explicit subordination to a status appendix);
+6. there is real drift risk / false information-ownership.
+
+Severity map:
+
+| profile / mode | HF-14b handling |
+|---|---|
+| controlled + release-gate | **BLOCKER** |
+| controlled + audit | MAJOR finding (does not force BLOCK) |
+| legacy + audit | MAJOR migration finding |
+| external + audit | MINOR/MAJOR — never a lone BLOCK |
+| status report / experiment report | N/A (owns its live facts) |
+| dated snapshot + pointer | PASS / escape |
+| two conflicting current dynamic values | that is HF-14a, not HF-14b |
+
+Regression triad (all byte-identical, adjudicated v4b): `BP-002-fail` (controlled+release-gate → BLOCK),
+`BP-002-audit` (controlled+audit → ALLOW), `BP-002-external` (external+audit → ALLOW).
+
 ## Consequences
 
 - **Now (corpus):** fixtures adopt `document_lifecycle`; manifests carry two-axis expectations + the
@@ -148,10 +222,9 @@ Recorded so the corpus can encode the intended behavior as `forbidden_blockers` 
 
 ## Open questions
 
-- **OQ-1:** does reproducibility get a dedicated hard gate (HF-REPRO) or stay findings-only? (decide after
-  GN-EXP-REPRO-001 spot-check)
-- **OQ-2:** how does `evaluation_profile` physically reach the skill at call time — explicit caller
-  argument vs skill-inferred from the document/caller? (affects the downstream gate contract; decide with
-  the F1 skill change)
-- **OQ-3:** should the verdict schema add a `CONDITIONAL_PASS` tier (deferred D-5 from v0.3)? Larger schema
-  change; revisit post-admission.
+- **OQ-1 → RESOLVED (B2):** reproducibility stays findings-only; `OQ-REPRO=DEFER`, no HF-REPRO in v0.4.
+- **OQ-2 → RESOLVED (B1):** `evaluation_profile` is passed explicitly by the caller; DQE never silently
+  infers `provenance_policy`/`decision_mode`; missing profile ⇒ `GATE_DECISION=INCOMPLETE`.
+- **OQ-3 (open):** should the verdict schema add a `CONDITIONAL_PASS` tier (deferred D-5 from v0.3)? Larger
+  schema change; revisit post-admission. (`QUALITY_BAND=PARTIAL` + `GATE_DECISION=ALLOW` already covers
+  much of this need, reducing its urgency.)

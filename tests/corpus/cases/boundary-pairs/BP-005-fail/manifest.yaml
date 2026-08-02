@@ -9,7 +9,7 @@ language: en
 holdout: true                          # reserved holdout
 document: tests/corpus/cases/boundary-pairs/BP-005-fail/document.md
 source: {kind: synthetic}
-profile: {provenance_policy: controlled, evidence_requirement: key-claims, reader_test: evidence-comprehension, output_mode: audit}
+profile: {provenance_policy: controlled, decision_mode: release-gate, evidence_requirement: key-claims, reader_test: evidence-comprehension, output_mode: audit}
 expected:
   document_quality: FAIL
   factual_validity_allowed: [UNVERIFIED]

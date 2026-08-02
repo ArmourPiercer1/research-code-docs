@@ -265,7 +265,10 @@ evidence in `docs/testing/corpus-repair-report-v4.md`):
 - **decision:** UNRESOLVED → user (decisions-pending D6): quarantine + rebuild on a leaner base proposal
   where removing the test plan genuinely breaks executability, OR accept a different intended defect. The
   KEP base is too implementation-complete to fail by one deletion (same failure mode as GN-EXP-001, D-04).
-- **status:** OPEN (disputed; excluded from live metrics)
+- **status:** RESOLVED 2026-08-02 (D-6=A). GN-PROP-001 v2 → `cases/quarantine/GN-PROP-001-v2/` (not
+  overridden to FAIL). Rebuilt lean controlled pair `GP-PROP-CONTROLLED-001` (gold PASS/ALLOW) +
+  `GN-PROP-VALIDATION-001` (gold PARTIAL/**INCOMPLETE** — both reviewers: missing required release
+  sections → non-ALLOW; a refinement of the expected BLOCK). See adjudication-v4b.md.
 
 ### D-14 — retired-status vocab: `ACCEPTED` is not a legal skill status token
 - **category:** CONTRACT + FIXTURE
@@ -278,6 +281,19 @@ evidence in `docs/testing/corpus-repair-report-v4.md`):
   `status:` field, so `document_lifecycle: ACCEPTED` elsewhere is inert under v0.3). CONTRACT: reconcile
   ADR document_lifecycle vocab with the skill lifecycle vocab in the v0.4 skill round.
 - **status:** FIXTURE part IMPLEMENTED; CONTRACT part OPEN (v0.4)
+
+### D-15 — HF-14b applicability must be profile-qualified (D-7 resolution)
+- **category:** CONTRACT (+ corpus)
+- **evidence:** BP-002-fail's gate split in adjudication-v4 (A BLOCK / B ALLOW). User ruled D-7=A_QUALIFIED:
+  keep FAIL/BLOCK, but only under `controlled + release-gate + stable-canonical-doc + bare-current-volatile-
+  fact + no-pointer`. Three byte-identical BP-002 variants (adjudication-v4b) confirm the gate flips with
+  profile alone: release-gate→BLOCK, controlled+audit→ALLOW, external+audit→ALLOW.
+- **decision:** HF-14b severity is profile-mapped (controlled+release-gate ⇒ BLOCKER; controlled+audit ⇒
+  MAJOR; legacy/external/audit ⇒ MINOR/MAJOR, never a lone BLOCK; status/experiment reports ⇒ N/A; dated
+  snapshot + pointer ⇒ escape). This is a **narrowing** of HF-14b, not an expansion.
+- **planned_change:** ADR-DQE-001 §HF-14b severity map (Phase B); skill implements the mapping (Phase C5,
+  C-round). Corpus: BP-002-fail (BLOCK) + BP-002-audit/external (ALLOW) added as regressions.
+- **status:** CONTRACT + corpus IMPLEMENTED (this round); skill mapping = Phase C.
 
 ## Bottom line (evidence-based)
 

@@ -1,0 +1,34 @@
+case_id: BP-002-external
+case_version: 1
+class: boundary-pass
+profile_variant_of: BP-002-fail        # SAME document bytes; only the profile differs (HF-14b severity test)
+difference_under_test: same stable-design doc as BP-002-fail, but provenance_policy=external + audit -> HF-14b does not release-BLOCK
+artifact_type: architecture-doc
+language: en
+holdout: false
+document: tests/corpus/cases/boundary-pairs/BP-002-external/document.md
+source: {kind: synthetic}
+profile: {provenance_policy: external, decision_mode: audit, evidence_requirement: key-claims, reader_test: architecture-comprehension, output_mode: audit}
+expected:
+  document_quality: PASS                # compat of GATE_DECISION=ALLOW
+  quality_band: PARTIAL                 # volatile-in-stable still noted
+  gate_decision: ALLOW                  # external + audit: not our release gate -> no BLOCK on this
+  factual_validity_allowed: [VERIFIED, PARTIALLY_VERIFIED, UNVERIFIED]
+  reader_test: PASS
+  required_blockers: []
+  forbidden_blockers: [HF-14b, HF-9, HF-13, HF-14a, HF-15]   # neither HF-14b (external) nor HF-9 (external) may BLOCK
+  required_findings: [volatile-in-stable]
+# Tests the D-7 severity map: external + audit -> HF-14b = MINOR/MAJOR, never a release BLOCK. Together
+# with BP-002-fail (BLOCK) and BP-002-audit (ALLOW) this proves the BLOCK comes from the controlled
+# release-gate CONTRACT, not a mechanical penalty on one line. FROZEN v0.3 will mis-BLOCK (expected).
+adjudication:
+  status: gold
+  method: two-axis blind Reviewer A/B (adjudication-v4b, isolated, no DQE skill)
+  reviewer_a: {quality_band: PARTIAL, gate: ALLOW, defect_tags: [volatile-in-stable], confidence: HIGH}
+  reviewer_b: {quality_band: PASS, gate: ALLOW, defect_tags: [volatile-in-stable], confidence: HIGH}
+  consensus: ALLOW                # gate consensus ALLOW; quality-band split PARTIAL/PASS -> record PARTIAL
+  confidence: HIGH
+  adjudicated_at: '2026-08-02'
+  notes: 'D-7 profile-severity CONFIRMED: same bytes as BP-002-fail but external + audit -> both reviewers
+    ALLOW. Triad BP-002-fail(BLOCK)/audit(ALLOW)/external(ALLOW) proves the BLOCK is the controlled
+    release-gate contract, not a mechanical penalty on one line.'

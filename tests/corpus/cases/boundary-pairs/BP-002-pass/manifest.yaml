@@ -9,7 +9,7 @@ language: en
 holdout: false
 document: tests/corpus/cases/boundary-pairs/BP-002-pass/document.md
 source: {kind: synthetic}
-profile: {provenance_policy: controlled, evidence_requirement: key-claims, reader_test: architecture-comprehension, output_mode: audit}
+profile: {provenance_policy: controlled, decision_mode: release-gate, evidence_requirement: key-claims, reader_test: architecture-comprehension, output_mode: audit}
 expected:
   document_quality: PASS
   factual_validity_allowed: [VERIFIED, PARTIALLY_VERIFIED]

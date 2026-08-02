@@ -9,7 +9,7 @@ language: en
 holdout: false
 document: tests/corpus/cases/boundary-pairs/BP-004-shared/document.md
 source: {kind: synthetic}
-profile: {provenance_policy: external, evidence_requirement: key-claims, reader_test: adr-comprehension, output_mode: audit}
+profile: {provenance_policy: external, decision_mode: audit, evidence_requirement: key-claims, reader_test: adr-comprehension, output_mode: audit}
 expected:
   document_quality: PASS
   factual_validity_allowed: [VERIFIED, PARTIALLY_VERIFIED, UNVERIFIED]

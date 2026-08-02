@@ -99,6 +99,8 @@ def main(argv: list[str]) -> int:
     warns: list[str] = []
     checked = 0
     pairs: dict[str, list] = {}
+    doc_sha: dict[str, str] = {}          # case_id -> document sha256 (for profile_variant_of checks)
+    variants: list[tuple] = []            # (case_id, profile_variant_of)
 
     for mp in manifests:
         m = yaml.safe_load(mp.read_text(encoding="utf-8"))
@@ -148,6 +150,11 @@ def main(argv: list[str]) -> int:
                 "policy": ((m.get("profile") or {}).get("provenance_policy")),
             })
 
+        # 5. profile_variant_of: a same-doc-different-profile case must be byte-identical to its base
+        doc_sha[cid] = hashlib.sha256(text.encode("utf-8")).hexdigest()
+        if m.get("profile_variant_of"):
+            variants.append((cid, m.get("profile_variant_of")))
+
     for pid, members in sorted(pairs.items()):
         if len(members) == 2:
             a, b = members
@@ -156,6 +163,13 @@ def main(argv: list[str]) -> int:
                     errors.append(f"boundary pair {pid}: members declare different provenance_policy "
                                   f"({a['policy']} vs {b['policy']}) but documents are NOT byte-identical "
                                   f"— a profile pair's only difference must be the profile")
+
+    for cid, base_case in variants:
+        if base_case not in doc_sha:
+            errors.append(f"{cid}: profile_variant_of '{base_case}' not found among live cases")
+        elif doc_sha[cid] != doc_sha[base_case]:
+            errors.append(f"{cid}: profile_variant_of '{base_case}' but documents are NOT byte-identical "
+                          f"— a profile-severity variant must share the base document's bytes exactly")
 
     print(f"# semantic-validated {checked} live documents under {base.relative_to(ROOT).as_posix()}")
     for w in warns:

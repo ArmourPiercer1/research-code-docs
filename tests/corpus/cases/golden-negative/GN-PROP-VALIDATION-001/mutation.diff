@@ -1,0 +1,34 @@
+--- base:D:/AI_Coworking/skill-build/research-code-dev/tests/corpus/cases/golden-positive/GP-PROP-CONTROLLED-001/document.md
++++ mutated:GN-PROP-VALIDATION-001
+@@ -35,31 +35,6 @@
+ - New config `assembly_cache.max_entries: int = 8` and `assembly_cache.enabled: bool` (shipped **false**,
+   flipped to true after the rollout gate below).
+ 
+-## Validation plan
+-
+-- Run benchmarks `hill-3d`, `duct-2d`, `step-2d` with `assembly_cache.enabled` set to false, then true,
+-  at a fixed seed and fixed config.
+-- Compare the assembled matrix (Frobenius norm of the difference) and total runtime against the
+-  `enabled=false` baseline on the same commit.
+-
+-## Acceptance criteria
+-
+-- **Correctness:** max ‖K_cached − K_baseline‖_F ≤ 1e-12 on all three benchmarks.
+-- **Speed:** wall-clock regression ≤ 0 on `hill-3d`; no benchmark slower by > 2%.
+-- **Memory:** peak RSS increase ≤ 1.1× baseline at `max_entries = 8`.
+-
+-## Rollout plan
+-
+-- Land behind `assembly_cache.enabled` defaulting to **false** for one release; enable it in CI on the
+-  three benchmarks; flip the default to **true** only after the acceptance criteria pass on `main` for
+-  7 consecutive days.
+-
+-## Rollback conditions
+-
+-- If any correctness invariant (‖·‖_F ≤ 1e-12) fails, or a solve diverges that converged without the
+-  cache, set `assembly_cache.enabled = false` (a single config flip, no code revert) and fall back to the
+-  direct assembly path, which is never removed.
+-
+ ## Risks and mitigations
+ 
+ - **Hash collision:** a BLAKE3 32-byte digest makes collision negligible; an on-miss recomputation is

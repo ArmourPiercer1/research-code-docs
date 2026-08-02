@@ -1,0 +1,64 @@
+mutation_result:
+  case_id: GN-PROP-VALIDATION-001
+  mutation_id: MUT-PROP-NO-RELEASE-READINESS
+  base_kind: fixture
+  base_ref: tests/corpus/cases/golden-positive/GP-PROP-CONTROLLED-001/document.md
+  base_path: D:/AI_Coworking/skill-build/research-code-dev/tests/corpus/cases/golden-positive/GP-PROP-CONTROLLED-001/document.md
+  base_sha256: 5dfbc7e316d1677550cf5eea87b166d136092d3ef67a376d814985096b800478
+  mutated_sha256: d4d15c6eac39187ded6f3b1caf3de15ab51d67a95ed540c8f63b29108576127f
+  changed_ranges:
+  - section: Validation plan
+    action: removed
+  - section: Acceptance criteria
+    action: removed
+  - section: Rollout plan
+    action: removed
+  - section: Rollback conditions
+    action: removed
+  intended_blockers: []
+  intended_findings:
+  - missing-validation-plan
+  - no-verifiable-acceptance
+  - missing-rollback
+  - not-release-ready
+  forbidden_unrelated_changes:
+  - Problem
+  - Scope and non-goals
+  - Proposed design
+  - Interface changes
+  forbidden_changes_verified: true
+  postconditions:
+    assert_absent:
+    - 1e-12
+    - wall-clock regression
+    - assembly_cache.enabled` (a single config flip
+    - 7 consecutive days
+    assert_present:
+    - '## Proposed design'
+    - '## Interface changes'
+    - AssemblyCache
+  semantic_validation:
+    status: PASS
+    findings:
+    - check: assert_absent
+      value: 1e-12
+      status: PASS
+    - check: assert_absent
+      value: wall-clock regression
+      status: PASS
+    - check: assert_absent
+      value: assembly_cache.enabled` (a single config flip
+      status: PASS
+    - check: assert_absent
+      value: 7 consecutive days
+      status: PASS
+    - check: assert_present
+      value: '## Proposed design'
+      status: PASS
+    - check: assert_present
+      value: '## Interface changes'
+      status: PASS
+    - check: assert_present
+      value: AssemblyCache
+      status: PASS
+  generated_at: '2026-08-02T14:38:42Z'

@@ -1,0 +1,32 @@
+case_id: BP-002-audit
+case_version: 1
+class: boundary-pass
+profile_variant_of: BP-002-fail        # SAME document bytes; only the profile differs (HF-14b severity test)
+difference_under_test: same stable-design doc as BP-002-fail, but decision_mode=audit (not release-gate) -> HF-14b is a finding, not a release BLOCK
+artifact_type: architecture-doc
+language: en
+holdout: false
+document: tests/corpus/cases/boundary-pairs/BP-002-audit/document.md
+source: {kind: synthetic}
+profile: {provenance_policy: controlled, decision_mode: audit, evidence_requirement: key-claims, reader_test: architecture-comprehension, output_mode: audit}
+expected:
+  document_quality: PASS                # compat of GATE_DECISION=ALLOW
+  quality_band: PARTIAL                 # the volatile-in-stable defect is still noted...
+  gate_decision: ALLOW                  # ...but audit mode does not release-BLOCK on it (may also be INCOMPLETE)
+  factual_validity_allowed: [VERIFIED, PARTIALLY_VERIFIED, UNVERIFIED]
+  reader_test: PASS
+  required_blockers: []
+  forbidden_blockers: [HF-14b, HF-13, HF-14a, HF-15]   # HF-14b must NOT appear as a release BLOCKER under audit mode
+  required_findings: [volatile-in-stable]              # it IS reported as a finding/MAJOR, just not a gate blocker
+# Tests the D-7 severity map: controlled + audit -> HF-14b = MAJOR finding, GATE_DECISION need not BLOCK.
+# Under the FROZEN v0.3 skill (profile-blind) this case will still BLOCK — that is expected until v0.4.
+adjudication:
+  status: gold
+  method: two-axis blind Reviewer A/B (adjudication-v4b, isolated, no DQE skill)
+  reviewer_a: {quality_band: PARTIAL, gate: ALLOW, defect_tags: [volatile-in-stable], confidence: HIGH}
+  reviewer_b: {quality_band: PASS, gate: ALLOW, defect_tags: [volatile-in-stable], confidence: HIGH}
+  consensus: ALLOW                # gate consensus ALLOW; quality-band split PARTIAL/PASS -> record PARTIAL (defect noted)
+  confidence: HIGH
+  adjudicated_at: '2026-08-02'
+  notes: 'D-7 profile-severity CONFIRMED: same bytes as BP-002-fail but decision_mode=audit -> both
+    reviewers ALLOW (volatile-in-stable reported, not release-blocked). Contrast with BP-002-fail (BLOCK).'

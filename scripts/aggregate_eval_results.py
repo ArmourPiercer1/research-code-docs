@@ -25,6 +25,14 @@ CASES = ROOT / "tests" / "corpus" / "cases"
 HF = re.compile(r"(HF-\d+[a-e]?)", re.I)
 POS = {"golden-positive", "boundary-pass"}
 NEG = {"golden-negative", "boundary-fail"}
+# two-axis (v0.4): gate falls back from document_quality when a run predates the gate axis
+GATE_FROM_DQ = {"PASS": "ALLOW", "FAIL": "BLOCK",
+                "INCOMPLETE_EVALUATION": "INCOMPLETE", "INCOMPLETE": "INCOMPLETE"}
+
+
+def gate_of(explicit, dq):
+    g = str(explicit).upper() if explicit else GATE_FROM_DQ.get(str(dq).upper(), str(dq).upper())
+    return g
 
 
 def norm(xs):
@@ -68,10 +76,15 @@ def main(argv):
         required = norm(exp.get("required_blockers"))
         forbidden = norm(exp.get("forbidden_blockers"))
         rec = (len(required & reported) / len(required)) if required else None
+        got_gate = gate_of(v.get("gate_decision"), dq)
+        exp_gate = gate_of(exp.get("gate_decision"), exp.get("document_quality"))
         per_run.append({
             "case_id": cid, "class": cls, "pair_id": m.get("pair_id"),
             "run_kind": r.get("run_kind"), "run_idx": r.get("run_idx"),
             "expected": exp.get("document_quality"), "got": dq,
+            "exp_gate": exp_gate, "got_gate": got_gate,
+            "quality_band": str(v.get("quality_band", "")).upper() or None,
+            "profile_echoed": bool(v.get("evaluation_profile") or v.get("profile_echoed")),
             "required": sorted(required), "forbidden": sorted(forbidden), "reported": sorted(reported),
             "recall": rec, "forbidden_violation": sorted(reported & forbidden),
             "total_score": v.get("total_score"),
@@ -80,8 +93,10 @@ def main(argv):
 
     cur = [x for x in per_run if x["run_kind"] == "current"]
 
-    neg_false_pass = [x for x in cur if x["class"] in NEG and x["got"] == "PASS"]
-    pos_false_fail = [x for x in cur if x["class"] in POS and x["got"] == "FAIL"]
+    # v0.4 gate axis: a negative fails by being ALLOWed; a positive fails by NOT being ALLOWed
+    neg_false_pass = [x for x in cur if x["class"] in NEG and x["got_gate"] == "ALLOW"]
+    pos_false_fail = [x for x in cur if x["class"] in POS and x["got_gate"] != "ALLOW"]
+    profile_compliance = (sum(1 for x in per_run if x["profile_echoed"]) / len(per_run)) if per_run else 1.0
 
     # pooled required-blocker recall over negative current runs that declare required blockers
     inter = tot = 0
@@ -93,12 +108,12 @@ def main(argv):
     viol = [x for x in per_run if x["forbidden_violation"]]
     viol_rate = len(viol) / len(per_run) if per_run else 0.0
 
-    # boundary pair ordering (current runs)
+    # boundary pair ordering (current runs) — gate axis: pass side ALLOW, fail side non-ALLOW
     pairs = {}
     for x in cur:
         if x["pair_id"]:
-            pairs.setdefault(x["pair_id"], {})[x["class"]] = x["got"]
-    pair_ok = {p: (d.get("boundary-pass") == "PASS" and d.get("boundary-fail") == "FAIL")
+            pairs.setdefault(x["pair_id"], {})[x["class"]] = x["got_gate"]
+    pair_ok = {p: (d.get("boundary-pass") == "ALLOW" and d.get("boundary-fail") in ("BLOCK", "INCOMPLETE"))
                for p, d in pairs.items()}
     ordering = (sum(pair_ok.values()) / len(pair_ok)) if pair_ok else 1.0
 
@@ -110,7 +125,7 @@ def main(argv):
     stability = {}
     for cid, xs in runs_by_case.items():
         if len(xs) > 1:
-            verdicts = [x["got"] for x in xs]
+            verdicts = [x["got_gate"] for x in xs]
             scores = [x["total_score"] for x in xs if isinstance(x["total_score"], (int, float))]
             blsets = [set(x["reported"]) for x in xs]
             jac = 1.0
@@ -127,18 +142,19 @@ def main(argv):
     max_stddev = max((s["score_stddev"] for s in stability.values() if s["score_stddev"] is not None), default=0.0)
 
     bar = {
-        "golden_negative_false_pass": len(neg_false_pass),                 # == 0
-        "golden_positive_false_hard_fail": len(pos_false_fail),            # == 0
+        "golden_negative_false_pass": len(neg_false_pass),                 # == 0  (negative wrongly ALLOWed)
+        "golden_positive_false_hard_fail": len(pos_false_fail),            # == 0  (positive not ALLOWed)
         "required_blocker_recall": round(recall, 3),                       # >= 0.90
         "forbidden_blocker_violation_rate": round(viol_rate, 3),          # <= 0.05
         "boundary_pair_ordering_accuracy": round(ordering, 3),            # == 1.0
-        "three_run_verdict_consistency": round(consistency, 3),           # == 1.0
+        "three_run_verdict_consistency": round(consistency, 3),           # == 1.0 (gate axis)
         "max_score_stddev": max_stddev,                                    # <= 5
+        "profile_echo_compliance": round(profile_compliance, 3),          # == 1.0
     }
     passed = (bar["golden_negative_false_pass"] == 0 and bar["golden_positive_false_hard_fail"] == 0
               and bar["required_blocker_recall"] >= 0.90 and bar["forbidden_blocker_violation_rate"] <= 0.05
               and bar["boundary_pair_ordering_accuracy"] == 1.0 and bar["three_run_verdict_consistency"] == 1.0
-              and bar["max_score_stddev"] <= 5)
+              and bar["max_score_stddev"] <= 5 and bar["profile_echo_compliance"] == 1.0)
 
     metrics = {"n_runs": len(per_run), "n_current": len(cur), "bar": bar, "promotion_bar_met": passed,
                "negative_false_pass_cases": [x["case_id"] for x in neg_false_pass],
@@ -153,13 +169,14 @@ def main(argv):
          "", f"Runs: {len(per_run)} ({len(cur)} current + {len(per_run)-len(cur)} repeat). "
          f"Corpus dataset_version 3.", "",
          "## §17 promotion bar", "", "| metric | value | bar | ok |", "|---|---|---|---|"]
-    checks = [("golden-negative false PASS", bar["golden_negative_false_pass"], "== 0", bar["golden_negative_false_pass"] == 0),
-              ("golden-positive false hard FAIL", bar["golden_positive_false_hard_fail"], "== 0", bar["golden_positive_false_hard_fail"] == 0),
+    checks = [("golden-negative false ALLOW", bar["golden_negative_false_pass"], "== 0", bar["golden_negative_false_pass"] == 0),
+              ("golden-positive false non-ALLOW", bar["golden_positive_false_hard_fail"], "== 0", bar["golden_positive_false_hard_fail"] == 0),
               ("required-blocker recall", bar["required_blocker_recall"], ">= 0.90", bar["required_blocker_recall"] >= 0.90),
               ("forbidden-blocker violation rate", bar["forbidden_blocker_violation_rate"], "<= 0.05", bar["forbidden_blocker_violation_rate"] <= 0.05),
               ("boundary-pair ordering", bar["boundary_pair_ordering_accuracy"], "== 1.0", bar["boundary_pair_ordering_accuracy"] == 1.0),
-              ("3-run verdict consistency", bar["three_run_verdict_consistency"], "== 1.0", bar["three_run_verdict_consistency"] == 1.0),
-              ("max score stddev", bar["max_score_stddev"], "<= 5", bar["max_score_stddev"] <= 5)]
+              ("3-run gate consistency", bar["three_run_verdict_consistency"], "== 1.0", bar["three_run_verdict_consistency"] == 1.0),
+              ("max score stddev", bar["max_score_stddev"], "<= 5", bar["max_score_stddev"] <= 5),
+              ("profile echo compliance", bar["profile_echo_compliance"], "== 1.0", bar["profile_echo_compliance"] == 1.0)]
     for name, val, thr, ok in checks:
         L.append(f"| {name} | {val} | {thr} | {'✅' if ok else '❌'} |")
     L += ["", f"**PROMOTION BAR: {'MET ✅' if passed else 'NOT MET ❌'}**", "",

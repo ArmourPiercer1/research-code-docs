@@ -11,6 +11,7 @@ source:
 
 profile:
   provenance_policy: controlled
+  decision_mode: release-gate
   evidence_requirement: key-claims
   reader_test: evidence-comprehension
   output_mode: gate

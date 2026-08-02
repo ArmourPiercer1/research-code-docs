@@ -29,6 +29,9 @@ EVIDENCE = {"E0", "E1", "E2", "E3", "E4", "E5"}
 # appears in a 'status:' field (registry entries, SKILL.md provenance). Accept either.
 LIFECYCLE = {"experimental", "active", "planned", "deprecated", "replaced",
              "retired", "reference-only", "in-progress"}
+# Authored-document lifecycle (ADR-DQE-001 D-14): the doc-level `document_lifecycle:` field.
+# This is DISTINCT from the skill/registry LIFECYCLE above and from claim STATUS.
+DOC_LIFECYCLE = {"DRAFT", "IN_REVIEW", "ACCEPTED", "DEPRECATED"}
 
 # tokens that look like a status/evidence tag but are NOT in the vocabulary
 STATUSLIKE = re.compile(r"\b([A-Z]{4,})\b")
@@ -63,6 +66,15 @@ def check_file(path: Path) -> tuple[bool, list[str]]:
         has_lifecycle = any(tok in val.lower() for tok in LIFECYCLE)
         if not (has_research or has_lifecycle):
             problems.append(f"status field without a legal token: {val!r}")
+
+    # 1b) explicit 'document_lifecycle:' fields (ADR-DQE-001 D-14) must carry a legal doc-lifecycle token
+    for m in re.finditer(r"(?im)^\s*document_lifecycle\s*:\s*(.+)$", text):
+        val = m.group(1).strip()
+        if not val or val.lower() in {"n/a", "na", "none", "-"}:
+            continue
+        if not any(tok in val.upper() for tok in DOC_LIFECYCLE):
+            problems.append(f"document_lifecycle field without a legal token "
+                            f"(DRAFT|IN_REVIEW|ACCEPTED|DEPRECATED): {val!r}")
 
     # 2) illegal evidence levels (E6+ etc.)
     for m in EVIDENCELIKE.finditer(text):

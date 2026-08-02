@@ -6,8 +6,8 @@ source_documents:
   - evals/skills/adjudication/adjudication-2026-07-31.md
   - evals/skills/adjudication/reviewer-{A,B}-2026-07-31.md
   - evals/skills/harness/hard-fail.md (v0.3 anti-erosion rule; HF-9/12A/15)
-status: RESOLVED 2026-07-31 (v3 decisions) — D-1=A(FAIL), D-2=A(refine+re-run), D-3=A(clean); D-4 in progress; D-5=A(defer to v0.4+). NEW 2026-07-31 (v4 round): D-6, D-7 OPEN (see bottom).
-last_verified: 2026-07-31
+status: RESOLVED 2026-07-31 (v3 decisions) — D-1=A(FAIL), D-2=A(refine+re-run), D-3=A(clean); D-4 in progress; D-5=A(defer to v0.4+). RESOLVED 2026-08-02 (v4): D-6=A (quarantine + rebuilt controlled proposal pair), D-7=A_QUALIFIED (BP-002-fail BLOCK, HF-14b qualified to controlled+release-gate).
+last_verified: 2026-08-02
 -->
 
 # DQE 测试语料 —— 待决策清单（2026-07-31）
@@ -181,9 +181,11 @@ reviewer 一致用 PARTIAL 而非 FAIL，其实指向一个更深的产品问题
 
 ## v4 ｜ 测试升级轮的两项待决策 (2026-07-31)
 
+> **✅ 已裁决 (2026-08-02，见 `docs/third-party-suggestions/DQE_v4_待决策项回复与下一阶段开发计划.md`)：
+> D-6=A · D-7=A_QUALIFIED。执行结果见下方各项的"裁决与执行"。** 相关文件：[adjudication-v4b.md](adjudication-v4b.md)。
+
 来源：两轴盲评双评审（[adjudication-v4.md](adjudication-v4.md)）+ 未改动 v0.3 评测器的确认性抽测
-（[corpus-repair-report-v4.md](corpus-repair-report-v4.md)）。**这两项在你裁决前，对应案例标为 `disputed`、
-不进任何 live 指标。** 本轮未改任何 skill。
+（[corpus-repair-report-v4.md](corpus-repair-report-v4.md)）。本轮未改任何 skill。
 
 ### D-6 — `GN-PROP-001` 还算不算一个有效负例？
 
@@ -197,6 +199,13 @@ reviewer 一致用 PARTIAL 而非 FAIL，其实指向一个更深的产品问题
   **B** 像 v1 的 D-1 一样人工判 FAIL；**C** 改写它的"本意缺陷"（例如改测别的东西）。
 - **影响**：决定 golden-negative 池里是否保留这个案例；不影响已锁的其余 5 个负例。
 
+> **✅ 裁决与执行（D-6=A，2026-08-02）**：GN-PROP-001 v2 已移入 `cases/quarantine/GN-PROP-001-v2/`（不进
+> live 指标，不人工覆盖 reviewer 的 PASS）。已重建**精简受控 proposal 对**：`GP-PROP-CONTROLLED-001`（正例）
+> + `GN-PROP-VALIDATION-001`（负例=删掉 validation/acceptance/rollout/rollback）。经语义校验 + 双盲双评审：
+> 正例 **PASS/ALLOW（A/B 一致 HIGH）**；负例 **INCOMPLETE/INCOMPLETE（A/B 一致 HIGH）**——两位都判"缺必需
+> 发布章节→无法批准"（非 ALLOW，负例有效）。这比原计划的 BLOCK 更精确：双轴契约把"缺必需章节"记为
+> INCOMPLETE。**未人工覆盖为 BLOCK。** 诊断矩阵对该负例的通过条件改为"非 ALLOW"。
+
 ### D-7 — `BP-002-fail` 的门槛：单条"稳定文档里的易变事实"该不该 BLOCK？
 
 - **现象**：清掉附带矛盾后，两位 reviewer 都识别出 volatile-in-stable 缺陷（BASELINE 架构文档里裸写
@@ -205,6 +214,14 @@ reviewer 一致用 PARTIAL 而非 FAIL，其实指向一个更深的产品问题
 - **选项**：**A**（推荐，维持语料本意）单条 volatile-in-stable 即 BLOCK → gold 保持 FAIL；**B** 视为 MINOR →
   软化为 PASS/ALLOW（则该案例从负例降级）。
 - **影响**：决定 BP-002 边界对 fail 侧的 gold；也间接定义 HF-14b 的严格度（会写回 ADR/skill 契约）。
+
+> **✅ 裁决与执行（D-7=A_QUALIFIED，2026-08-02）**：`BP-002-fail` 锁为 **QUALITY_BAND=PARTIAL /
+> GATE_DECISION=BLOCK / required=[HF-14b]**，并在 manifest 补上 `decision_mode: release-gate`。但 HF-14b 的
+> BLOCK 语义被**限定**为「controlled + release-gate + 稳定 canonical 文档 + 裸写未标日期的"当前"易变事实 +
+> 无动态源指针」全部成立时才触发。为证明这不是"机械惩罚一行数字"，新增两个**同字节不同 profile** 的相邻边界：
+> `BP-002-audit`（controlled+audit）与 `BP-002-external`（external+audit）。双盲双评审结果：三者同字节、
+> **门槛随 profile 翻转**——fail(release-gate)=BLOCK[用户裁决]、audit=ALLOW[A/B]、external=ALLOW[A/B]，
+> 经验证实了限定规则。该限定已写入 [ADR-DQE-001](../skill-development/adr/ADR-DQE-001-evaluation-profile-and-verdict-axes.md) §HF-14b。
 
 > 裁决后我再执行：若 D-6=A 则重建 GN-PROP-001 并重新双评审；D-7 按你选项锁 gold。**在此之前不动 skill、
 > 不跑准入矩阵。**

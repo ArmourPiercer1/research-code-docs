@@ -1,0 +1,22 @@
+# Immutable v2 snapshot — quarantined per user ruling D-6=A (2026-08-02). Excluded from live metrics.
+adjudication_status: quarantine
+quarantined_at: '2026-08-02'
+dataset_version_at_quarantine: 4
+reason: base-document-remains-executable-after-mutation
+detail: >-
+  Two isolated blind reviewers BOTH rated the mutated KEP-127 PASS/ALLOW (HIGH confidence): its Design
+  Details (CRI protobuf changes, ID-mapping algorithm, worked idmap examples, PRR questionnaire, failure
+  modes, alternatives) are complete enough to implement from, so removing Test Plan / Graduation Criteria
+  / Feature-Enablement reads as process/maturity scaffolding, not an executability blocker. The mutation
+  did NOT isolate the intended "technical proposal not executable" defect. The unchanged v0.3 evaluator's
+  FAIL came from HF-9 (external-profile gap, D-01) + a mutation-induced contradiction (Implementation
+  History "1.36 GA" vs the unchecked (R) Test-plan/Graduation boxes), not the target finding. Per D-6=A we
+  do NOT override the reviewers to FAIL; the KEP base is too implementation-complete to break with one
+  deletion (same failure mode as GN-EXP-001, D-04).
+reviewers: [PASS/ALLOW, PASS/ALLOW]
+original_intended_defect: missing-validation-story
+actual_dqe_failure: HF-9 (external profile) + mutation-induced GA-vs-unchecked-signoff contradiction
+replaced_by:
+  - GP-PROP-CONTROLLED-001   # lean controlled positive proposal
+  - GN-PROP-VALIDATION-001   # negative: same lean proposal minus validation/acceptance/rollback
+do_not: [edit, run, count-in-metrics]

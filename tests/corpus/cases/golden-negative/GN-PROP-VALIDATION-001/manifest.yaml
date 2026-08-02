@@ -1,0 +1,59 @@
+case_id: GN-PROP-VALIDATION-001
+case_version: 1
+class: golden-negative
+artifact_type: technical-proposal
+language: en
+holdout: false
+document: tests/corpus/cases/golden-negative/GN-PROP-VALIDATION-001/document.md
+
+source:
+  kind: mutation
+  base_fixture: tests/corpus/cases/golden-positive/GP-PROP-CONTROLLED-001/document.md
+
+profile:
+  provenance_policy: controlled
+  decision_mode: release-gate
+  evidence_requirement: key-claims
+  reader_test: proposal-execution
+  output_mode: gate
+
+expected:
+  document_quality: INCOMPLETE_EVALUATION   # A/B consensus: INCOMPLETE (missing required release sections -> can't approve); compat of GATE=INCOMPLETE
+  quality_band: PARTIAL           # design/interface are fine; the release-readiness story is missing
+  gate_decision: INCOMPLETE       # non-ALLOW: a release gate cannot approve a proposal missing validation/acceptance/rollback
+  factual_validity_allowed: [VERIFIED, PARTIALLY_VERIFIED, UNVERIFIED]
+  reader_test: FAIL
+  required_blockers: []           # soft-FAIL via proposal rubric + non-compensatory rule; NO proposal hard gate yet
+  forbidden_blockers: [HF-9, HF-13, HF-14a, HF-14b, HF-15]   # frontmatter kept (no HF-9); single clean defect (no structural gate)
+  non_allow_required: true        # the ONLY hard requirement for this negative: gate must be non-ALLOW (BLOCK or INCOMPLETE)
+  required_findings:
+    - missing-validation-plan
+    - no-verifiable-acceptance
+    - missing-rollback
+    - not-release-ready
+
+mutation:
+  base_case: GP-PROP-CONTROLLED-001
+  mutation_id: MUT-PROP-NO-RELEASE-READINESS
+  difference_under_test: Validation plan + Acceptance criteria + Rollout plan + Rollback conditions removed; design/interface kept
+
+# D-6=A rebuild: on a LEAN base, removing the release-readiness sections genuinely leaves a proposal you
+# cannot prove-done / safely-ship / roll-back. Tests whether DQE reaches BLOCK via the proposal rubric +
+# non-compensatory rule WITHOUT a dedicated hard gate. If v0.4 stably ALLOWs, revisit a proposal
+# non-compensatory dimension (do NOT hand-override to FAIL).
+
+adjudication:
+  status: gold
+  method: two-axis blind Reviewer A/B (adjudication-v4b, isolated, no DQE skill)
+  reviewer_a: {quality_band: PARTIAL, gate: INCOMPLETE, defect_tags: [not-release-ready, non-executable-milestone], confidence: HIGH}
+  reviewer_b: {quality_band: PARTIAL, gate: INCOMPLETE, defect_tags: [non-executable-milestone, not-release-ready], confidence: HIGH}
+  consensus: INCOMPLETE           # both HIGH; NON-ALLOW -> a valid negative (a not-release-ready proposal is not approved)
+  confidence: HIGH
+  adjudicated_at: '2026-08-02'
+  notes: >-
+    D-6=A rebuild CONFIRMED as a valid negative. Both reviewers independently reached INCOMPLETE (not
+    BLOCK, not ALLOW): the proposal is missing REQUIRED release-gate sections (validation/acceptance/
+    rollback), so a release gate cannot approve it — "can't-approve-yet", not "wrong". This is a
+    REFINEMENT of the plan's expected BLOCK: the two-axis contract treats missing-required-sections as
+    INCOMPLETE. The test's core purpose (a not-release-ready proposal must NOT be ALLOWed) is satisfied.
+    Gold NOT overridden to BLOCK — reviewers are authoritative. Diagnostic pass condition = non-ALLOW.

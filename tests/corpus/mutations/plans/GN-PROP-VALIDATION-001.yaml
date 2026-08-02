@@ -1,0 +1,29 @@
+case_id: GN-PROP-VALIDATION-001
+case_version: 1
+mutation_id: MUT-PROP-NO-RELEASE-READINESS
+base:
+  kind: fixture                    # minimal-difference from the controlled positive
+  ref: tests/corpus/cases/golden-positive/GP-PROP-CONTROLLED-001/document.md
+  ext: md
+# D-6=A rebuild: a LEAN controlled proposal minus its release-readiness. Remove Validation plan +
+# Acceptance criteria + Rollout plan + Rollback conditions; KEEP Problem / Scope / Proposed design /
+# Interface changes / Risks. Result: the reader knows WHAT to build but cannot tell how completion is
+# proven, how it is safely released, or when to roll back — genuinely not release-ready. Because the base
+# is lean (no redundant scaffolding to fall back on), removing these sections truly breaks executability,
+# unlike the over-rich KEP base (quarantined GN-PROP-001).
+operations:
+  - op: remove-sections
+    headings: ["Validation plan", "Acceptance criteria", "Rollout plan", "Rollback conditions"]
+postconditions:
+  assert_absent:                   # the load-bearing verification/release story is gone
+    - "1e-12"
+    - "wall-clock regression"
+    - "assembly_cache.enabled` (a single config flip"
+    - "7 consecutive days"
+  assert_present:                  # the design/interface survive -> "know what to build, not how to prove/ship it"
+    - "## Proposed design"
+    - "## Interface changes"
+    - "AssemblyCache"
+intended_blockers: []              # soft-FAIL via rubric + non-compensatory; do NOT invent a proposal hard gate yet (OQ-REPRO/proposal-gate deferred)
+intended_findings: [missing-validation-plan, no-verifiable-acceptance, missing-rollback, not-release-ready]
+forbidden_unrelated_changes: ["Problem", "Scope and non-goals", "Proposed design", "Interface changes"]

@@ -1,0 +1,39 @@
+case_id: GP-PROP-CONTROLLED-001
+case_version: 1
+class: golden-positive
+artifact_type: technical-proposal
+language: en
+holdout: false
+document: tests/corpus/cases/golden-positive/GP-PROP-CONTROLLED-001/document.md
+
+source:
+  kind: synthetic                  # lean controlled proposal (D-6=A rebuild; replaces the over-rich KEP base)
+
+profile:
+  provenance_policy: controlled
+  decision_mode: release-gate
+  evidence_requirement: key-claims
+  reader_test: proposal-execution
+  output_mode: gate
+
+expected:
+  document_quality: PASS
+  quality_band: PASS
+  gate_decision: ALLOW
+  factual_validity_allowed: [VERIFIED, PARTIALLY_VERIFIED, UNVERIFIED]
+  reader_test: PASS
+  required_blockers: []
+  forbidden_blockers: [HF-9, HF-13, HF-14a, HF-14b, HF-15]   # complete controlled proposal -> nothing fires
+  required_findings: [implementation-and-release-story-complete]
+
+adjudication:
+  status: gold
+  method: two-axis blind Reviewer A/B (adjudication-v4b, isolated, no DQE skill)
+  reviewer_a: {quality_band: PASS, gate: ALLOW, defect_tags: [], confidence: HIGH}
+  reviewer_b: {quality_band: PASS, gate: ALLOW, defect_tags: [], confidence: HIGH}
+  consensus: PASS
+  confidence: HIGH
+  adjudicated_at: '2026-08-02'
+  notes: 'D-6=A rebuild CONFIRMED: both reviewers PASS/ALLOW the complete controlled proposal. (Reviewer A
+    flagged a minor enabled-default inconsistency in the pre-fix draft; fixed — Interface now says shipped
+    false, flipped after rollout — so the positive is clean.) Gold set by A/B, not DQE.'
