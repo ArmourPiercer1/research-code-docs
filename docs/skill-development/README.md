@@ -5,15 +5,26 @@ generated_by_skill: (manual, Phase-1)
 skill_version: n/a
 source_commit: mattpocock/skills vendored snapshot (plugin.json v1.2.0; no pinned commit)
 source_documents: [docs/prompt.md, docs/研究软件文档Skills系统_设计与创建指南.md]
-status: DECIDED (Phase-1 complete; Batch-2 unlocked)
-last_verified: 2026-07-30T09:47:06Z
+status: DECIDED (Phase-1 complete; DQE v0.4.1 advisory freeze; Batch 2 decoupled + in progress)
+last_verified: 2026-08-05
 -->
 
 > Governance home for the research-software documentation **Skills system**. Everything here is
 > **workspace-only** and isolated from the live Claude Code loader (versioned via GitHub). Nothing
 > is installed or auto-triggered without explicit user approval.
 
-## Phase-1 status: ✅ complete · Batch-2 gate: ⚠️ PROVISIONAL · DQE at **v0.3.0** (false-pass fixed)
+## Phase-1 ✅ · DQE **v0.4.1 FROZEN (advisory / profile-scoped)** · Batch-2 gate **DECOUPLED** · Batch 2 **4/4 built + light-passed**
+
+> **Scope correction (2026-08-05).** DQE reached a reliable **advisory** state (v0.4.1). Rather than keep
+> expanding its test system toward a *universal automatic terminal gate*, we **froze it as advisory /
+> profile-scoped**, **decoupled Batch 2** from that promotion, and **entered Batch 2**. The halted Phase-E
+> D-17 canary (a `controlled + release-gate` experiment report stably false-ALLOWs) is resolved by **scoping
+> that profile out** → `GATE_DECISION=INCOMPLETE / GATE_REASON=unsupported-evaluation-profile` (no HF-REPRO,
+> no HF-threshold change). **Phase E is deferred** to a future promotion gate. Details:
+> [dqe-v0.4.1-freeze-and-batch2-entry-2026-08-05.md](reports/dqe-v0.4.1-freeze-and-batch2-entry-2026-08-05.md).
+> All skills remain `experimental` + manual-only; nothing installed or pushed.
+
+<details><summary>Earlier: Phase-1 complete · v0.2 real refs · v0.3 false-pass fix · v0.4 profile-aware</summary>
 
 `documentation-quality-evaluator` passed its basic evals (trigger 28/28 + discriminative e2e), which
 per [prompt.md](../prompt.md) §E unlocked Batch 2. It was then upgraded to **0.2.0** (real vendored
@@ -28,6 +39,8 @@ gate until the v1.0 bar (full golden suite + ablation + recall≥90%) is met. De
 [dqe-v0.3-upgrade-2026-07-30.md](reports/dqe-v0.3-upgrade-2026-07-30.md). All skills remain
 `experimental` + manual-only. Per-method attribution + license:
 [upstream-method-matrix.md](../../references/documentation-methodology/upstream-method-matrix.md).
+
+</details>
 
 ## Deliverables (this phase)
 
@@ -65,6 +78,14 @@ Runner uv-venv: `.venv/` (pyyaml). See [evals/skills/README.md](../../evals/skil
 - **Real-task gap** — ≥2 real historical project tasks per skill must be supplied by the user; current task-quality cases are environment-grounded, not verbatim (constraint D.8).
 - **Not yet executed** — multi-turn runs; task-quality soft-scoring for PSR/GSWE/UDM; standalone reader-agent pass. (Batch-1→2 hardening.)
 
-## Next (Batch 2, now unlocked)
+## Next (Batch 2 — all four skills BUILT + light-round PASSED)
 
-`document-information-architect` · `research-question-and-literature-planner` (adapter over lit-review/wos-research/deep-research) · `research-evidence-synthesizer` (consumes retrieved evidence) · `workspace-forensics-and-inventory` (read-only). See [creation-roadmap.md](creation-roadmap.md) §2.
+All four Batch-2 skills exist and passed their light first round (trigger 32/32, read-only shadow runs, reader
+discipline-checks green, no-skill comparison): **`workspace-forensics-and-inventory`** (read-only inventory) →
+**`document-information-architect`** (design the HF-13 split) → **`research-question-and-literature-planner`**
+([ADAPT] thin scope+route over lit-review/wos-research/deep-research) → **`research-evidence-synthesizer`**
+([ADAPT] design-facing evidence map; never retrieves). All stay `experimental` + manual-only. Reports:
+[batch2-skills-eval-2026-08-05.md](reports/batch2-skills-eval-2026-08-05.md) +
+[batch2-workspace-forensics-eval-2026-08-05.md](reports/batch2-workspace-forensics-eval-2026-08-05.md).
+Next: Batch 3 control flows, or a real RQLP→lit-review→RES chain to validate the research adapters end-to-end.
+See [creation-roadmap.md](creation-roadmap.md) §2-§3.

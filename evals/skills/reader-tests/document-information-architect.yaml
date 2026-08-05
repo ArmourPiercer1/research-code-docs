@@ -1,0 +1,33 @@
+skill: document-information-architect
+skill_version: "0.1.0"
+dataset_version: 1
+# No-context reader test for an ARTIFACT MAP (design plan). A FRESH reader gets ONLY the produced artifact
+# map. The discipline check: the map must be actionable as a DESIGN (roles, target doc-set, one canonical
+# home per info-type, a complete split plan), and must NOT read as rewritten prose or as an executed move.
+protocol:
+  layer1_comprehension:
+    - "What document/corpus is this an architecture for, and what doc-roles did it identify?"
+    - "What is the proposed target doc-set (one responsibility each)?"
+    - "For each information-type, what is its single canonical home?"
+    - "What are the open decisions left for a human?"
+  layer2_discipline_refutation:
+    - "Is every existing section assigned to a target doc (is the split plan complete)?"
+    - "Does any information-type get TWO canonical homes (a duplication failure)? Does any volatile fact get copied into a stable doc (HF-14b)?"
+    - "Does the map REWRITE the content (final prose) or MOVE/DELETE any file — or does it stay a plan?"
+    - "Are canonical-source assignments that depend on unverified facts marked provisional (needs PSR)?"
+  scoring:
+    design_actionability_fail_if: "reader cannot list the roles, the target doc-set, or the per-type canonical home from the map alone"
+    lane_violation_fail_if: "the map contains rewritten target-doc prose, or describes moving/deleting files, instead of a plan + hand-off"
+    duplication_fail_if: "an information-type is assigned two canonical homes, or a volatile fact is copied into a stable doc"
+
+cases:
+  - id: dia-reader-shadow
+    real: true
+    artifact: evals/skills/results/document-information-architect/shadow/artifact-map-eoopt-roadmap-2026-08-05.md
+    expected_reader_outcomes:
+      - {q: "layer1: roles + target doc-set + canonical homes", outcome: ANSWERABLE, why: "the map lists roles, a target doc-set, and one canonical home per info-type."}
+      - {q: "layer2: rewrite/move performed?", outcome: NO-LANE-VIOLATION, why: "a correct map is a design + split plan handed to migration/rewriter; it neither rewrites prose nor moves files."}
+      - {q: "layer2: duplicate canonical homes?", outcome: NONE, why: "each info-type has exactly one home; volatile state is a pointer, not a copy."}
+    notes: >
+      Run in a SEPARATE fresh sub-agent on the shadow artifact-map of the eoopt hybrid roadmap (the canonical
+      HF-13 case). Pass condition: actionable as a design AND no lane violation (no rewrite / no file move).

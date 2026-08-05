@@ -1,0 +1,17 @@
+skill: workspace-forensics-and-inventory
+skill_version: "0.1.0"
+dataset_version: 1
+# Batch-2 LIGHT trigger set (per 2026-08-05 directive §8): 3 should-trigger + 3 should-not.
+# Manual-only skill: "should-trigger" = "when explicitly invoked on this input, engage and produce a
+# read-only inventory"; "should-not" = "when invoked on this out-of-scope input, decline or route away".
+# Boundary/conflict cases with the SEQ-adjacent skills live in conflict/workspace-forensics-and-inventory.yaml.
+cases:
+  # ---------- should-trigger (engage: read-only inventory) ----------
+  - {id: wfi-trig-01, set: should-trigger, real: false, input: "I inherited this solver repo and have no idea what's in it. Do a read-only inventory of what's here before I touch anything.", notes: "workspace mode; classic 'map the unknown workspace' entry."}
+  - {id: wfi-trig-02, set: should-trigger, real: false, input: "Map this workspace: which scripts look like entry points, which scripts are orphaned, and which files under results/ have no producing script?", notes: "workspace mode; entry-point + orphan + unreferenced-artifact inventory."}
+  - {id: wfi-trig-03, set: should-trigger, real: false, input: "Catalog the documents under docs/ by type and flag which files overlap or contradict each other. Don't change anything.", notes: "document-corpus mode; doc-type + overlap/contradiction candidates for later IA."}
+
+  # ---------- should-not (decline or route away) ----------
+  - {id: wfi-not-01, set: should-not, real: false, input: "Review src/solver.py for bugs and code quality.", expected: {route_to: code-review}, notes: "code review of a single file, not a workspace inventory."}
+  - {id: wfi-not-02, set: should-not, real: false, input: "My training script throws a KeyError on line 88 — help me fix it.", expected: {route_to: diagnosing-bugs}, notes: "debugging a specific error, not inventory."}
+  - {id: wfi-not-03, set: should-not, real: false, input: "Our ROADMAP.md is a mess of roadmap + status + notes. Design how we should split it into proper documents.", expected: {route_to: document-information-architect}, notes: "DESIGN of the doc split is IA's job; forensics only FLAGS the mixing candidate."}

@@ -8,12 +8,13 @@ source_documents:
   - docs/研究软件文档Skills系统_设计与创建指南.md (§10, §16)
   - docs/skill-development/system-architecture.md
   - docs/skill-development/current-skills-audit.md
-status: DECIDED for Batch 1; PLANNED for Batches 2-5
-last_verified: 2026-07-30T09:47:06Z
+status: DECIDED for Batch 1; Batch 2 IN PROGRESS (decoupled from DQE terminal-gate promotion, 2026-08-05); PLANNED for Batches 3-5
+last_verified: 2026-08-05
 -->
 
 > **Principle (guide §17).** The quality bar is not "all files generated" but: recover facts before designing; write unknowns as unknown; turn research questions into surveys/experiments, not fake plans; keep stable design / dynamic state / paper evidence / session notes separate; recognize simple tasks; improve via evals, not vibes.
-> **Gate rule (constraint D.3 / prompt E).** No new skill auto-triggers until it passes trigger+conflict evals. `documentation-quality-evaluator` must pass its basic evals **before Batch 2 begins** — it grades everything after it.
+> **Gate rule (constraint D.3 / prompt E).** No new skill auto-triggers until it passes trigger+conflict evals. `documentation-quality-evaluator` had to pass its own **basic** evals before Batch 2 began — it grades everything after it. It did (trigger 28/28 + discriminative e2e).
+> **Scope-correction (2026-08-05).** Batch 2 is now **DECOUPLED** from "DQE becomes a *universal automatic terminal gate*." DQE v0.4.1 is frozen as an **advisory / profile-scoped** evaluator — enough to assist Batch-2 development alongside an independent/human reviewer. The heavier promotion bar (full golden suite, Phase E 3-arm admission matrix, reproducibility contract) is **deferred**; it must not keep blocking functional-skill development. See `skills-registry.yaml` meta `batch2_gate` / `phase_e` and `reports/dqe-v0.4.1-freeze-and-batch2-entry-2026-08-05.md`.
 
 ---
 
@@ -55,16 +56,25 @@ Order is fixed by dependency (guide §10.2):
 
 ## 2. Batch 2 — document structure & research-evidence adapters
 
-**Unlocks only after `documentation-quality-evaluator` reaches `active`.**
+**Status: ALL FOUR BUILT + light-round PASSED (2026-08-05).** Decoupled from "DQE reaches `active`" (see the scope-correction note above).
+DQE v0.4.1 (advisory) + an independent reviewer + a no-skill comparison was a sufficient eval posture for these.
+All ship **experimental + `disable-model-invocation: true`** (manual/orchestrator-only) until their own auto-trigger evals pass.
+Trigger 32/32 · 4 read-only shadow runs (targets verified untouched) · 4 reader discipline-checks green. Report: `reports/batch2-skills-eval-2026-08-05.md`.
 
-| # | Skill | Key adaptation | Special caution |
-|---|---|---|---|
-| 5 | `document-information-architect` | Standard. | Easily over-triggers on any writing task → restrict to "document corpus / mixed / needs type-split." |
-| 6 | `research-question-and-literature-planner` | **[ADAPT]** thin scoping front-end that hands off to `lit-review`/`wos-research`/`deep-research`. | Do-not-trigger must name all five existing research skills. |
-| 7 | `research-evidence-synthesizer` | **[ADAPT]** consumes retrieved evidence → matrix/cards/levels; no retrieval. | Must not launch heavy paper flows on ordinary technical questions. |
-| 8 | `workspace-forensics-and-inventory` | Read-only inventory. | **Never** move/delete by default; provides real messy-workspace eval samples. |
+**Recommended build order** (lowest-risk / most-reused first — not the guide's numbering):
+
+| Build | # | Skill | Key adaptation | Special caution |
+|---|---|---|---|---|
+| 1st | 8 | `workspace-forensics-and-inventory` | Read-only inventory of a messy workspace / doc corpus. | **Never** move/delete/modify. `project-state-reconstructor` already depends on it; it also supplies real messy-workspace eval samples. |
+| 2nd | 5 | `document-information-architect` | Detect mixed doc responsibilities → artifact map + canonical-source + split/link/lifecycle plan. | Easily over-triggers on any writing task → restrict to "document corpus / mixed / needs type-split." Directly addresses the original hybrid-roadmap disease. |
+| 3rd | 6 | `research-question-and-literature-planner` | **[ADAPT]** thin scoping front-end (question→scope, inclusion/exclusion, stop criteria, evidence standard) that hands off to `lit-review`/`wos-research`/`deep-research`. | Do-not-trigger must name all existing research skills; must NOT itself run broad retrieval/synthesis. |
+| 4th | 7 | `research-evidence-synthesizer` | **[ADAPT]** consumes already-retrieved evidence → matrix/cards/levels/transfer-assumptions; no retrieval. | Must not launch heavy paper flows on ordinary technical questions. |
+
+**Per-skill first round (light — deliberately NOT DQE's heavy corpus):** 3 should-trigger · 3 should-not · 2 boundary/conflict · 1 real shadow run · 1 no-context reader test · 1 no-skill comparison. Only add a regression case after a **real** failure appears.
 
 **Decision point after Batch 2 (OQ-4):** if 6+7 prove to be mostly glue over the L3 stack, merge them into a single `research-evidence-adapter`.
+
+**Phase E (DQE promotion) is deferred**, not cancelled — revisit only after ≥2 Batch-2 skills exist and 5–10 real downstream Skill outputs are collected (then judge DQE on real outputs, not synthetic mutations). See `skills-registry.yaml` meta `phase_e`.
 
 ---
 
@@ -135,4 +145,4 @@ Batch 1 is "done" when:
 - `documentation-quality-evaluator` beats no-skill baseline on a doc-grading task in an A/B check.
 - A no-context reader can extract goal/state/next-step/acceptance/open-questions from the produced state report.
 
-**Batch 2 is blocked until `documentation-quality-evaluator` clears the bar in row 1 of §1.**
+**Batch 2 entry (revised 2026-08-05):** Batch 2 began once `documentation-quality-evaluator` cleared its **basic** bar (§1 row 1) — which it did. It is **no longer** blocked on DQE reaching a universal terminal gate; that promotion (Phase E) is deferred. New Batch-2 skills still ship experimental + manual-only and are evaluated with the light per-skill round in §2.

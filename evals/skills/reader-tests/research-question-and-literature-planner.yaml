@@ -1,0 +1,31 @@
+skill: research-question-and-literature-planner
+skill_version: "0.1.0"
+dataset_version: 1
+# No-context reader test for a SEARCH PLAN. A FRESH reader gets ONLY the produced plan. Discipline check:
+# the plan must be executable-as-scope (question, in/out, inclusion/exclusion, stop, evidence standard, a named
+# route) and must contain NO retrieved results (no paper list, no summaries) — the planner never retrieves.
+protocol:
+  layer1_comprehension:
+    - "What is the refined research question, and what decision does it inform?"
+    - "What is in scope and out of scope? What are the inclusion/exclusion criteria?"
+    - "What is the explicit stop criterion?"
+    - "What evidence/quality standard is set, and which E-level can this question's evidence support?"
+  layer2_discipline_refutation:
+    - "Which downstream retrieval skill is chosen, and is a justification given?"
+    - "Does the plan contain any actual RETRIEVED results (a paper list, summaries, findings)? (a correct plan does NOT)"
+    - "If it is a transfer question, is the cross-domain/analogy limitation flagged?"
+  scoring:
+    scope_actionability_fail_if: "reader cannot list the question, in/out scope, inclusion/exclusion, stop criterion, and the named route from the plan alone"
+    overreach_fail_if: "the plan contains retrieved papers / summaries / findings instead of staying a scope-and-route artifact"
+
+cases:
+  - id: rqlp-reader-shadow
+    real: true
+    artifact: evals/skills/results/research-question-and-literature-planner/shadow/search-plan-manifold-transfer-2026-08-05.md
+    expected_reader_outcomes:
+      - {q: "layer1: question + scope + inclusion/exclusion + stop + evidence standard", outcome: ANSWERABLE, why: "the plan states all of these explicitly."}
+      - {q: "layer2: named route + justification", outcome: ANSWERABLE, why: "the plan ends with a specific retrieval skill + why."}
+      - {q: "layer2: any retrieved results present?", outcome: NONE, why: "a correct plan performs no retrieval — no paper list / summaries."}
+    notes: >
+      Run in a SEPARATE fresh sub-agent on the shadow search-plan (a transfer question). Pass condition: the
+      plan is executable-as-scope AND contains no retrieved results (it stayed a thin scope-and-route artifact).

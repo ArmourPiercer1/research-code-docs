@@ -1,0 +1,33 @@
+skill: research-evidence-synthesizer
+skill_version: "0.1.0"
+dataset_version: 1
+# No-context reader test for an EVIDENCE MAP. A FRESH reader gets ONLY the produced evidence map. Discipline
+# check (constraint D.8): every claim must carry an E-level + channel; cross-domain/analogy or paper evidence
+# must NOT be presented as a project-verified fact; transfer cards must state assumptions + an E-cap.
+protocol:
+  layer1_comprehension:
+    - "What design decision is this evidence organized to inform?"
+    - "For each candidate claim, what is its E-level and its channel (direct / same-domain-indirect / cross-domain-analogy / project-inference)?"
+    - "What method-transfer cards are present, and what assumptions does each transfer rely on?"
+    - "What are the unresolved gaps, and what would close each?"
+  layer2_discipline_refutation:
+    - "Is any paper / analogy / cross-domain claim presented as a project-VERIFIED FACT? (it must NOT be)"
+    - "Is each transfer claim capped at the E-level its weakest assumption allows, with assumptions explicit?"
+    - "Are the evidence channels kept separate (a direct measurement not mixed with an analogy)?"
+    - "Did the skill stay within organizing (no new search / retrieval performed)?"
+  scoring:
+    synthesis_actionability_fail_if: "reader cannot list the claims with their E-level+channel, the transfer assumptions, or the gaps from the map alone"
+    fact_upgrade_fail_if: "any cross-domain/analogy or paper-only claim is presented as a project-verified fact, or a transfer claim is not capped by its weakest assumption (D.8 / HF-12D violation)"
+
+cases:
+  - id: res-reader-shadow
+    real: true
+    artifact: evals/skills/results/research-evidence-synthesizer/shadow/evidence-map-manifold-transfer-2026-08-05.md
+    expected_reader_outcomes:
+      - {q: "layer1: claims with E-level + channel; transfer assumptions; gaps", outcome: ANSWERABLE, why: "the map tags each link with E-level+channel and states transfer assumptions + gaps."}
+      - {q: "layer2: analogy laundered into project fact?", outcome: NO-FACT-UPGRADE, why: "the manifold-transfer claim (S1/S2, cross-domain) must be capped at analogy, with the LICQ assumption (S3) flagged as a gap, and the S4 in-project note kept a weak single-trial direct signal — none upgraded to fact."}
+      - {q: "layer2: new retrieval performed?", outcome: NONE, why: "a correct synthesizer organizes the given bundle; it does not search for more."}
+    notes: >
+      Run in a SEPARATE fresh sub-agent on the shadow evidence-map (built from the SYNTHETIC manifold-transfer
+      bundle). Pass condition: actionable evidence structure AND no analogy-to-fact upgrade (channels separate,
+      transfer capped, assumptions explicit).

@@ -1,0 +1,45 @@
+skill: workspace-forensics-and-inventory
+skill_version: "0.1.0"
+dataset_version: 1
+# No-context reader test for an INVENTORY REPORT. A FRESH reader gets ONLY the produced inventory report
+# (no skill, no chat, no target workspace). Unlike the DQE reader test, the KEY discipline check here is the
+# INVERSE: a correct inventory must let the reader see the buckets/candidates/coverage/handoff, but must NOT
+# let the reader conclude that any code verifiably RUNS or PASSES — forensics defers that to
+# project-state-reconstructor. A reader who comes away believing "the pipeline runs end-to-end" from an
+# inventory alone indicates a forensics OVER-CLAIM defect.
+protocol:
+  layer1_comprehension:
+    - "What MODE was run (workspace / document-corpus)?"
+    - "What is the SINGLE primary purpose of THIS report? (a read-only inventory — is it, or does it read as a verified state report?)"
+    - "What are the top-level directories and their purpose-guesses? What is the coverage (scanned vs summarized vs skipped)?"
+    - "Which files are entry-point CANDIDATES, and by what signal?"
+    - "Which items are orphan / unreferenced CANDIDATES?"
+  layer2_discipline_refutation:
+    - "Does the report claim that any specific code actually RUNS or that tests PASS? (a correct inventory should NOT)"
+    - "What exactly is handed off to project-state-reconstructor to verify?"
+    - "Is every classification tagged with a SIGNAL (i.e. a candidate), rather than stated as a fact?"
+    - "Are generated/cached outputs labeled as GENERATED rather than treated as source?"
+    - "What was NOT covered (skipped / summarized-only)?"
+  scoring:
+    over_claim_fail_if: "reader concludes from the report ALONE that specific code verifiably runs or that tests pass (forensics must not assert this — that is PSR's job)"
+    inventory_actionability_fail_if: "reader cannot list the mode, the entry-point candidates, the orphan candidates, or the project-state-reconstructor handoff from the report alone"
+    read_only_fail_if: "the report describes having moved/renamed/deleted/edited anything in the target"
+
+cases:
+  - id: wfi-reader-shadow
+    real: true
+    artifact: evals/skills/results/workspace-forensics-and-inventory/shadow/inventory-tests-corpus-2026-08-05.md
+    expected_reader_outcomes:
+      - q: "layer1: mode / buckets / coverage"
+        outcome: ANSWERABLE
+        why: "the inventory report states its mode and lists Project Map + buckets + coverage."
+      - q: "layer2: does it claim code runs/passes?"
+        outcome: NO-OVERCLAIM
+        why: "a correct forensics report defers 'what runs' to project-state-reconstructor and makes no run/pass claim."
+      - q: "layer2: PSR handoff present?"
+        outcome: ANSWERABLE
+        why: "the Handoff section names the unknowns/questions for project-state-reconstructor."
+    notes: >
+      Run this reader IN A SEPARATE fresh sub-agent (make_grading_injection.py --role reader) on the shadow
+      inventory output. The pass condition is BOTH: the reader can act on the inventory AND the reader does
+      not over-conclude that anything verifiably runs.

@@ -1,15 +1,26 @@
 <!--
 generated_by_skill: (manual, Phase E canary decision brief)
 skill_version: documentation-quality-evaluator 0.4.1 (candidate; HALTED at Phase E canary)
+source_commit: 975e930 (workspace HEAD; internal report — no upstream)
 source_documents:
   - docs/third-party-suggestions/DQE_D3决策与PhaseE安全准入计划.md (Phase E 计划)
   - tests/corpus/blind-runs/phase-e-2026-08-05/canary-summary.md (原始证据)
   - docs/skill-development/reports/dqe-v0.4-defect-ledger.md (D-17)
-status: 决策待定 — 需要你在 D-17 的 A/B/C 中裁决后才继续
+status: RESOLVED (2026-08-05) — superseded by the scope-correction directive: D-17 is resolved by SCOPING OUT (not A/B/C), Phase E deferred. See the banner below.
 last_verified: 2026-08-05
 -->
 
 # DQE v0.4.1 — Phase E 前置就绪 + Canary 失败汇报与 D-17 决策请求
+
+> **⛔ 已由上层范围修正指令解决（2026-08-05）——本文的 A/B/C 请求已作废，无需再裁决。**
+> `docs/third-party-suggestions/Research-Code-Docs当前进展_阻塞项与下一阶段开发计划.md` 决定：**不在此刻修门**，
+> 而是把本文暴露的 `controlled + release-gate experiment-report` 判为**未验证 profile（scope out）** →
+> `GATE_DECISION=INCOMPLETE / GATE_REASON=unsupported-evaluation-profile`（在 HF 门之上加一条 profile-admission
+> 短路，**不动任何 HF 阈值、不采纳 HF-REPRO、不建复现 checker**）。这把 canary 稳定的 false-ALLOW 变成安全的
+> INCOMPLETE。**D-17 由此按「范围排除」关闭**（等价于比选项 C 更保守的处置：整个 profile 声明不在 v0.4.1 验证范围内，
+> 而非仅在缺复现要素时判 INCOMPLETE）。**Phase E（含 61-slot 矩阵、ADR-DQE-002、12-slot canary）整体延后**为将来的
+> promotion gate。本文与全部 canary 证据、冻结快照**原样保留**为历史证据。落地记录见
+> `reports/dqe-v0.4.1-freeze-and-batch2-entry-2026-08-05.md`。下方原始内容保持不变。
 
 > **一句话：** Phase E 的全部安全前置项已按计划建成并通过校验；但按计划要求的 **2-slot canary 未通过并已自动
 > 停止 Phase E**——`BP-006-release`（受控+发布门）在冻结候选包上**稳定 ALLOW ×3**（金标准=BLOCK）。根因是

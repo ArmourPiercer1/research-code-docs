@@ -1,0 +1,16 @@
+skill: research-question-and-literature-planner
+skill_version: "0.1.0"
+dataset_version: 1
+# Batch-2 LIGHT trigger set (directive §8): 3 should-trigger + 3 should-not.
+# "should-trigger" = engage and produce a SEARCH PLAN (scope, then route). "should-not" = decline/route.
+# The research-layer rule (conflict-matrix §50): do-not-trigger names all five research skills.
+cases:
+  # ---------- should-trigger (engage: scope, then route) ----------
+  - {id: rqlp-trig-01, set: should-trigger, real: false, input: "I have an open question: which implicit-constraint / manifold-optimization methods transfer to our general nonlinear solver, and under what assumptions? Help me scope a literature search — inclusion/exclusion and stop criteria — before I run it.", notes: "scope a transfer question (only cross-domain/analogy evidence exists)."}
+  - {id: rqlp-trig-02, set: should-trigger, real: false, input: "Turn this vague research question into a proper search protocol with an evidence standard, then tell me which search tool to use.", notes: "protocol + route; does not run the search."}
+  - {id: rqlp-trig-03, set: should-trigger, real: false, input: "Define the scope and the stopping criteria for a review of preconditioner choices for saddle-point systems.", notes: "scope/stop-criteria artifact."}
+
+  # ---------- should-not (decline or route away: user wants execution/retrieval) ----------
+  - {id: rqlp-not-01, set: should-not, real: false, input: "Just go run the literature review on adaptive mesh refinement and give me the key papers.", expected: {route_to: lit-review}, notes: "run the survey -> lit-review; planner never retrieves."}
+  - {id: rqlp-not-02, set: should-not, real: false, input: "Fetch the full text of Nocedal & Wright 2006 and summarize chapter 18 for me.", expected: {route_to: paper-fetch-skill}, notes: "a known specific paper -> paper-fetch-skill."}
+  - {id: rqlp-not-03, set: should-not, real: false, input: "How does SciPy's LinearOperator API actually behave when you pass a non-square matvec? Check the docs/source.", expected: {route_to: research}, notes: "technical primary source / software behavior -> research (not academic literature)."}

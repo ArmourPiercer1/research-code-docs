@@ -5,7 +5,7 @@
 # generated_by: manual (Phase-1 governance authoring)
 # schema_version: 0.1
 # source_commit: mattpocock/skills vendored snapshot (plugin.json v1.2.0; no pinned commit)
-# last_verified: 2026-07-30T09:47:06Z
+# last_verified: 2026-08-05  (v0.4.1 advisory freeze + Batch-2 decoupling; earlier governance 2026-07-30T09:47:06Z)
 #
 # Schema per entry: see docs/skill-development/system-architecture.md §10.
 # STATUS values: experimental | active | planned | deprecated | replaced | retired | reference-only
@@ -22,7 +22,9 @@ meta:
   evidence_levels: [E0, E1, E2, E3, E4, E5]
   formal_verified_threshold: E3
   batch1_eval: "PASS (trigger 28/28 x4; DQE discriminative e2e correct). Report: docs/skill-development/reports/batch1-eval-run-2026-07-30.md"
-  batch2_gate: "UNLOCKED but PROVISIONAL. documentation-quality-evaluator passed BASIC evals, but a v0.3 audit found a hybrid-roadmap FALSE-PASS: it is NOT yet a terminal quality gate. Do not treat its PASS as auto-approval for downstream skills until the v1.0 admission bar (full golden suite, severe-issue recall >=90%, false-pass=0, 3-round regression) is met. New skills still ship experimental + manual-only."
+  batch2_gate: "DECOUPLED (2026-08-05 scope-correction directive). Batch 2 no longer waits on DQE becoming a universal automatic terminal gate. documentation-quality-evaluator v0.4.1 is FROZEN as an ADVISORY / profile-scoped evaluator; it is sufficient to assist downstream development alongside an independent/human reviewer. New Batch-2 skills are evaluated by DQE-advisory + an independent reviewer + a no-skill comparison (light test set, NOT DQE's heavy corpus) and ship experimental + manual-only. Recommended order: workspace-forensics-and-inventory -> document-information-architect -> research-question-and-literature-planner -> research-evidence-synthesizer."
+  phase_e: "DEFERRED to a future promotion gate (2026-08-05). The 61-slot 3-arm admission matrix + the reproducibility-release contract (ADR-DQE-002 / HF-REPRO / a reproducibility checker / 12-slot canary) are NOT built now — they belong to the later experiment-provenance-and-reproducibility capability, not to making DQE 'perfect' before Batch 2. Restart preconditions: >=2 Batch-2 skills done + 5-10 real downstream Skill outputs collected + explicit intent to promote DQE from advisory to a terminal gate (corpus should then be real outputs, not synthetic mutations). Canary-failure evidence + frozen snapshots are PRESERVED: tests/corpus/blind-runs/phase-e-2026-08-05/ and evals/skills/snapshots/{dqe-v0.3.0,dqe-v0.4.0-pre-d16,dqe-v0.4.1-candidate}/."
+  v0_4_1_freeze: "DQE v0.4.1 FROZEN as advisory/profile-scoped (2026-08-05). Added a profile-ADMISSION scope guard (SKILL.md Rule 0 + EVALUATOR_CONTRACT): an unsupported profile -> GATE_DECISION=INCOMPLETE / GATE_REASON=unsupported-evaluation-profile. This resolves the halted D-17 canary by SCOPING OUT the controlled+release-gate experiment-report profile (NOT by adopting HF-REPRO): the canary's stable false-ALLOW becomes a safe INCOMPLETE. NO HF-1..15 threshold, no rubric weight, and no gate rules 1-3 changed — the guard sits above them. Report: reports/dqe-v0.4.1-freeze-and-batch2-entry-2026-08-05.md."
   v0_2_upgrade: "Batch-1 skills upgraded to 0.2.0 from real vendored references (agent-skills/github-awesome-copilot/research-paper-writing-skills MIT; academic-research-skills CC-BY-NC ideas-only). Per-method attribution in references/documentation-methodology/upstream-method-matrix.md. Regression re-eval: see reports/batch1-eval-run-2026-07-30.md (v0.2 section)."
   v0_3_upgrade: "documentation-quality-evaluator -> 0.3.0 after a hybrid-roadmap false-pass. Added anti-erosion/no-PASS-prediction discipline, structural gates HF-13/HF-14a/HF-14b/HF-15, decomposed HF-12A-E (doc-only vs source-needing -> DOCUMENT_QUALITY vs FACTUAL_VALIDITY), roadmap rubric + non-compensatory scoring, two-layer reader, structured KEY=VALUE verdict, 5 SIGNAL checkers + isolated grading harness. Anchor golden-negative (eoopt roadmap) now FAILs with HF-13/14a/14b/15 (recall 1.0, false_pass 0); B1 comprehensive-report PASSes (no HF-13 over-fire); trigger+conflict 28/28 no-regression. Report: reports/dqe-v0.3-upgrade-2026-07-30.md."
   v0_4_upgrade: "documentation-quality-evaluator -> 0.4.0 -> 0.4.1 (ADR-DQE-001 ACCEPTED). 0.4.0: caller-supplied evaluation_profile (provenance_policy/decision_mode NEVER silently inferred), profile-aware HF-9 (external/legacy docs not hard-failed for missing local front-matter), two-axis verdict QUALITY_BAND(quality) vs GATE_DECISION(may-proceed) with DOCUMENT_QUALITY compat map + EVALUATION_PROFILE echo, document_lifecycle vocab distinct from claim-status, HF-14b profile-severity map. HF-12A/HF-15 logic + HF-13/HF-14a thresholds UNCHANGED. 0.4.1: D-16 gate-composition fix (deterministic 3-rule GATE_DECISION; rubric total + FACTUAL_VALIDITY gate QUALITY_BAND only). Diagnostic 8/8 (dataset_version 4). OQ-REPRO=A: no HF-REPRO gate added. Frozen bundles under evals/skills/snapshots/. Phase E admission matrix pending. Reports: reports/dqe-v0.4-{skill-change-summary,diagnostic-matrix,oq-repro-decision,defect-ledger}.md + reports/dqe-v0.4.1-diagnostic-close.md."
@@ -45,6 +47,12 @@ skills:
     invocation: orchestrator-only
     auto_trigger: false
     disable_model_invocation: true
+    role: advisory-evaluator                  # 2026-08-05 freeze: advisory doc reviewer, NOT a universal auto terminal gate
+    terminal_gate_authority: profile-scoped   # an ALLOW is a green terminal gate ONLY within supported_profiles
+    supported_profiles: [roadmap, adr, architecture-doc, technical-proposal, evidence-note, evidence-matrix, external-audit, legacy-audit, general-structure-state-evidence-review]
+    unsupported_profiles:                      # -> GATE_DECISION=INCOMPLETE / GATE_REASON=unsupported-evaluation-profile
+      - "experiment-report + provenance_policy:controlled + decision_mode:release-gate (reproducibility-completeness admission) — Phase-E canary showed stable false-ALLOW"
+      - "general experiment reproducibility-release admission; use as a blanket automatic terminal gate"
     upstream_dependencies: []          # runs on any produced doc
     downstream_outputs: [quality-report, reader-test-report]
     conflicts: []                       # read-only gate; composes with all
@@ -61,9 +69,9 @@ skills:
       - {method: "severity taxonomy + reverse-outline", src: "addyosmani/agent-skills code-review-and-quality + research-paper-writing", license: MIT, adoption: method-borrow}
       - {method: "two-pass adversarial reader", src: "addyosmani/agent-skills doubt-driven-development", license: MIT, adoption: method-borrow}
       - {method: "HF-13/14/15 + HF-12A-E + non-compensatory + structured verdict + 5 signal checkers", src: "reports/documentation-quality-evaluator_独立检查失败复盘与升级要求.md (v0.3 audit)", license: internal, adoption: adapt}
-    evals: {trigger: pass, conflict: pass, task_quality: "v0.4 diagnostic 8/8 (13 cases x3=39 runs, dataset_version 4) after the D-16 gate-composition fix; profile-aware HF-9 + two-axis verdict + OQ-REPRO=A confirmed. Phase E 3-arm admission matrix (v0.4.1 / frozen-v0.3 / no-skill) not yet run.", reader_test: "two-layer protocol authored + anchor reader-failures specified; full standalone run folded into Phase E"}
+    evals: {trigger: pass, conflict: pass, task_quality: "v0.4 diagnostic 8/8 (13 cases x3=39 runs, dataset_version 4) after the D-16 gate-composition fix; profile-aware HF-9 + two-axis verdict + OQ-REPRO=A confirmed. Phase E 3-arm admission matrix DEFERRED (not a Batch-2 precondition; canary failed -> the unsupported profile is now scoped out to INCOMPLETE).", reader_test: "two-layer protocol authored + anchor reader-failures specified; full standalone run folded into the deferred Phase E"}
     last_evaluated: "2026-08-05"
-    notes: "v0.4.1 CANDIDATE (D-16 gate-composition fix; thresholds unchanged, observable behavior changed). Bumped 0.3.0->0.4.0 (profile-aware HF-9, two-axis QUALITY_BAND/GATE_DECISION, document_lifecycle vocab, HF-14b profile severity; ADR-DQE-001 ACCEPTED) ->0.4.1 (D-16). Diagnostic 8/8. Status stays experimental/manual-only; promotion to provisional-gate is GATED on the Phase E admission matrix. Terminal-gate authority PROVISIONAL. Frozen bundles: evals/skills/snapshots/{dqe-v0.3.0,dqe-v0.4.0-pre-d16,dqe-v0.4.1-candidate}."
+    notes: "v0.4.1 FROZEN as ADVISORY / profile-scoped (2026-08-05 scope-correction directive). Added a profile-ADMISSION scope guard: unsupported profile (controlled+release-gate experiment-report; general reproducibility-release; blanket auto gate) -> GATE_DECISION=INCOMPLETE / GATE_REASON=unsupported-evaluation-profile. This resolves the halted D-17 canary by SCOPING OUT, not by adopting HF-REPRO — NO HF-1..15 threshold changed. History: 0.3.0->0.4.0 (profile-aware HF-9, two-axis QUALITY_BAND/GATE_DECISION, document_lifecycle vocab, HF-14b profile severity; ADR-DQE-001 ACCEPTED) ->0.4.1 (D-16 gate-composition). Diagnostic 8/8. Stays experimental/manual-only; promotion to a terminal gate is DEFERRED to the future Phase E (see meta.phase_e). Frozen bundles preserved: evals/skills/snapshots/{dqe-v0.3.0,dqe-v0.4.0-pre-d16,dqe-v0.4.1-candidate} (candidate = pre-scope-guard canary bytes; live SKILL.md adds the advisory guard on top)."
 
   - name: project-state-reconstructor
     version: "0.2.0"
@@ -154,13 +162,135 @@ skills:
     notes: "Batch-1 trigger 28/28; domain-modeling boundary held in all 5 conflict cases; routed code-fact to state-reconstructor. Multi-turn + task_quality (register_check) runs pending. Manual-only (D.3)."
 
 # -----------------------------------------------------------------------------
-# PLANNED — later batches (not created yet; here so the roster is complete)
+# BATCH 2 — in progress (decoupled from DQE terminal-gate promotion; 2026-08-05 directive)
+#   Ship experimental + manual-only; evaluated by DQE-advisory + an independent reviewer (light round).
 # -----------------------------------------------------------------------------
 
-  - {name: document-information-architect,            version: "0.0.0", status: planned, layer: L2-atomic, class: design,   invocation: orchestrator-only, auto_trigger: false, batch: 2, purpose: "Design doc-set information architecture and boundaries."}
-  - {name: research-question-and-literature-planner,  version: "0.0.0", status: planned, layer: L2-atomic, class: research-adapter, invocation: orchestrator-only, auto_trigger: false, batch: 2, purpose: "Scope/inclusion/exclusion/stop-criteria; hands off to lit-review/wos-research/deep-research.", conflicts: [lit-review, wos-research, deep-research, paper-fetch-skill, research]}
-  - {name: research-evidence-synthesizer,             version: "0.0.0", status: planned, layer: L2-atomic, class: research-adapter, invocation: orchestrator-only, auto_trigger: false, batch: 2, purpose: "Turn retrieved evidence into an evidence matrix + method-transfer cards + evidence levels; no retrieval.", conflicts: [lit-review, wos-research, deep-research]}
-  - {name: workspace-forensics-and-inventory,         version: "0.0.0", status: planned, layer: L2-atomic, class: audit,    invocation: orchestrator-only, auto_trigger: false, batch: 2, write_scope: {read_only: true}, purpose: "Read-only inventory of a messy workspace or doc corpus. Never moves/deletes."}
+  - name: workspace-forensics-and-inventory
+    version: "0.1.0"
+    status: experimental
+    layer: L2-atomic
+    class: audit
+    owner: research-code-dev
+    purpose: >
+      Read-only structural inventory of a messy workspace or document corpus: enumerate + classify raw
+      artifacts by signal (entry-point candidates, tests, experiment scripts, results, caches, data, docs),
+      flag orphan/unreferenced artifacts, and propose CANDIDATE canonical sources. Never moves/deletes/
+      modifies; never asserts what runs (that verified job is project-state-reconstructor's).
+    invocation: orchestrator-only
+    auto_trigger: false
+    disable_model_invocation: true
+    upstream_dependencies: []          # first (read-only) step of the workspace / doc-refactor chains
+    downstream_outputs: [inventory-report]
+    conflicts: [project-state-reconstructor, workspace-migration-planner, document-information-architect]  # SEQ-adjacent trigger-boundaries: forensics inventories (read-only) BEFORE they verify/mutate/design — route, don't co-fire
+    replaces: null
+    replaced_by: null
+    write_scope: {read_only: true, creates_new_files: true, may_overwrite: false, may_move: false, may_delete: false, requires_user_approval: false, requires_isolated_branch: false}
+    context_budget: {default_reads: [project-map, manifests, entry-points, a-few-high-signal-files], max_scope: "shallow tree + sampled key files; never a raw whole-tree dump", whole_repo_allowed: false}
+    required_tools: [Read, Grep, Glob, Bash]     # Bash only for read-only listing + the checker
+    norm_sources: []
+    status_vocab: true
+    license_sources:
+      - {method: "bounded Project Map + evidence hygiene + stack detection", src: "github/awesome-copilot acquire-codebase-knowledge@be7a1cf", license: MIT, adoption: method-borrow}
+      - {method: "file trust tiers + context budget", src: "addyosmani/agent-skills context-engineering@7829ffd", license: MIT, adoption: method-borrow}
+      - {method: "read-only inventory precedes state/refactor; candidate-not-claim discipline", src: "system-architecture §3.2/§3.3 + design-guide", license: internal, adoption: adapt}
+    evals: {trigger: "pass (8/8: 3 should-trigger ENGAGE + 3 should-not routed + 2 boundary routed to PSR / migration-planner)", conflict: "pass (2/2 boundary: what-runs -> project-state-reconstructor; move/delete -> workspace-migration-planner)", task_quality: "light shadow-run on tests/corpus/ (read-only verified via git status --porcelain = clean) beats no-skill baseline: adds candidate+signal tagging, GENERATED hygiene, orphan-candidates-with-cited-search, trust tiers, coverage note, PSR handoff; baseline blurred inventory with interpretation and omitted the handoff/hygiene", reader_test: "pass (no-context reader: READER_CAN_ACT=YES, OVERCLAIM_DETECTED=NO — actionable inventory, no 'runs/passes' over-claim)"}
+    last_evaluated: "2026-08-05"
+    notes: "Batch-2 FIRST skill (read-only). Light round per 2026-08-05 directive §8 PASSED (trigger 8/8 + shadow run + reader test + no-skill compare). Stays experimental + disable-model-invocation:true (manual-only) — the light round validates ADVISORY manual use, NOT auto-trigger. Evidence: evals/skills/results/workspace-forensics-and-inventory/ + reports/batch2-workspace-forensics-eval-2026-08-05.md. Feeds project-state-reconstructor (conflict-matrix §67 now real)."
+
+  - name: document-information-architect
+    version: "0.1.0"
+    status: experimental
+    layer: L2-atomic
+    class: design
+    owner: research-code-dev
+    purpose: >
+      Design the target information architecture for a hybrid doc or doc corpus: separate the doc-roles,
+      assign one canonical home per responsibility + info-type, produce an artifact map + split/link/lifecycle
+      plan. The DESIGN answer to what DQE flags as HF-13. Does NOT rewrite prose or move files.
+    invocation: orchestrator-only
+    auto_trigger: false
+    disable_model_invocation: true
+    upstream_dependencies: [workspace-forensics-and-inventory, project-state-reconstructor]
+    downstream_outputs: [artifact-map]
+    conflicts: [documentation-quality-evaluator, technical-document-rewriter, content-canonicalization-and-migration, domain-modeling]
+    replaces: null
+    replaced_by: null
+    write_scope: {read_only: true, creates_new_files: true, may_overwrite: false, may_move: false, may_delete: false, requires_user_approval: false, requires_isolated_branch: false}
+    context_budget: {default_reads: [target-corpus, forensics-inventory, psr-state-report, canonical-source-map], max_scope: "the doc-set + its inventory/state; no whole-repo scan", whole_repo_allowed: false}
+    required_tools: [Read, Grep, Glob, Bash]
+    norm_sources: []
+    status_vocab: true
+    license_sources:
+      - {method: "canonical home per doc-role; match existing convention", src: "addyosmani/agent-skills documentation-and-adrs@7829ffd", license: MIT, adoption: adapt}
+      - {method: "boundary/responsibility separation", src: "mattpocock/skills codebase-design@snapshot", license: MIT, adoption: method-borrow}
+      - {method: "HF-13/HF-14b cure = canonical-home assignment", src: "hard-fail.md + canonical-source-map.md", license: internal, adoption: adapt}
+    evals: {trigger: "pass (8/8: 3 ENGAGE + routed to DQE/rewriter/migration/domain-modeling/PSR)", conflict: "pass (2/2 boundary: terminology->domain-modeling; facts-first->project-state-reconstructor)", task_quality: "shadow run on the eoopt hybrid roadmap (read-only, untouched) beats no-skill baseline: 11 roles + one canonical home per info-type + complete split plan + provisional(needs-PSR) flags + open decisions; baseline drifted into rewrite/execute + silent decisions", reader_test: "pass (DESIGN_ACTIONABLE=YES, LANE_VIOLATION=NO, DUPLICATION=NO)"}
+    last_evaluated: "2026-08-05"
+    notes: "Batch-2 skill #2 (design). Light round per directive §8 PASSED. Resolves what DQE HF-13 flags: a DESIGN PLAN (no rewrite/move); volatile->pointer = the HF-14b cure. Stays experimental + disable-model-invocation:true. Evidence: results/document-information-architect/ + reports/batch2-skills-eval-2026-08-05.md."
+
+  - name: research-question-and-literature-planner
+    version: "0.1.0"
+    status: experimental
+    layer: L2-atomic
+    class: research-adapter
+    owner: research-code-dev
+    purpose: >
+      Thin scoping front-end: turn an open research question into a search plan (scope, inclusion/exclusion,
+      stop criteria, evidence standard) and ROUTE to the retrieval stack. Never retrieves or synthesizes.
+    invocation: orchestrator-only
+    auto_trigger: false
+    disable_model_invocation: true
+    upstream_dependencies: [goal-scope-and-workflow-elicitor, uncertainty-and-decision-manager]
+    downstream_outputs: [search-plan]
+    conflicts: [lit-review, wos-research, deep-research, paper-fetch-skill, research, research-evidence-synthesizer]
+    replaces: null
+    replaced_by: null
+    write_scope: {read_only: true, creates_new_files: true, may_overwrite: false, may_move: false, may_delete: false, requires_user_approval: false, requires_isolated_branch: false}
+    context_budget: {default_reads: [the-question, originating-decision], max_scope: "the question + its decision context; no retrieval", whole_repo_allowed: false}
+    required_tools: [Read]
+    norm_sources: []
+    status_vocab: true
+    license_sources:
+      - {method: "testable criteria + stop conditions", src: "addyosmani/agent-skills spec-driven-development@7829ffd", license: MIT, adoption: method-borrow}
+      - {method: "sufficiency/stop", src: "addyosmani/agent-skills interview-me@7829ffd", license: MIT, adoption: method-borrow}
+    evals: {trigger: "pass (8/8: 3 ENGAGE + routed to lit-review/paper-fetch-skill/research/research-evidence-synthesizer/wos-research)", conflict: "pass (2/2 boundary: already-retrieved->research-evidence-synthesizer (OQ-4); WoS iterative->wos-research)", task_quality: "shadow search-plan on a cross-domain transfer question stayed a thin scope+route artifact; the no-skill baseline OVERREACHED (named seed papers as findings + a 'pre-registered hypothesis' about the literature + offered to execute) — the clearest value demonstration of the batch", reader_test: "pass (SCOPE_ACTIONABLE=YES, OVERREACH=NO; seeds labeled 'to confirm, not findings')"}
+    last_evaluated: "2026-08-05"
+    notes: "Batch-2 skill #3 ([ADAPT] thin adapter). Light round per directive §8 PASSED. do-not-trigger names all five research skills; never retrieves. OQ-4 (merge with the synthesizer) open. Stays experimental + disable-model-invocation:true. Evidence: results/research-question-and-literature-planner/."
+
+  - name: research-evidence-synthesizer
+    version: "0.1.0"
+    status: experimental
+    layer: L2-atomic
+    class: research-adapter
+    owner: research-code-dev
+    purpose: >
+      Design-facing: turn ALREADY-RETRIEVED evidence into a claim-evidence matrix + method-transfer cards +
+      E0-E5 levels + transfer assumptions + gaps (direct / same-domain-indirect / cross-domain-analogy /
+      project-inference channels kept separate). Never retrieves; never upgrades paper/analogy evidence to fact.
+    invocation: orchestrator-only
+    auto_trigger: false
+    disable_model_invocation: true
+    upstream_dependencies: [research-question-and-literature-planner, lit-review, evidence-extraction]
+    downstream_outputs: [evidence-map]
+    conflicts: [lit-review, wos-research, deep-research, paper-fetch-skill, research, evidence-extraction, literature-synthesis, research-question-and-literature-planner]
+    replaces: null
+    replaced_by: null
+    write_scope: {read_only: true, creates_new_files: true, may_overwrite: false, may_move: false, may_delete: false, requires_user_approval: false, requires_isolated_branch: false}
+    context_budget: {default_reads: [retrieved-evidence-bundle, literature-ingest-store, the-decision], max_scope: "the retrieved evidence + the decision; no new search", whole_repo_allowed: false}
+    required_tools: [Read, Grep, Glob]
+    norm_sources: [hypotheses, candidates]
+    status_vocab: true
+    license_sources:
+      - {method: "claim|evidence|status matrix", src: "research-paper-writing paper-review.md@77e7c2c", license: MIT, adoption: method-borrow}
+      - {method: "evidence-authority ladder -> E0-E5", src: "addyosmani/agent-skills source-driven-development@7829ffd", license: MIT, adoption: adapt}
+    evals: {trigger: "pass (8/8: 3 ENGAGE + routed to lit-review/review-writer/planner/evidence-extraction/uncertainty-and-decision-manager)", conflict: "pass (2/2 boundary: single-paper full-text->evidence-extraction; record-decision->uncertainty-and-decision-manager)", task_quality: "shadow evidence-map on the SYNTHETIC bundle held D.8: analogy capped E2, LICQ assumption flagged E0 (assumed+contradicted), weak direct trial isolated E1, transfer-card assumptions explicit, 5 gaps + register handoff; no-skill baseline gave a good narrative but no E-level/channel structure / transfer-card / gaps / handoff", reader_test: "pass (SYNTHESIS_ACTIONABLE=YES, FACT_UPGRADE=NO)"}
+    last_evaluated: "2026-08-05"
+    notes: "Batch-2 skill #4 ([ADAPT] thin adapter). Light round per directive §8 PASSED. Design-decision-facing; SHARP boundary vs INSTALLED literature-synthesis/review-writer held (res-not-02 routed to review-writer). Never retrieves; D.8 no fact-upgrade held. OQ-4 open. Stays experimental + disable-model-invocation:true. Evidence: results/research-evidence-synthesizer/."
+
+# -----------------------------------------------------------------------------
+# PLANNED — later batches (not created yet; here so the roster is complete)
+# -----------------------------------------------------------------------------
 
   - {name: numerical-research-software-design,        version: "0.0.0", status: planned, layer: L1-control, class: orchestrate, invocation: manual-only, auto_trigger: false, batch: 3, purpose: "Control flow: fuzzy numerical idea -> stable design spec.", conflicts: [scientific-workspace-reconstruction, documentation-refactor]}
   - {name: scientific-workspace-reconstruction,       version: "0.0.0", status: planned, layer: L1-control, class: orchestrate, invocation: manual-only, auto_trigger: false, batch: 3, purpose: "Control flow: messy dev-test-experiment workspace -> reconstructed, reproducible structure.", conflicts: [numerical-research-software-design, documentation-refactor, improve-codebase-architecture]}

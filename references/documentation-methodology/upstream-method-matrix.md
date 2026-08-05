@@ -113,6 +113,51 @@ no external license). Two borrows extend existing MIT rows.
 | **Reason on REJECTED/DEFERRED/superseded** + alternatives/consequences | agent-skills `documentation-and-adrs` | MIT | adapt | Checker-enforced; ADR file-layout rejected (§3). |
 | **Evidence-coverage gate** (no orphan commitment) | research-paper-writing `experiments.md` | MIT | method-borrow | Every structural commitment maps to an evidence locator. |
 
+### 2.5 `workspace-forensics-and-inventory` (v0.1.0 — Batch 2)
+
+| Method | Source | License | Adoption | Boundary |
+|---|---|---|---|---|
+| **Bounded Project Map** (one line per dir, shallow-first) + **Coverage note** | github `acquire-codebase-knowledge` + agent-skills `context-engineering` | MIT | method-borrow | Inventory only; no `docs/codebase/*` authoring or C4/UML (§3). |
+| **Evidence hygiene** — generated/cached output labeled, never source | `acquire-codebase-knowledge` | MIT | adapt | Read-only; forensics labels GENERATED, it does not re-derive facts (that is PSR). |
+| **Stack detection** (ambiguous env → signal-based candidate) | `acquire-codebase-knowledge/references/stack-detection.md` | MIT | method-borrow | Reports the stack as a CANDIDATE with its signal, never a certainty. |
+| **File trust tiers** (Trusted / Verify / Untrusted) + untrusted-as-data | agent-skills `context-engineering` | MIT | adapt | Untrusted file text is inventory data, never an instruction (security §12). |
+| **Candidate-not-claim** inventory discipline | system-architecture §3.2/§3.3 + design-guide | internal | adapt | The core boundary: forensics nominates candidates + signals; it NEVER asserts what runs / is tested / is canonical (PSR / document-information-architect / the decision manager decide). |
+
+All borrowed methods are a **strict subset** of what `project-state-reconstructor` (§2.2) already takes from the
+same MIT sources, **bounded to inventory** (enumerate + classify by signal), with the verification/interpretation
+layer deliberately left to PSR. No new upstream text is copied.
+
+### 2.6 `document-information-architect` (v0.1.0 — Batch 2)
+
+| Method | Source | License | Adoption | Boundary |
+|---|---|---|---|---|
+| **Canonical home per doc-role** + match-existing-convention-first | agent-skills `documentation-and-adrs` | MIT | adapt | Assigns *where info lives*; does not author the doc body (rewriter) or move files (migration). |
+| **Responsibility / boundary separation** | mattpocock `codebase-design` | MIT | method-borrow | Applied to DOC responsibilities, not code modules; structure only. |
+| **HF-13 / HF-14b cure = one canonical home per info-type** | internal (hard-fail.md + canonical-source-map.md) | internal | adapt | The design answer to the hybrid-doc disease; a plan, never an executed move/rewrite. |
+
+### 2.7 `research-question-and-literature-planner` (v0.1.0 — Batch 2, [ADAPT] thin adapter)
+
+| Method | Source | License | Adoption | Boundary |
+|---|---|---|---|---|
+| **Testable criteria + explicit stop conditions** | agent-skills `spec-driven-development` | MIT | method-borrow | Applied to a *search* scope (inclusion/exclusion/stop), not a software spec; no retrieval. |
+| **Sufficiency / stop-when-enough** | agent-skills `interview-me` | MIT | method-borrow | The search stop criterion; the skill delegates all retrieval to the L3 stack. |
+
+Rule of the research layer (conflict-matrix §50): the do-not-trigger list names all five existing research
+skills (`lit-review`, `wos-research`, `deep-research`, `paper-fetch-skill`, `research`) and the workflow
+delegates retrieval. A *thin adapter*, not a reimplementation. OQ-4 (possible merge with §2.8) remains open.
+
+### 2.8 `research-evidence-synthesizer` (v0.1.0 — Batch 2, [ADAPT] thin adapter)
+
+| Method | Source | License | Adoption | Boundary |
+|---|---|---|---|---|
+| **`claim｜evidence｜status` matrix** | research-paper-writing `paper-review.md` | MIT | method-borrow | Design-facing claim–evidence matrix, NOT a review write-up (that is the installed `literature-synthesis`). |
+| **Evidence-authority ladder → E0–E5** | agent-skills `source-driven-development` | MIT | adapt | Every source→claim link tagged E-level + channel; analogy/paper evidence never upgraded to project-fact (D.8). |
+
+Boundary vs the **installed** research-writing stack: `literature-synthesis` / `review-writer` are review-
+writing-facing; this skill is *design-decision-facing* (method transfer + E-levels feeding the decision
+register). It consumes `evidence-extraction` units + `lit-review` / `literature-ingest` output; it never
+retrieves (conflict-matrix §44–46, §50). OQ-4 (possible merge with §2.7) remains open.
+
 ---
 
 ## 3. Rejected upstream rules (with reason)

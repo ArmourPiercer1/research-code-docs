@@ -1,0 +1,21 @@
+skill: research-evidence-synthesizer
+skill_version: "0.1.0"
+dataset_version: 1
+# Batch-2 LIGHT boundary/conflict set (2 cases). Correct behavior = route per conflict-matrix §44-46 + §50.
+cases:
+  - id: res-conf-01
+    set: conflict
+    real: false
+    input: "I have the PDF full text of one paper — extract its structured evidence units (claims, settings, quotes, limitations) for me."
+    expected: {decision: route, route_to: evidence-extraction}
+    notes: >
+      Single-paper full-text -> evidence-units is evidence-extraction's job (RES's upstream). The synthesizer
+      CONSUMES those units across many sources; it does not read a raw full text to extract them.
+  - id: res-conf-02
+    set: conflict
+    real: false
+    input: "Record our decision to adopt method M as a CANDIDATE at evidence level E2 in the register."
+    expected: {decision: route, route_to: uncertainty-and-decision-manager}
+    notes: >
+      RES supplies the evidence + E-level/channel; the DECIDED/CANDIDATE status and the register entry belong
+      to uncertainty-and-decision-manager. Synthesizer organizes; it does not own the decision.

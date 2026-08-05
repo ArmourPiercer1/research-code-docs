@@ -1,0 +1,16 @@
+skill: document-information-architect
+skill_version: "0.1.0"
+dataset_version: 1
+# Batch-2 LIGHT trigger set (directive §8): 3 should-trigger + 3 should-not.
+# "should-trigger" = when invoked on this input, engage and produce an artifact-map (design plan).
+# "should-not" = decline or route away. Boundary/conflict cases live in the conflict yaml.
+cases:
+  # ---------- should-trigger (engage: design the information architecture) ----------
+  - {id: dia-trig-01, set: should-trigger, real: false, input: "Our ROADMAP.md is a mess — it's a vision doc, a phase plan, a status log, and an ADR index all in one file. Design how we should split it into proper documents.", notes: "classic hybrid -> design the split (the HF-13 cure)."}
+  - {id: dia-trig-02, set: should-trigger, real: false, input: "The files under docs/ overlap and contradict each other. Which document should own the 'current test status', and how should the whole set be organized?", notes: "corpus -> canonical-source assignment + target architecture."}
+  - {id: dia-trig-03, set: should-trigger, real: false, input: "The quality evaluator flagged HF-13 (mixed responsibilities) on our design doc. Plan the structural fix — what's the target doc-set and who owns what?", notes: "HF-13 -> structural design answer (not a reword)."}
+
+  # ---------- should-not (decline or route away) ----------
+  - {id: dia-not-01, set: should-not, real: false, input: "Grade this architecture doc against our documentation quality bar and give me a verdict.", expected: {route_to: documentation-quality-evaluator}, notes: "judging, not designing."}
+  - {id: dia-not-02, set: should-not, real: false, input: "The structure is fine — just rewrite this doc so the prose is clearer.", expected: {route_to: technical-document-rewriter}, notes: "rewriting content, not deciding where content lives."}
+  - {id: dia-not-03, set: should-not, real: false, input: "Go ahead and move those sections into new files and delete the old mega-doc.", expected: {route_to: content-canonicalization-and-migration}, notes: "executing a file move -> migration (dry-run first); IA only PLANS the split."}

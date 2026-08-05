@@ -1,0 +1,16 @@
+skill: research-evidence-synthesizer
+skill_version: "0.1.0"
+dataset_version: 1
+# Batch-2 LIGHT trigger set (directive §8): 3 should-trigger + 3 should-not.
+# "should-trigger" = engage and organize ALREADY-RETRIEVED evidence into a design-facing evidence map.
+# "should-not" = decline/route. Research-layer rule (§50): never retrieve; name the delegated skills.
+cases:
+  # ---------- should-trigger (engage: organize retrieved evidence) ----------
+  - {id: res-trig-01, set: should-trigger, real: false, input: "I have ~15 extracted papers on manifold optimization. Build an evidence matrix with evidence levels, and flag which methods actually transfer to our nonlinear implicit-constraint solver and under what assumptions.", notes: "retrieved evidence in hand -> matrix + transfer cards + E-levels."}
+  - {id: res-trig-02, set: should-trigger, real: false, input: "Organize this retrieved evidence into method-transfer cards for our design decision — for each method, what does the transfer to our problem rely on, and what's evidenced vs assumed?", notes: "transfer cards + explicit assumptions (the HF-12D lens)."}
+  - {id: res-trig-03, set: should-trigger, real: false, input: "We collected notes from the lit-review run. Map each claim to an E0–E5 level and separate direct vs cross-domain-analogy evidence before it goes into the decision register.", notes: "channel separation + E-levels for the register."}
+
+  # ---------- should-not (decline or route away) ----------
+  - {id: res-not-01, set: should-not, real: false, input: "Go find papers on Riemannian optimization for us.", expected: {route_to: lit-review}, notes: "retrieval -> lit-review (or scope first via the planner); synthesizer consumes retrieved evidence only."}
+  - {id: res-not-02, set: should-not, real: false, input: "Write up our literature review section into a polished narrative for the paper.", expected: {route_to: literature-synthesis}, notes: "KEY boundary: review-writing is literature-synthesis / review-writer; synthesizer is design-decision-facing, not a review write-up."}
+  - {id: res-not-03, set: should-not, real: false, input: "Scope a literature search on preconditioners for saddle-point systems before we start searching.", expected: {route_to: research-question-and-literature-planner}, notes: "before-retrieval scoping -> the planner (OQ-4 boundary)."}

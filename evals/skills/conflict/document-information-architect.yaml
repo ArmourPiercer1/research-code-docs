@@ -1,0 +1,23 @@
+skill: document-information-architect
+skill_version: "0.1.0"
+dataset_version: 1
+# Batch-2 LIGHT boundary/conflict set (2 cases) — the adjacent skills IA is most confused with.
+# Correct behavior = defer/route per conflict-matrix.md + system-architecture §3.3 chain ordering.
+cases:
+  - id: dia-conf-01
+    set: conflict
+    real: false
+    input: "Are 'flux limiter' and 'slope limiter' the right canonical names for this concept across our glossary and docs?"
+    expected: {decision: route, route_to: domain-modeling}
+    notes: >
+      IA structures DOCUMENTS (which doc owns which responsibility); the canonical choice of a TERM is
+      domain-modeling's job. IA may note that a glossary should own terminology, but the term decision is
+      not IA's.
+  - id: dia-conf-02
+    set: conflict
+    real: false
+    input: "Before we reorganize the docs, figure out what our project's real current state actually is — what runs, what's tested."
+    expected: {decision: route, route_to: project-state-reconstructor}
+    notes: >
+      system-architecture §3.3: forensics -> project-state-reconstructor -> ... -> document-information-architect.
+      IA CONSUMES verified state (FACT/UNKNOWN); it does not recover facts. Facts first (PSR), then design.

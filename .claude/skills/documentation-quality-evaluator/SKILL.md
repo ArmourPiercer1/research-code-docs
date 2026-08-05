@@ -7,7 +7,7 @@ disable-model-invocation: true
 <!--
 skill_version: 0.4.1
 status: experimental (manual/orchestrator-only until the v0.4.1 admission matrix passes; see docs/skill-development/creation-roadmap.md)
-generated_by_skill: manual authoring; v0.2 upgraded from real references; v0.3 hardened after a hybrid-roadmap false-pass; v0.4 adds ADR-DQE-001 (profile-aware HF-9, two-axis verdict, lifecycle vocab, HF-14b profile severity); v0.4.1 = D-16 gate-composition contract fix (deterministic 3-rule GATE_DECISION derivation; thresholds unchanged, observable behavior changed)
+generated_by_skill: manual authoring; v0.2 upgraded from real references; v0.3 hardened after a hybrid-roadmap false-pass; v0.4 adds ADR-DQE-001 (profile-aware HF-9, two-axis verdict, lifecycle vocab, HF-14b profile severity); v0.4.1 = D-16 gate-composition contract fix (deterministic 3-rule GATE_DECISION derivation; thresholds unchanged, observable behavior changed); v0.4.1 FROZEN 2026-08-05 as an advisory/profile-scoped evaluator — added a profile-ADMISSION scope guard (unsupported profile -> GATE_DECISION=INCOMPLETE / GATE_REASON=unsupported-evaluation-profile); NO HF-1..15 threshold changed; Phase E deferred
 source_commit: addyosmani/agent-skills@7829ffd (MIT); Master-cai/Research-Paper-Writing-Skills@77e7c2c (MIT); Imbad0202/academic-research-skills@2cf3a51 (CC-BY-NC, ideas-only); mattpocock/skills@snapshot(v1.2.0)
 source_documents:
   - references/agent-skills/skills/code-review-and-quality/SKILL.md (MIT)
@@ -18,6 +18,7 @@ source_documents:
   - evals/skills/harness/rubric.md, evals/skills/harness/hard-fail.md, evals/skills/harness/canonical-source-map.md
   - docs/skill-development/adr/ADR-DQE-001-evaluation-profile-and-verdict-axes.md (v0.4 contract, ACCEPTED)
   - docs/skill-development/reports/documentation-quality-evaluator_独立检查失败复盘与升级要求.md (v0.3 upgrade spec, workspace-internal)
+  - docs/third-party-suggestions/Research-Code-Docs当前进展_阻塞项与下一阶段开发计划.md (2026-08-05 scope-correction: advisory freeze, profile-scoped, Phase E deferred)
   - references/documentation-methodology/upstream-method-matrix.md §2.1
 last_verified: 2026-08-05
 -->
@@ -25,6 +26,7 @@ last_verified: 2026-08-05
 # Documentation Quality Evaluator
 
 > **Experimental · manual/orchestrator-only.** Grades every other skill's output, so it is built and hardened first. It **never edits** the document under review.
+> **v0.4.1 is FROZEN (2026-08-05) as an ADVISORY, profile-scoped evaluator** — a reliable *advisory* reviewer + independent-reviewer companion for its **supported profiles** (roadmap · ADR · architecture doc · technical proposal · evidence note/matrix · external/legacy audit · general structure/state/evidence/executability review), **not** a universal automatic terminal gate. For the one **unsupported** profile the Phase-E canary exposed — a **controlled + release-gate experiment report** (reproducibility-completeness admission) — and for any general reproducibility-release or blanket auto-gate use, it emits `GATE_DECISION=INCOMPLETE` + `GATE_REASON=unsupported-evaluation-profile` instead of a possibly-wrong ALLOW/BLOCK. See **Supported scope & profile admission** below. This freeze changed **no** HF-1..15 threshold; Phase E is **deferred** to a future promotion gate.
 > **v0.4** implements ADR-DQE-001: an explicit **`evaluation_profile`** input (the caller supplies `provenance_policy` + `decision_mode`; DQE never silently infers them), **profile-aware HF-9** (external/legacy docs are not hard-failed for missing local front-matter), a **two-axis verdict** (`QUALITY_BAND` = holistic quality vs `GATE_DECISION` = may-it-proceed, with `DOCUMENT_QUALITY` as a compat map), a **document-lifecycle vocabulary** distinct from claim status, and **profile-qualified HF-14b**. It keeps every v0.3 gate; **HF-12A and HF-15 logic are unchanged**, and HF-13/HF-14a keep their v0.3 thresholds (only their contract wording is synced to the ADR).
 > **v0.4.1** applies the **D-16 gate-composition fix**: `GATE_DECISION` is now a deterministic 3-rule derivation (missing-required/profile ⇒ INCOMPLETE · any profile-mapped BLOCKER ⇒ BLOCK · else ⇒ ALLOW); the rubric total and `FACTUAL_VALIDITY` gate `QUALITY_BAND` only and never move `GATE_DECISION`. **No hard-gate threshold changed** — this fixes an under-specified audit-mode gate that made an external+audit doc resolve 3-way (BLOCK/ALLOW/INCOMPLETE). Observable behavior changed, so the candidate is versioned **0.4.1** (not 0.4.0).
 
@@ -50,6 +52,33 @@ Engage when **all** hold:
 - General **prose/article editing** with no research-software doc purpose → `edit-article` / plain editing.
 - There is **no artifact yet** → ask for it or route to the skill that produces it.
 - The user wants the document **rewritten**, not judged → `technical-document-rewriter`. This skill only judges.
+
+## Supported scope & profile admission (v0.4.1 advisory freeze)
+
+Per the **2026-08-05 scope-correction directive**, DQE v0.4.1 is frozen as an **advisory / profile-scoped**
+evaluator. Use it as a doc reviewer alongside an independent/human reviewer — **not** as a blanket automatic
+terminal gate.
+
+**Supported (validated advisory scope):**
+- `roadmap` · `adr` · `architecture-doc` · `technical-proposal` · `evidence-note` / `evidence-matrix`
+- `external` / `legacy` audit of any of the above
+- general structure / state-consistency / evidence-labelling / executability review
+
+**Unsupported (NOT yet validated) — do NOT emit a terminal ALLOW/BLOCK; emit INCOMPLETE:**
+- `artifact_type: experiment-report` **with** `provenance_policy: controlled` **and** `decision_mode: release-gate`
+  (reproducibility-completeness release admission). The Phase-E canary showed DQE **stably mis-ALLOWs** this
+  profile (it once emitted `QUALITY_BAND=FAIL` + `READER_TEST=FAIL` yet `GATE_DECISION=ALLOW`).
+- any **general experiment reproducibility-release** admission, or use as a **blanket automatic terminal gate**.
+
+**Profile-admission guard (GATE_DECISION derivation — Rule 0, runs BEFORE Rules 1–3):** if the
+`(artifact_type, provenance_policy, decision_mode)` triple is in the unsupported set above →
+`GATE_DECISION=INCOMPLETE` with `GATE_REASON=unsupported-evaluation-profile`, and state plainly *"this
+evaluator is not validated for this profile"*. This is a **scope declaration, not a quality judgement** of
+the target; it is deliberately more conservative than the (canary-proven unreliable) gate it replaces for
+this profile. It changes **no** HF-1..15 threshold and no rubric weight — it only short-circuits the gate to
+the safe non-ALLOW when the profile is out of validated scope. You may still report the document's advisory
+`QUALITY_BAND` and findings. The real reproducibility-admission contract (ADR-DQE-002 / a reproducibility
+checker / HF-REPRO / Phase E) is **deferred** to a later batch; until then this profile stays INCOMPLETE.
 
 ## Inputs
 
@@ -105,6 +134,7 @@ Engage when **all** hold:
 ```
 QUALITY_BAND=<PASS|PARTIAL|FAIL>                    # holistic document quality
 GATE_DECISION=<ALLOW|BLOCK|INCOMPLETE>             # may this proceed in the caller's workflow
+GATE_REASON=<none|unsupported-evaluation-profile|missing-profile|missing-required-section|unclassifiable-type|checks-not-run>  # why non-ALLOW; 'none' when ALLOW/BLOCK on merits
 DOCUMENT_QUALITY=<PASS|FAIL|INCOMPLETE_EVALUATION>  # compat map of GATE_DECISION (ALLOW->PASS, BLOCK->FAIL, INCOMPLETE->INCOMPLETE_EVALUATION)
 FACTUAL_VALIDITY=<VERIFIED|PARTIALLY_VERIFIED|UNVERIFIED>
 READER_TEST=<PASS|FAIL>
@@ -121,7 +151,10 @@ FILES_READ=[...]                                    # the evaluator's actual rea
   proceed. They are independent: a `PARTIAL` doc can still `BLOCK` on one gate; an honestly-labeled
   hypothesis can be `PASS` + `ALLOW`. `DOCUMENT_QUALITY` is the backward-compatible mapping of `GATE_DECISION`.
 - **How to derive each axis (deterministic — do NOT improvise; this is the single source of the gate value):**
-  - `GATE_DECISION` is decided ONLY by these three, in order: (1) if a required section/input is missing, or
+  - `GATE_DECISION` is decided ONLY by these rules, in order: **(0) profile admission** — if the
+    `(artifact_type, provenance_policy, decision_mode)` triple is in the **unsupported** set (see *Supported
+    scope & profile admission*) → **INCOMPLETE** with `GATE_REASON=unsupported-evaluation-profile` (stop here;
+    do not attempt a terminal gate for this profile); (1) else if a required section/input is missing, or
     `provenance_policy`/`decision_mode` is missing, or the artifact type is unclassifiable, or checkers/reader
     test did not run → **INCOMPLETE**; (2) else if any applicable hard gate is MET at BLOCKER severity (after
     profile-aware severity mapping) → **BLOCK**; (3) else → **ALLOW**.
@@ -173,11 +206,14 @@ FILES_READ=[...]                                    # the evaluator's actual rea
 ## Handoff rules
 
 - On FAIL → hand the severity-labeled fix list back to the invoking flow or `technical-document-rewriter`. Do not fix it yourself.
-- **Terminal-gate contract (for other skills).** A downstream skill may proceed only if
+- **Terminal-gate contract (for other skills) — advisory / profile-scoped (v0.4.1).** DQE is an **advisory**
+  evaluator; treat its verdict as one input alongside an independent/human reviewer, not as an automatic
+  release. Within a **supported** profile, a downstream skill may proceed only if
   `GATE_DECISION=ALLOW AND FACTUAL_VALIDITY≠UNVERIFIED AND CHECKER_STATUS=COMPLETE AND READER_TEST=PASS`.
   A `GATE_DECISION=ALLOW` with `FACTUAL_VALIDITY=UNVERIFIED` is **not** a green terminal gate — it means
-  "structurally sound, facts not yet verifiable here". `GATE_DECISION=INCOMPLETE` (including a missing
-  profile) never permits proceeding.
+  "structurally sound, facts not yet verifiable here". `GATE_DECISION=INCOMPLETE` never permits proceeding —
+  this includes a missing profile **and** `GATE_REASON=unsupported-evaluation-profile` (an out-of-scope
+  profile, e.g. a controlled release-gate experiment report: DQE is simply not validated to gate it here).
 
 ## Failure modes
 

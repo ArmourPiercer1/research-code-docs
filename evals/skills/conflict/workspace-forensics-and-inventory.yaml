@@ -1,0 +1,24 @@
+skill: workspace-forensics-and-inventory
+skill_version: "0.1.0"
+dataset_version: 1
+# Batch-2 LIGHT boundary/conflict set (2 cases) — the SEQ-adjacent skills forensics is most confused with.
+# Correct behavior = defer/route per conflict-matrix.md (forensics is read-only inventory ONLY).
+cases:
+  - id: wfi-conf-01
+    set: conflict
+    real: false
+    input: "Tell me what actually runs end-to-end here and what is tested, with evidence for each claim."
+    expected: {decision: route, route_to: project-state-reconstructor}
+    notes: >
+      conflict-matrix §67: forensics INVENTORIES raw artifacts (candidates + signals, read-only); it must
+      NOT assert what runs/is tested. Verified 'what runs' with evidence is project-state-reconstructor,
+      which CONSUMES this inventory. Forensics may offer to produce the inventory first, then hand off.
+  - id: wfi-conf-02
+    set: conflict
+    real: false
+    input: "Delete the orphaned scripts and move everything under results/ into an archive/ folder."
+    expected: {decision: route, route_to: workspace-migration-planner}
+    notes: >
+      Forensics is READ-ONLY — it never moves/deletes/modifies. Any reorganization is an approval-gated,
+      dry-run-first step owned by workspace-migration-planner. Forensics may supply the orphan/artifact
+      inventory that such a plan would build on, but does not perform the move.

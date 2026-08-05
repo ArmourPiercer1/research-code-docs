@@ -1,0 +1,22 @@
+skill: research-question-and-literature-planner
+skill_version: "0.1.0"
+dataset_version: 1
+# Batch-2 LIGHT boundary/conflict set (2 cases). Correct behavior = route per conflict-matrix §41-46,§50.
+cases:
+  - id: rqlp-conf-01
+    set: conflict
+    real: false
+    input: "I already have 20 extracted papers with notes — organize them into an evidence matrix with evidence levels and flag the transfer assumptions."
+    expected: {decision: route, route_to: research-evidence-synthesizer}
+    notes: >
+      OQ-4 boundary. Planner is BEFORE retrieval (scope + route); the synthesizer is AFTER retrieval (organize
+      already-retrieved evidence into a matrix + E-levels + transfer cards). Evidence already in hand -> synthesizer.
+  - id: rqlp-conf-02
+    set: conflict
+    real: false
+    input: "Search Web of Science for papers citing this seed and iterate on the relevance feedback until it converges."
+    expected: {decision: route, route_to: wos-research}
+    notes: >
+      conflict-matrix §42: WoS-specific iterative search + relevance feedback is wos-research's execution. The
+      planner would scope it and hand the seed query + stop criteria to wos-research; if the user wants the
+      iterative execution itself, route to wos-research.

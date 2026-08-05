@@ -171,4 +171,4 @@ The `front-matter-completeness` checker (HF-9) enforces presence; a missing fiel
 | goal-scope-and-workflow-elicitor | trigger evals pass; declines to interview on ≥ 9/10 simple-task should-not cases; no duplicate questions across a 3-turn case. |
 | uncertainty-and-decision-manager | trigger evals pass; correctly assigns §7 status + evidence levels; respects the `domain-modeling` boundary in all 5 conflict cases. |
 
-**Gate:** only after `documentation-quality-evaluator` hits its target does Batch 2 begin (prompt E, roadmap §1).
+**Gate:** `documentation-quality-evaluator` had to clear its **basic** target (§10 row 1) before Batch 2 began — it did. **Scope-correction (2026-08-05):** Batch 2 is now DECOUPLED from DQE becoming a *universal automatic terminal gate*; DQE v0.4.1 is frozen as an **advisory / profile-scoped** evaluator and the heavier Phase-E promotion is deferred (see `skills-registry.yaml` meta `batch2_gate`/`phase_e`).

@@ -39,7 +39,7 @@ def _read(p: Path) -> str:
 
 
 EVALUATOR_CONTRACT = """\
-You are the `documentation-quality-evaluator` skill (v0.4) running as a TERMINAL QUALITY GATE, in a FRESH
+You are the `documentation-quality-evaluator` skill (v0.4.1, ADVISORY / profile-scoped) running in a FRESH
 process. You have NO knowledge of this project beyond the files pasted below. You MUST NOT use any
 outside, prior-conversation, or assumed project knowledge to fill gaps in the target document — if the
 document does not say it, it is not established. Filling gaps from outside knowledge is the exact bug
@@ -63,19 +63,31 @@ Follow the injected SKILL.md workflow EXACTLY. In particular:
   `GATE_DECISION=INCOMPLETE` (never a terminal ALLOW) and name the missing fields.
 - A missing REQUIRED section/input (e.g. a release-gate proposal with no validation/acceptance/rollback)
   => `GATE_DECISION=INCOMPLETE` (can't-approve-yet), distinct from BLOCK (a present, identifiable defect).
-- **DERIVE GATE_DECISION deterministically (do NOT improvise):** (1) if a required section/input is missing,
-  or provenance_policy/decision_mode is missing, or the type is unclassifiable, or checkers/reader-test did
-  not run => INCOMPLETE; (2) else if any applicable hard gate is MET at BLOCKER severity => BLOCK; (3) else
-  => ALLOW. A rubric total < 75 or FACTUAL_VALIDITY=UNVERIFIED does **NOT** move GATE_DECISION — the total
-  sets QUALITY_BAND (PASS/PARTIAL/FAIL); UNVERIFIED is a factual-validity floor that only bars the green
-  terminal gate. Worked case: external+audit, no blocker, total 74, UNVERIFIED => GATE_DECISION=ALLOW,
-  QUALITY_BAND=PARTIAL (an advisory audit that found no blocker ALLOWs — do NOT emit BLOCK/INCOMPLETE).
+- **DERIVE GATE_DECISION deterministically (do NOT improvise):** (0) PROFILE ADMISSION — if the
+  (artifact_type, provenance_policy, decision_mode) triple is in the UNSUPPORTED set below => INCOMPLETE with
+  GATE_REASON=unsupported-evaluation-profile (stop; do not attempt a terminal gate for this profile);
+  (1) else if a required section/input is missing, or provenance_policy/decision_mode is missing, or the type
+  is unclassifiable, or checkers/reader-test did not run => INCOMPLETE; (2) else if any applicable hard gate is
+  MET at BLOCKER severity => BLOCK; (3) else => ALLOW. A rubric total < 75 or FACTUAL_VALIDITY=UNVERIFIED does
+  **NOT** move GATE_DECISION — the total sets QUALITY_BAND (PASS/PARTIAL/FAIL); UNVERIFIED is a factual-validity
+  floor that only bars the green terminal gate. Worked case: external+audit, no blocker, total 74, UNVERIFIED
+  => GATE_DECISION=ALLOW, QUALITY_BAND=PARTIAL (an advisory audit that found no blocker ALLOWs — do NOT emit
+  BLOCK/INCOMPLETE).
+- **UNSUPPORTED PROFILE (v0.4.1 advisory freeze — 2026-08-05 scope-correction directive).** DQE v0.4.1 is an
+  ADVISORY, profile-scoped evaluator. It is NOT validated to terminally gate: (a) an `experiment-report` under
+  `provenance_policy: controlled` AND `decision_mode: release-gate` (reproducibility-completeness admission —
+  the Phase-E canary showed DQE stably mis-ALLOWs it), or (b) any general reproducibility-release / blanket
+  auto terminal gate. For these => GATE_DECISION=INCOMPLETE + GATE_REASON=unsupported-evaluation-profile, and
+  say plainly "this evaluator is not validated for this profile". This is a SCOPE declaration, not a quality
+  judgement, and changes no HF threshold. Supported profiles (judge normally): roadmap, adr, architecture-doc,
+  technical-proposal, evidence-note/matrix, external/legacy audit, and general structure/state/evidence review.
 - Do NOT predict or imply a re-eval ALLOW while any structural gate (HF-13/14a/14b/15) or non-compensatory
   dimension is failing or unassessed.
 - Separate DOCUMENT quality from FACTUAL_VALIDITY (needs opening cited sources). If you cannot open a cited
   source, it is UNVERIFIED — do NOT report HF-12 verified/PASS.
 - End with the machine-parseable TWO-AXIS verdict block, verbatim keys:
   QUALITY_BAND=<PASS|PARTIAL|FAIL> / GATE_DECISION=<ALLOW|BLOCK|INCOMPLETE> /
+  GATE_REASON=<none|unsupported-evaluation-profile|missing-profile|missing-required-section|unclassifiable-type|checks-not-run> /
   DOCUMENT_QUALITY=<PASS|FAIL|INCOMPLETE_EVALUATION> (compat: ALLOW->PASS, BLOCK->FAIL, INCOMPLETE->INCOMPLETE_EVALUATION) /
   FACTUAL_VALIDITY / READER_TEST / CHECKER_STATUS / SOURCE_COVERAGE / CONFIDENCE / BLOCKERS=[...] /
   FINDING_CODES=[kebab-case, ...] (stable names for the MAJOR issues found — e.g. missing-code-version,
