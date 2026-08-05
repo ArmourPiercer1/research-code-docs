@@ -1,0 +1,16 @@
+# Immutable v1 snapshot — quarantined per user ruling OQ-REPRO=A (2026-08-02). Excluded from live metrics.
+adjudication_status: quarantine
+quarantined_at: '2026-08-02'
+dataset_version_at_quarantine: 4
+reason: profile-expectation-mismatch
+detail: >-
+  The case's declared profile was external + audit, but its expected gate was BLOCK. Under ADR-DQE-001
+  those are inconsistent: an advisory audit of an EXTERNAL upstream doc correctly yields PARTIAL/ALLOW
+  (surface the reproducibility defect without release-blocking an upstream doc — the over-blocking D-01
+  fixed). The v0.4 diagnostic returned PARTIAL/ALLOW ×3 (stable, correct for the profile); a probe under
+  controlled + release-gate returned FAIL/BLOCK ×2 (independent of HF-9, via the rubric + non-compensatory
+  rule). => CORPUS_SPEC_MISMATCH, not a DQE defect. HF-REPRO NOT adopted.
+superseded_by:
+  - BP-006-audit     # external + audit  -> PARTIAL / ALLOW (findings surfaced, not release-blocked)
+  - BP-006-release   # controlled + release-gate -> BLOCK (same body + local frontmatter, no HF-9 confound)
+do_not: [edit, run, count-in-metrics]

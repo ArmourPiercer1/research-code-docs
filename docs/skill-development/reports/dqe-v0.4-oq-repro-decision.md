@@ -7,11 +7,17 @@ source_documents:
   - tests/corpus/blind-runs/diag-2026-08-02/raw-results.json (39 diagnostic runs)
   - tests/corpus/blind-runs/diag-2026-08-02/probe/ (2 controlled+release-gate probes)
   - docs/skill-development/adr/ADR-DQE-001-...md (OQ-REPRO, Decision 4/B2)
-status: OPEN — user decision needed (A / B / C) before the full admission matrix
+status: RESOLVED 2026-08-02 — Option A (BP-006 profile pair); HF-REPRO NOT adopted
 last_verified: 2026-08-02
 -->
 
 # OQ-REPRO decision brief — GN-EXP-REPRO-001 (the diagnostic's one open item)
+
+> **✅ RESOLVED 2026-08-02 — user chose Option A.** `GN-EXP-REPRO-001` quarantined (CORPUS_SPEC_MISMATCH);
+> replaced by the `BP-006` profile pair — `BP-006-audit` (external+audit → PARTIAL/ALLOW) + `BP-006-release`
+> (controlled+release-gate → BLOCK, complete frontmatter so HF-9 is not the reason, body byte-identical to
+> the audit side after frontmatter strip). **No HF-REPRO.** The three options and full evidence are kept
+> below for the record.
 
 ## 1. One-paragraph summary
 

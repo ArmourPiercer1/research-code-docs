@@ -90,3 +90,23 @@ re-check. **No skill file was modified** (SKILL.md / hard-fail.md / rubric.md / 
   `docs/testing/corpus-repair-report-v4.md`, `docs/skill-development/reports/dqe-v0.4-defect-ledger.md`.
 - Nothing installed, pushed, or auto-triggered.
 
+### Addendum — Phase D.3 diagnostic close + one v0.4 text fix (2026-08-04)
+
+- **Runaway averted, then re-run controlled.** The first D.3 attempt was a background Workflow that received
+  `args` as a JSON **string** (not the array), iterated it character-by-character, and hit the 1000-agent cap
+  after ~63M tokens / ~11h before failing. **No corpus/skill/result file was written by it** (evaluators are
+  read-only; aggregation never ran). The D.3 reruns were then done as **7 controlled direct Agent calls** — no
+  workflow, no loop, no runaway surface.
+- **BP-006 pair + GP-EXP-001 results (v0.4):** `BP-006-release` → **BLOCK ×3** via HF-12A/HF-12E (HF-9
+  correctly silent, frontmatter complete); `GP-EXP-001` → **ALLOW, files_checked=1** (the earlier
+  `files_checked=0` stale-path bug is fixed). `BP-006-audit` first ran **3-way unstable** (BLOCK/ALLOW/
+  INCOMPLETE) → root-caused to an **audit-mode gate-composition gap** (release-gate ALLOW preconditions
+  leaking onto GATE_DECISION; see ledger **D-16**).
+- **Fix (text-only, no threshold change):** made GATE_DECISION a deterministic 3-rule derivation in `SKILL.md`
+  + EVALUATOR_CONTRACT; rubric total now gates QUALITY_BAND only; UNVERIFIED bars the green terminal gate but
+  never moves the gate. Re-ran `BP-006-audit ×3` → **ALLOW ×3 / PARTIAL ×3**, stable. **Diagnostic closes at
+  8/8.** Skill stays **0.4.0** (pre-admission hardening; disclosed, not auto-installed).
+- **OQ-REPRO = A confirmed** by both blind A/B and the skill: no dedicated HF-REPRO gate is needed — a
+  non-reproducible controlled release-gate doc BLOCKs on existing HF-12A/E, and its external+audit twin ALLOWs.
+- Nothing installed, pushed, or auto-triggered this round.
+

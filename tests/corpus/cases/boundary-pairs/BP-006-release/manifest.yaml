@@ -1,0 +1,68 @@
+case_id: BP-006-release
+case_version: 1
+class: boundary-fail
+pair_id: BP-006
+pair_role: fail
+difference_under_test: >-
+  The same unreproducible experiment-report body as BP-006-audit, but WITH complete local traceability
+  frontmatter, evaluated as controlled+release-gate. Blocking must come from the rubric / reader test /
+  HF-12A-E / non-compensatory rule, NOT from HF-9.
+artifact_type: experiment-report
+language: en
+holdout: false
+document: tests/corpus/cases/boundary-pairs/BP-006-release/document.md
+
+source:
+  kind: mutation
+  base_seed: SEED-EXP-YAHOO-RESNET
+  upstream_repo: https://github.com/yahoo/ml-reproducibility-guidelines.git
+  upstream_commit: ff931bf844c1238073e6781e1d7e440914903fc9
+  note: same mutated body as BP-006-audit + a local traceability frontmatter prepended (removes the HF-9 confound)
+
+pair_invariants:
+  normalized_body_sha256_equal: true       # body (frontmatter stripped) must equal BP-006-audit
+  allowed_differences: [local-traceability-frontmatter, evaluation-profile]
+
+profile:
+  provenance_policy: controlled
+  decision_mode: release-gate
+  evidence_requirement: key-claims
+  reader_test: reproducibility-execution
+  output_mode: audit
+
+expected:
+  document_quality: FAIL                    # compat map of a non-ALLOW gate
+  quality_band: PARTIAL                      # A/B consensus: PARTIAL (identical body to the audit side)
+  gate_decision: BLOCK                      # a controlled reproducibility doc gated for release, that cannot be reproduced
+  factual_validity_allowed: [UNVERIFIED, PARTIALLY_VERIFIED]
+  reader_test: FAIL
+  required_blockers: []                     # NO dedicated HF-REPRO; BLOCK via rubric + non-compensatory rule
+  forbidden_blockers: [HF-9, HF-13, HF-14a, HF-14b, HF-15]   # HF-9 MUST NOT be the reason (frontmatter is complete)
+  required_findings:
+    - missing-code-version
+    - missing-execution-entry
+    - missing-hyperparameters
+    - missing-environment
+    - missing-reproduction-tolerance
+    - reader-cannot-reproduce
+
+# OQ-REPRO=A: proves a non-reproducible report BLOCKs under controlled+release-gate WITHOUT a dedicated
+# gate — the existing rubric (Actionability + Evidence-traceability collapse), reader Layer-2, and the
+# non-compensatory rule (optionally via HF-12A/E) force non-ALLOW. HF-9 is forbidden so the BLOCK is proven
+# to be about reproducibility, not metadata. `required_blockers` is empty (blocker set may vary run to run;
+# only the gate + findings are pinned).
+
+adjudication:
+  status: gold
+  method: two-axis blind Reviewer A/B (adjudication-v4c, isolated, no DQE skill; neutral profile semantics)
+  reviewer_a: {quality_band: PARTIAL, gate: BLOCK, defect_tags: [not-reproducible, context-dependent, unsupported-claim, state-contradiction], confidence: HIGH}
+  reviewer_b: {quality_band: PARTIAL, gate: BLOCK, defect_tags: [not-reproducible, unsupported-claim, not-release-ready, context-dependent], confidence: MEDIUM}
+  consensus: BLOCK                          # both PARTIAL/BLOCK under controlled+release-gate
+  confidence: HIGH
+  adjudicated_at: '2026-08-02'
+  notes: >-
+    OQ-REPRO=A CONFIRMED (release side): both reviewers BLOCK the same body under controlled+release-gate,
+    driven by non-reproducibility (no recipe/hyperparameters, private data, unreconciled headline) — NOT by
+    HF-9 (frontmatter is complete). Proves a non-reproducible report blocks WITHOUT a dedicated HF-REPRO.
+    (Reviewer A also loosely tagged "state-contradiction" re: ACCEPTED lifecycle vs unreconciled result; under
+    the v0.4 contract that is lifecycle≠claim-status, NOT HF-14a — the D.3 rerun confirms HF-14a stays silent.)

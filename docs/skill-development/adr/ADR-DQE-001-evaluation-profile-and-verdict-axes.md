@@ -159,11 +159,13 @@ handle" (HF-12A). It is evaluated via dedicated `required_findings`:
 required_findings: [missing-code-version, missing-environment, missing-execution-entry, missing-reproduction-tolerance]
 ```
 
-Whether reproducibility deserves its own **hard gate** (e.g. HF-REPRO) is **`OQ-REPRO=DEFER` (B2,
-ACCEPTED)** — no HF-REPRO is added in v0.4. The v0.3 spot-check already BLOCKed `GN-EXP-REPRO-001` via
-HF-12A/HF-12E; a dedicated gate is only designed if the v0.4 diagnostic matrix shows that case wrongly
-ALLOWed after the HF-9 profile fix. This ADR fixes that the *corpus* separates "bare claim"
-(`GN-EVIDENCE-BARE-CLAIM-001`, pure HF-12A) from "not reproducible" (`GN-EXP-REPRO-001`, findings-based).
+Whether reproducibility deserves its own **hard gate** (e.g. HF-REPRO) is **`OQ-REPRO=RESOLVED (Option A,
+2026-08-02): HF-REPRO NOT ADOPTED`**. Evidence: (a) under `external + audit` a non-reproducible upstream
+doc correctly yields PARTIAL/ALLOW (diagnostic, 3/3); (b) under `controlled + release-gate` the existing
+**rubric + non-compensatory rule** already forces BLOCK (probe, 2/2, independent of HF-9). The corpus
+records both via the `BP-006` profile pair (`BP-006-audit` ALLOW / `BP-006-release` BLOCK). This ADR fixes
+that the *corpus* separates "bare claim" (`GN-EVIDENCE-BARE-CLAIM-001`, pure HF-12A) from "not reproducible"
+(`BP-006` pair, findings-based). No dedicated reproducibility gate is added.
 
 ## Decision 5 — Hard-gate tightening targets (for the deferred skill round; recorded here as contract)
 
@@ -222,7 +224,10 @@ Regression triad (all byte-identical, adjudicated v4b): `BP-002-fail` (controlle
 
 ## Open questions
 
-- **OQ-1 → RESOLVED (B2):** reproducibility stays findings-only; `OQ-REPRO=DEFER`, no HF-REPRO in v0.4.
+- **OQ-1 → RESOLVED (Option A, 2026-08-02):** `OQ-REPRO=RESOLVED`, `HF-REPRO=NOT-ADOPTED`. Reproducibility
+  is a quality finding whose gate effect is profile-dependent — surfaced (PARTIAL/ALLOW) under
+  `external+audit`, blocking (BLOCK via rubric+non-compensatory) under `controlled+release-gate`. Recorded
+  as the `BP-006` profile pair; `GN-EXP-REPRO-001` quarantined as CORPUS_SPEC_MISMATCH.
 - **OQ-2 → RESOLVED (B1):** `evaluation_profile` is passed explicitly by the caller; DQE never silently
   infers `provenance_policy`/`decision_mode`; missing profile ⇒ `GATE_DECISION=INCOMPLETE`.
 - **OQ-3 (open):** should the verdict schema add a `CONDITIONAL_PASS` tier (deferred D-5 from v0.3)? Larger

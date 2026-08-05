@@ -295,6 +295,28 @@ evidence in `docs/testing/corpus-repair-report-v4.md`):
   C-round). Corpus: BP-002-fail (BLOCK) + BP-002-audit/external (ALLOW) added as regressions.
 - **status:** CONTRACT + corpus IMPLEMENTED (this round); skill mapping = Phase C.
 
+### D-16 — audit-mode gate under-specified (found by the D.3 diagnostic on BP-006-audit)
+- **category:** CONTRACT (skill text) — surfaced 2026-08-04
+- **evidence:** first D.3 rerun of `BP-006-audit` (external + audit) was **3-way unstable**: run-1 BLOCK,
+  run-2 ALLOW, run-3 INCOMPLETE — while all three agreed QUALITY_BAND=PARTIAL and surfaced the same
+  reproducibility findings. Root cause in the evaluators' own reasoning: with **no hard gate MET** but rubric
+  total < 75 and `FACTUAL_VALIDITY=UNVERIFIED`, the v0.4 ALLOW preconditions (`total ≥ 75 AND
+  FACTUAL_VALIDITY≠UNVERIFIED`) were **release-gate semantics leaking onto the GATE_DECISION axis**, so each
+  run resolved the gate differently. BP-006-release (BLOCK×3) and GP-EXP-001 (ALLOW) were unaffected — the
+  ambiguity only bites when no blocker fires and the score is sub-threshold.
+- **decision:** clarify (not re-scope) the two axes: **GATE_DECISION is derived deterministically** —
+  (1) missing required section/input/profile or checkers/reader not run ⇒ INCOMPLETE; (2) else any BLOCKER-
+  severity hard gate ⇒ BLOCK; (3) else ALLOW. Rubric total gates **QUALITY_BAND only**; UNVERIFIED is a
+  factual-validity floor that bars the *green terminal* gate but never moves GATE_DECISION. Added the worked
+  case (external+audit, no blocker, total 74, UNVERIFIED ⇒ ALLOW/PARTIAL) to SKILL.md + the EVALUATOR_CONTRACT.
+- **change:** `SKILL.md` (derivation rule + amended forbidden-ALLOW list + amended PASS condition) and
+  `make_grading_injection.py` EVALUATOR_CONTRACT (deterministic derivation). **No discrimination threshold
+  changed** (HF-9/12A/13/14a/14b/15 untouched); this is a verdict-composition clarification only. Skill stays
+  0.4.0 (pre-admission text hardening, disclosed here).
+- **verify:** re-ran `BP-006-audit ×3` (diag-d3b) → **ALLOW ×3**, PARTIAL ×3, blockers=[] — stable. Diagnostic
+  closes at 8/8.
+- **status:** IMPLEMENTED + verified (2026-08-04).
+
 ## Bottom line (evidence-based)
 
 **Of the report's proposed skill fixes F1–F4, only F1 (HF-9 profile-gating) survives the evidence.**
@@ -302,4 +324,9 @@ F2 (HF-12A) and F3 (HF-15) were fixture defects — the clean v2 fixtures fire t
 F4 (HF-13/HF-14a tightening) did not reproduce on the clean fixture. This round therefore **prevents an
 over-modification of the skill**: the next (separately-approved) skill pass should implement HF-9
 profile-gating and re-run, not a broad F1–F4 sweep.
+
+**D.3 addendum (2026-08-04):** the diagnostic also caught one genuine v0.4 text gap (**D-16**, audit-mode
+gate composition) which is now fixed and re-verified stable. The OQ-REPRO=A decision (BP-006 pair) is
+confirmed by blind A/B **and** by the skill: a non-reproducible controlled release-gate doc BLOCKs via
+HF-12A/E **without** any dedicated HF-REPRO, and the audit twin ALLOWs — the two-axis model holds.
 

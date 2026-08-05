@@ -62,6 +62,10 @@ def main(argv):
         return 2
     raw_path = Path(args[0])
     out_dir = (Path(argv[argv.index("--out") + 1]) if "--out" in argv else raw_path.parent).resolve()
+    # §4.4: version metadata from CLI (not hardcoded); default to v0.4 / dataset 4 / run-id from the dir
+    skill_version = argv[argv.index("--skill-version") + 1] if "--skill-version" in argv else "0.4.0"
+    dataset_version = argv[argv.index("--dataset-version") + 1] if "--dataset-version" in argv else "4"
+    run_id = argv[argv.index("--run-id") + 1] if "--run-id" in argv else raw_path.parent.name
     runs = json.loads(raw_path.read_text(encoding="utf-8"))
     man = load_manifests()
 
@@ -78,25 +82,43 @@ def main(argv):
         rec = (len(required & reported) / len(required)) if required else None
         got_gate = gate_of(v.get("gate_decision"), dq)
         exp_gate = gate_of(exp.get("gate_decision"), exp.get("document_quality"))
+        # §4.1 primary correctness: got gate matches the manifest's explicit expected gate
+        gate_mismatch = (exp_gate in ("ALLOW", "BLOCK", "INCOMPLETE")) and (got_gate != exp_gate)
+        # §4.2 required-finding recall (machine-scored findings)
+        req_find = [str(x).lower() for x in (exp.get("required_findings") or [])]
+        got_find = {str(x).lower() for x in (v.get("finding_codes") or [])}
+        # only count findings that use the controlled code vocabulary (skip free-text required_findings)
+        req_find_codes = [x for x in req_find if re.match(r"^[a-z0-9]+(-[a-z0-9]+)+$", x)]
+        find_rec = (len([x for x in req_find_codes if x in got_find]) / len(req_find_codes)) if req_find_codes else None
         per_run.append({
             "case_id": cid, "class": cls, "pair_id": m.get("pair_id"),
             "run_kind": r.get("run_kind"), "run_idx": r.get("run_idx"),
             "expected": exp.get("document_quality"), "got": dq,
-            "exp_gate": exp_gate, "got_gate": got_gate,
+            "exp_gate": exp_gate, "got_gate": got_gate, "gate_mismatch": gate_mismatch,
             "quality_band": str(v.get("quality_band", "")).upper() or None,
             "profile_echoed": bool(v.get("evaluation_profile") or v.get("profile_echoed")),
             "required": sorted(required), "forbidden": sorted(forbidden), "reported": sorted(reported),
             "recall": rec, "forbidden_violation": sorted(reported & forbidden),
+            "req_find_codes": req_find_codes, "got_find": sorted(got_find), "finding_recall": find_rec,
             "total_score": v.get("total_score"),
             "factual_validity": v.get("factual_validity"), "reader_test": v.get("reader_test"),
         })
 
     cur = [x for x in per_run if x["run_kind"] == "current"]
 
-    # v0.4 gate axis: a negative fails by being ALLOWed; a positive fails by NOT being ALLOWed
-    neg_false_pass = [x for x in cur if x["class"] in NEG and x["got_gate"] == "ALLOW"]
-    pos_false_fail = [x for x in cur if x["class"] in POS and x["got_gate"] != "ALLOW"]
+    # §4.1 PRIMARY correctness metric: gate matches the explicit expected gate (works for ALLOW negatives too)
+    gate_mismatches = [x for x in cur if x["gate_mismatch"]]
+    # class-based positive/negative kept as SECONDARY (advisory)
+    neg_false_pass = [x for x in cur if x["class"] in NEG and x["got_gate"] == "ALLOW" and x["exp_gate"] != "ALLOW"]
+    pos_false_fail = [x for x in cur if x["class"] in POS and x["got_gate"] != "ALLOW" and x["exp_gate"] == "ALLOW"]
     profile_compliance = (sum(1 for x in per_run if x["profile_echoed"]) / len(per_run)) if per_run else 1.0
+
+    # §4.2 pooled required-finding recall over current runs that declare finding codes
+    fi = ft = 0
+    for x in cur:
+        if x["req_find_codes"]:
+            fi += len([c for c in x["req_find_codes"] if c in set(x["got_find"])]); ft += len(x["req_find_codes"])
+    finding_recall = (fi / ft) if ft else 1.0
 
     # pooled required-blocker recall over negative current runs that declare required blockers
     inter = tot = 0
@@ -142,21 +164,27 @@ def main(argv):
     max_stddev = max((s["score_stddev"] for s in stability.values() if s["score_stddev"] is not None), default=0.0)
 
     bar = {
-        "golden_negative_false_pass": len(neg_false_pass),                 # == 0  (negative wrongly ALLOWed)
-        "golden_positive_false_hard_fail": len(pos_false_fail),            # == 0  (positive not ALLOWed)
+        "gate_expectation_mismatch_count": len(gate_mismatches),           # == 0  (PRIMARY, §4.1)
+        "golden_negative_false_pass": len(neg_false_pass),                 # == 0  (secondary)
+        "golden_positive_false_hard_fail": len(pos_false_fail),            # == 0  (secondary)
         "required_blocker_recall": round(recall, 3),                       # >= 0.90
+        "required_finding_recall": round(finding_recall, 3),              # >= 0.90 (§4.2)
         "forbidden_blocker_violation_rate": round(viol_rate, 3),          # <= 0.05
         "boundary_pair_ordering_accuracy": round(ordering, 3),            # == 1.0
         "three_run_verdict_consistency": round(consistency, 3),           # == 1.0 (gate axis)
         "max_score_stddev": max_stddev,                                    # <= 5
         "profile_echo_compliance": round(profile_compliance, 3),          # == 1.0
     }
-    passed = (bar["golden_negative_false_pass"] == 0 and bar["golden_positive_false_hard_fail"] == 0
-              and bar["required_blocker_recall"] >= 0.90 and bar["forbidden_blocker_violation_rate"] <= 0.05
+    passed = (bar["gate_expectation_mismatch_count"] == 0
+              and bar["golden_negative_false_pass"] == 0 and bar["golden_positive_false_hard_fail"] == 0
+              and bar["required_blocker_recall"] >= 0.90 and bar["required_finding_recall"] >= 0.90
+              and bar["forbidden_blocker_violation_rate"] <= 0.05
               and bar["boundary_pair_ordering_accuracy"] == 1.0 and bar["three_run_verdict_consistency"] == 1.0
               and bar["max_score_stddev"] <= 5 and bar["profile_echo_compliance"] == 1.0)
 
-    metrics = {"n_runs": len(per_run), "n_current": len(cur), "bar": bar, "promotion_bar_met": passed,
+    metrics = {"skill_version": skill_version, "dataset_version": dataset_version, "run_id": run_id,
+               "n_runs": len(per_run), "n_current": len(cur), "bar": bar, "promotion_bar_met": passed,
+               "gate_mismatch_cases": [{"case": x["case_id"], "expected": x["exp_gate"], "got": x["got_gate"]} for x in gate_mismatches],
                "negative_false_pass_cases": [x["case_id"] for x in neg_false_pass],
                "positive_false_fail_cases": [x["case_id"] for x in pos_false_fail],
                "forbidden_violations": [{"case": x["case_id"], "fired": x["forbidden_violation"]} for x in viol],
@@ -164,14 +192,16 @@ def main(argv):
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "metrics.json").write_text(json.dumps(metrics, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    # evaluation-summary.md
-    L = ["# Blind-matrix evaluation summary — documentation-quality-evaluator v0.3",
+    # evaluation-summary.md  (§4.4: version from CLI/metadata, not hardcoded)
+    L = [f"# Blind-matrix evaluation summary — documentation-quality-evaluator v{skill_version}",
          "", f"Runs: {len(per_run)} ({len(cur)} current + {len(per_run)-len(cur)} repeat). "
-         f"Corpus dataset_version 3.", "",
-         "## §17 promotion bar", "", "| metric | value | bar | ok |", "|---|---|---|---|"]
-    checks = [("golden-negative false ALLOW", bar["golden_negative_false_pass"], "== 0", bar["golden_negative_false_pass"] == 0),
+         f"Corpus dataset_version {dataset_version}. run_id={run_id}.", "",
+         "## Promotion bar (two-axis)", "", "| metric | value | bar | ok |", "|---|---|---|---|"]
+    checks = [("gate-expectation mismatch (PRIMARY)", bar["gate_expectation_mismatch_count"], "== 0", bar["gate_expectation_mismatch_count"] == 0),
+              ("golden-negative false ALLOW", bar["golden_negative_false_pass"], "== 0", bar["golden_negative_false_pass"] == 0),
               ("golden-positive false non-ALLOW", bar["golden_positive_false_hard_fail"], "== 0", bar["golden_positive_false_hard_fail"] == 0),
               ("required-blocker recall", bar["required_blocker_recall"], ">= 0.90", bar["required_blocker_recall"] >= 0.90),
+              ("required-finding recall", bar["required_finding_recall"], ">= 0.90", bar["required_finding_recall"] >= 0.90),
               ("forbidden-blocker violation rate", bar["forbidden_blocker_violation_rate"], "<= 0.05", bar["forbidden_blocker_violation_rate"] <= 0.05),
               ("boundary-pair ordering", bar["boundary_pair_ordering_accuracy"], "== 1.0", bar["boundary_pair_ordering_accuracy"] == 1.0),
               ("3-run gate consistency", bar["three_run_verdict_consistency"], "== 1.0", bar["three_run_verdict_consistency"] == 1.0),
@@ -180,11 +210,13 @@ def main(argv):
     for name, val, thr, ok in checks:
         L.append(f"| {name} | {val} | {thr} | {'✅' if ok else '❌'} |")
     L += ["", f"**PROMOTION BAR: {'MET ✅' if passed else 'NOT MET ❌'}**", "",
-          "## Per-case (current runs)", "", "| case | class | expected | got | recall | forbidden-fired |",
-          "|---|---|---|---|---|---|"]
-    for x in sorted(cur, key=lambda r: (r["class"], r["case_id"])):
-        L.append(f"| {x['case_id']} | {x['class']} | {x['expected']} | {x['got']} | "
+          "## Per-case (current runs)", "", "| case | class | exp_gate | got_gate | ✓ | recall | find-rec | forbidden-fired |",
+          "|---|---|---|---|---|---|---|---|"]
+    for x in sorted(cur, key=lambda r: (r["class"] or "", r["case_id"])):
+        L.append(f"| {x['case_id']} | {x['class']} | {x['exp_gate']} | {x['got_gate']} | "
+                 f"{'❌' if x['gate_mismatch'] else '✅'} | "
                  f"{'' if x['recall'] is None else round(x['recall'],2)} | "
+                 f"{'' if x['finding_recall'] is None else round(x['finding_recall'],2)} | "
                  f"{','.join(x['forbidden_violation']) or '—'} |")
     L += ["", "## Boundary-pair ordering", ""]
     for p, ok in sorted(pair_ok.items()):

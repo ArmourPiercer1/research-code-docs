@@ -88,6 +88,23 @@ def check_file(path: Path) -> tuple[bool, list[str]]:
     return (len(uniq) == 0), uniq
 
 
+def warnings(path: Path) -> list[str]:
+    """Non-blocking v0.4 deprecation notes (do NOT affect pass/fail or exit code). A leading frontmatter
+    block that still uses a legacy `status:` for document-level state, without a `document_lifecycle:`
+    field, is nudged toward `document_lifecycle` (ADR-DQE-001 D-14)."""
+    text = path.read_text(encoding="utf-8", errors="replace")
+    m = re.match(r"\s*<!--(.*?)-->", text, re.S) or re.match(r"\s*---\n(.*?)\n---", text, re.S)
+    if not m:
+        return []
+    fm = m.group(1)
+    has_status = re.search(r"(?im)^\s*status\s*:", fm)
+    has_lifecycle = re.search(r"(?im)^\s*document_lifecycle\s*:", fm)
+    if has_status and not has_lifecycle:
+        return ["legacy 'status:' front-matter field is deprecated for document-level state; "
+                "prefer 'document_lifecycle:' (ADR-DQE-001 D-14). Non-blocking."]
+    return []
+
+
 def main(argv: list[str]) -> int:
     if len(argv) < 2:
         print("usage: status_vocab_check.py <file.md> [...]", file=sys.stderr)

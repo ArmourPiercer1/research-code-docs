@@ -63,6 +63,13 @@ Follow the injected SKILL.md workflow EXACTLY. In particular:
   `GATE_DECISION=INCOMPLETE` (never a terminal ALLOW) and name the missing fields.
 - A missing REQUIRED section/input (e.g. a release-gate proposal with no validation/acceptance/rollback)
   => `GATE_DECISION=INCOMPLETE` (can't-approve-yet), distinct from BLOCK (a present, identifiable defect).
+- **DERIVE GATE_DECISION deterministically (do NOT improvise):** (1) if a required section/input is missing,
+  or provenance_policy/decision_mode is missing, or the type is unclassifiable, or checkers/reader-test did
+  not run => INCOMPLETE; (2) else if any applicable hard gate is MET at BLOCKER severity => BLOCK; (3) else
+  => ALLOW. A rubric total < 75 or FACTUAL_VALIDITY=UNVERIFIED does **NOT** move GATE_DECISION — the total
+  sets QUALITY_BAND (PASS/PARTIAL/FAIL); UNVERIFIED is a factual-validity floor that only bars the green
+  terminal gate. Worked case: external+audit, no blocker, total 74, UNVERIFIED => GATE_DECISION=ALLOW,
+  QUALITY_BAND=PARTIAL (an advisory audit that found no blocker ALLOWs — do NOT emit BLOCK/INCOMPLETE).
 - Do NOT predict or imply a re-eval ALLOW while any structural gate (HF-13/14a/14b/15) or non-compensatory
   dimension is failing or unassessed.
 - Separate DOCUMENT quality from FACTUAL_VALIDITY (needs opening cited sources). If you cannot open a cited
@@ -71,6 +78,8 @@ Follow the injected SKILL.md workflow EXACTLY. In particular:
   QUALITY_BAND=<PASS|PARTIAL|FAIL> / GATE_DECISION=<ALLOW|BLOCK|INCOMPLETE> /
   DOCUMENT_QUALITY=<PASS|FAIL|INCOMPLETE_EVALUATION> (compat: ALLOW->PASS, BLOCK->FAIL, INCOMPLETE->INCOMPLETE_EVALUATION) /
   FACTUAL_VALIDITY / READER_TEST / CHECKER_STATUS / SOURCE_COVERAGE / CONFIDENCE / BLOCKERS=[...] /
+  FINDING_CODES=[kebab-case, ...] (stable names for the MAJOR issues found — e.g. missing-code-version,
+  missing-rollback, volatile-in-stable, not-release-ready — so the harness can score required_findings) /
   EVALUATION_PROFILE={artifact_type, provenance_policy, decision_mode} / FILES_READ=[...]
 """
 
@@ -127,6 +136,11 @@ You are NOT the evaluator-under-test. Do not emit that skill's KEY=VALUE block. 
    ALLOW, BLOCK (a defect must be fixed before it proceeds), or INCOMPLETE (cannot tell without more
    info/sources). NOTE: these are two DIFFERENT axes — a document can be PARTIAL quality yet still BLOCK
    the gate on one defect; an honestly-labeled hypothesis can be PASS quality AND ALLOW.
+   The declared `decision_mode` sets the gate's stance (NOT a hint at the answer):
+   - `audit` — an advisory audit; a quality defect that is "should-fix" is reported (→ may be
+     PARTIAL/ALLOW), not release-blocked. Judge on the merits.
+   - `release-gate` — a strict release gate; an unresolved release-critical defect yields BLOCK (or
+     INCOMPLETE if a required section/input is missing).
 4. TOP DEFECTS — the 1–5 most serious issues (free text). For each, tag ONE category from:
    mixed-responsibilities | state-contradiction | volatile-in-stable | non-executable-milestone |
    unsupported-claim | not-reproducible | missing-rationale | not-actionable | context-dependent |

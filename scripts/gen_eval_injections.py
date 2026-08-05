@@ -34,8 +34,9 @@ def main(argv):
         print(__doc__); return 2
     out = ROOT / argv[1]; out.mkdir(parents=True, exist_ok=True)
     by_id = manifests()
-    picks = sorted(by_id) if "--all-live" in argv[2:] else argv[2:]
+    picks = sorted(by_id) if "--all-live" in argv[2:] else [a for a in argv[2:] if not a.startswith("--")]
     n = 0
+    targets: list[str] = []                 # §4.3: record the resolved checker target per case (no hardcoded paths)
     for cid in picks:
         mp = by_id.get(cid)
         if not mp:
@@ -45,6 +46,8 @@ def main(argv):
         at = prof.get("artifact_type") or m.get("artifact_type") or ""
         pp, dm = prof.get("provenance_policy", ""), prof.get("decision_mode", "")
         doc = ROOT / m["document"]
+        if not doc.is_file():
+            print(f"  [FAIL] {cid}: manifest document not found: {m['document']}"); continue
         profile_str = f"provenance_policy: {pp}, decision_mode: {dm}"
         cmd = [PY, str(MGI), "documentation-quality-evaluator", str(doc),
                "--role", "evaluator", "--artifact-type", at, "--profile", profile_str]
@@ -52,9 +55,11 @@ def main(argv):
         if res.returncode != 0:
             print(f"  [FAIL] {cid}: {res.stderr[:200]}"); continue
         (out / f"{cid}.txt").write_text(res.stdout, encoding="utf-8")
+        targets.append(f"{cid}\t{m['document']}")
         n += 1
         print(f"  {cid}: profile=({pp}/{dm}) type={at} -> {out.name}/{cid}.txt")
-    print(f"\n==> generated {n} evaluator injection(s) under {out.relative_to(ROOT).as_posix()}")
+    (out / "targets.tsv").write_text("\n".join(targets) + "\n", encoding="utf-8")
+    print(f"\n==> generated {n} evaluator injection(s) + targets.tsv under {out.relative_to(ROOT).as_posix()}")
     return 0
 
 

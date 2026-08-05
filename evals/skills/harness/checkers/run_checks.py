@@ -76,6 +76,11 @@ def run(path: Path, advisory_is_hard: bool = False) -> dict:
             entry["hard"][name] = {"pass": ok, "problems": problems}
             if not ok:
                 report["hard_fail"] = True
+            # non-blocking v0.4 deprecation notes (never affect hard_fail / exit code)
+            if hasattr(mod, "warnings"):
+                notes = mod.warnings(f)
+                if notes:
+                    entry.setdefault("notes", []).extend(notes)
         for name, mod in ADVISORY:
             ok, problems = mod.check_file(f)
             entry["advisory"][name] = {"pass": ok, "problems": problems}

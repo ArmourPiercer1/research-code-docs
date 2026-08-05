@@ -89,6 +89,15 @@ def frontmatter_block(text: str) -> str:
     return m.group(1) if m else ""
 
 
+def normalized_body(text: str) -> str:
+    """Body with a leading frontmatter block (HTML-comment or YAML '---') stripped + CRLF->LF, for
+    same-body-different-profile pair invariants (a profile pair may differ ONLY in local frontmatter)."""
+    t = text.replace("\r\n", "\n")
+    t = re.sub(r"^\s*<!--.*?-->\s*", "", t, count=1, flags=re.S)   # leading HTML-comment frontmatter
+    t = re.sub(r"^---\n.*?\n---\s*", "", t, count=1, flags=re.S)    # or leading YAML frontmatter
+    return t
+
+
 def main(argv: list[str]) -> int:
     sys.stdout.reconfigure(encoding="utf-8")  # type: ignore[union-attr]
     args = [a for a in argv[1:] if not a.startswith("--")]
@@ -101,6 +110,7 @@ def main(argv: list[str]) -> int:
     pairs: dict[str, list] = {}
     doc_sha: dict[str, str] = {}          # case_id -> document sha256 (for profile_variant_of checks)
     variants: list[tuple] = []            # (case_id, profile_variant_of)
+    body_inv: dict[str, list] = {}        # pair_id -> [(case_id, normalized-body sha256)] for normalized_body_sha256_equal
 
     for mp in manifests:
         m = yaml.safe_load(mp.read_text(encoding="utf-8"))
@@ -155,7 +165,14 @@ def main(argv: list[str]) -> int:
         if m.get("profile_variant_of"):
             variants.append((cid, m.get("profile_variant_of")))
 
+        # 6. pair_invariants.normalized_body_sha256_equal: a profile pair may differ ONLY in frontmatter
+        if pid and (m.get("pair_invariants") or {}).get("normalized_body_sha256_equal"):
+            body_inv.setdefault(pid, []).append(
+                (cid, hashlib.sha256(normalized_body(text).encode("utf-8")).hexdigest()))
+
     for pid, members in sorted(pairs.items()):
+        if pid in body_inv:
+            continue          # this pair allows a frontmatter difference — checked by normalized_body below
         if len(members) == 2:
             a, b = members
             if a["policy"] and b["policy"] and a["policy"] != b["policy"]:
@@ -170,6 +187,13 @@ def main(argv: list[str]) -> int:
         elif doc_sha[cid] != doc_sha[base_case]:
             errors.append(f"{cid}: profile_variant_of '{base_case}' but documents are NOT byte-identical "
                           f"— a profile-severity variant must share the base document's bytes exactly")
+
+    for pid, members in sorted(body_inv.items()):
+        shas = {sha for _, sha in members}
+        if len(shas) > 1:
+            errors.append(f"pair {pid}: normalized_body_sha256_equal set but the frontmatter-stripped bodies "
+                          f"DIFFER across {[c for c, _ in members]} — a profile pair may differ ONLY in "
+                          f"local frontmatter + evaluation profile")
 
     print(f"# semantic-validated {checked} live documents under {base.relative_to(ROOT).as_posix()}")
     for w in warns:

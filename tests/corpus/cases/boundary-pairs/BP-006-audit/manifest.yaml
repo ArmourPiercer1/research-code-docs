@@ -1,0 +1,60 @@
+case_id: BP-006-audit
+case_version: 1
+class: boundary-pass
+pair_id: BP-006
+pair_role: pass
+difference_under_test: >-
+  The same unreproducible experiment-report body is evaluated as external+audit (this case) versus
+  controlled+release-gate (BP-006-release). Tests the GATE semantics under the profile, not the frontmatter.
+artifact_type: experiment-report
+language: en
+holdout: false
+document: tests/corpus/cases/boundary-pairs/BP-006-audit/document.md
+
+source:
+  kind: mutation
+  base_seed: SEED-EXP-YAHOO-RESNET
+  upstream_repo: https://github.com/yahoo/ml-reproducibility-guidelines.git
+  upstream_commit: ff931bf844c1238073e6781e1d7e440914903fc9
+  note: body reused from the quarantined GN-EXP-REPRO-001 (MUT-EXP-UNREPRODUCIBLE); provenance in quarantine/GN-EXP-REPRO-001-v1
+
+pair_invariants:
+  normalized_body_sha256_equal: true       # body (frontmatter stripped) must equal BP-006-release
+  allowed_differences: [local-traceability-frontmatter, evaluation-profile]
+
+profile:
+  provenance_policy: external
+  decision_mode: audit
+  evidence_requirement: key-claims
+  reader_test: reproducibility-execution
+  output_mode: audit
+
+expected:
+  document_quality: PASS                    # compat map of GATE_DECISION=ALLOW (NOT a claim that overall quality is PASS)
+  quality_band: PARTIAL                     # the reproducibility defect IS surfaced -> holistic quality PARTIAL
+  gate_decision: ALLOW                      # advisory audit of an external doc: report, do not release-block
+  factual_validity_allowed: [UNVERIFIED, PARTIALLY_VERIFIED]
+  reader_test: FAIL
+  required_blockers: []
+  forbidden_blockers: [HF-9, HF-13, HF-14a, HF-14b, HF-15]   # external -> HF-9 must NOT block; no structural gate
+  required_findings:
+    - missing-code-version
+    - missing-execution-entry
+    - missing-hyperparameters
+    - missing-environment
+    - missing-reproduction-tolerance
+
+# OQ-REPRO=A: the "negative" here is the QUALITY finding (PARTIAL), not a gate block. Under external+audit,
+# ALLOW is the correct gate. If the evaluator fails to surface the reproducibility findings, the case does
+# NOT pass just because the gate is ALLOW (see BP-006-release for the blocking counterpart).
+
+adjudication:
+  status: gold
+  method: two-axis blind Reviewer A/B (adjudication-v4c, isolated, no DQE skill; neutral profile semantics)
+  reviewer_a: {quality_band: PARTIAL, gate: ALLOW, defect_tags: [not-reproducible, context-dependent, unsupported-claim], confidence: HIGH}
+  reviewer_b: {quality_band: PARTIAL, gate: ALLOW, defect_tags: [not-reproducible, unsupported-claim, not-release-ready, context-dependent], confidence: MEDIUM}
+  consensus: ALLOW                          # both PARTIAL/ALLOW; findings surfaced on both sides
+  confidence: HIGH
+  adjudicated_at: '2026-08-02'
+  notes: 'OQ-REPRO=A CONFIRMED (audit side): both reviewers surface the reproducibility findings (quality
+    PARTIAL) but ALLOW under external+audit — advisory audit does not release-block an upstream doc.'
