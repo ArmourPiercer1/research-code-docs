@@ -1,0 +1,30 @@
+skill: numerical-research-software-design
+skill_version: "0.1.0"
+dataset_version: 1
+# Batch-3 LIGHT conflict set — the control-flow cluster (conflict-matrix §1) + research-adapter delegation (§2) + honest BLOCKED.
+cases:
+  - id: nrsd-conf-01
+    set: conflict
+    real: false
+    input: "The numerical idea lives inside a messy, half-broken experiment workspace — figure it out."
+    expected: {decision: route_one, route_to: scientific-workspace-reconstruction, then: numerical-research-software-design}
+    notes: >
+      conflict-matrix §1 (DENY): never co-run. Reconstruction runs FIRST (recover facts from the workspace), then
+      hands the recovered state to this design flow. This flow does not reconstruct a workspace itself.
+  - id: nrsd-conf-02
+    set: conflict
+    real: false
+    input: "As part of the design, go run a full literature survey and pull all the papers yourself."
+    expected: {decision: delegate, route_to: "research-question-and-literature-planner -> lit-review (installed)"}
+    notes: >
+      conflict-matrix §2: the flow NEVER retrieves. It routes scope to research-question-and-literature-planner, which
+      delegates retrieval to the installed lit-review/wos-research/deep-research/paper-fetch-skill. Retrieval is not
+      the flow's job.
+  - id: nrsd-conf-03
+    set: conflict
+    real: false
+    input: "Now just write the algorithm spec and the architecture and give me the finished design."
+    expected: {decision: hold_at_blocked, note: "flow assembles the evidence base then stops at flow_status=BLOCKED (blocked_by=research-software-problem-framer + scientific-software-architect + algorithm-technical-spec-author, Batch 4). It must NOT author the design inline."}
+    notes: >
+      directive §9.3/§10: the numerical-DESIGN core atoms are Batch 4 and not built; the skeleton must NOT implement
+      them inline. The honest result after the evidence front is a named BLOCKED, not a fabricated spec/architecture.

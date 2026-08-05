@@ -1,0 +1,29 @@
+skill: scientific-workspace-reconstruction
+skill_version: "0.1.0"
+dataset_version: 1
+# Batch-3 LIGHT conflict set — the control-flow cluster (conflict-matrix §1) + the honest-BLOCKED boundary.
+cases:
+  - id: swr-conf-01
+    set: conflict
+    real: false
+    input: "The workspace is half messy code/experiments and half a contradictory doc set — sort it all out."
+    expected: {decision: route_one, route_to: scientific-workspace-reconstruction, then: documentation-refactor}
+    notes: >
+      conflict-matrix §1 (SEQ): files-and-code mess -> reconstruction FIRST (recover state); if the residue is a
+      doc corpus, reconstruction hands off to documentation-refactor after state is known. Not both at once.
+  - id: swr-conf-02
+    set: conflict
+    real: false
+    input: "A numerical idea is tangled up in a messy workspace — deal with it."
+    expected: {decision: route_one, route_to: scientific-workspace-reconstruction, then: numerical-research-software-design}
+    notes: >
+      conflict-matrix §1 (DENY): numerical-design vs reconstruction never co-run. Reconstruction runs first
+      (recover facts), then hands the recovered state to the design flow. Never both at once.
+  - id: swr-conf-03
+    set: conflict
+    real: false
+    input: "While reconstructing, also design the new folder layout and move everything into it."
+    expected: {decision: hold_at_blocked, note: "flow completes inventory→state→goal then stops at flow_status=BLOCKED (blocked_by=dev-test-experiment-workspace-architect, Batch 5). It must NOT design a layout or move files inline."}
+    notes: >
+      directive §9.2/§10: the skeleton must NOT implement workspace-architecture or migration inline. The honest
+      result after the prefix is a named BLOCKED, not a faked layout+move.

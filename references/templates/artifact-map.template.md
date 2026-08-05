@@ -3,6 +3,15 @@ generated_by_skill: document-information-architect
 skill_version: 0.1.0
 source_commit: <repo@commit at generation time>
 source_documents: [<hybrid doc or corpus>, <forensics inventory if present>, <PSR state report if present>]
+artifact_type: document-artifact-map
+document_lifecycle: IN_REVIEW
+scope: <one line: target IA for which corpus; a plan only — no file moved/rewritten>
+facts: none (a design plan; fact-dependent home assignments flagged "provisional (needs PSR)")
+hypotheses: <pointer+count to provisional home assignments>
+open_questions: <pointer+count to Open decisions (canonical-home ambiguities); never 'none' if any exist>
+evidence_level: n/a (design plan; no evidence claim)
+next_handoff: BLOCKED:content-canonicalization-and-migration, technical-document-rewriter (Batch 5 — not built)
+handoff_requirements: <what a future migration/rewriter needs: target doc-set + per-type home + split/linking plan + resolved open decisions>
 status: CANDIDATE information architecture (a design plan; open decisions listed; no file moved, no prose rewritten)
 last_verified: <YYYY-MM-DDTHH:MM:SSZ>
 -->

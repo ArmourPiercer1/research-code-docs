@@ -3,6 +3,15 @@ generated_by_skill: workspace-forensics-and-inventory
 skill_version: 0.1.0
 source_commit: <repo@commit at generation time>
 source_documents: [<repo tree / corpus tree>, <existing status docs listed as claims, not verified>]
+artifact_type: inventory-report
+document_lifecycle: IN_REVIEW
+scope: <one line: what corpus/tree this covers; excludes execution + fact verification (PSR's job)>
+facts: none (candidates + signals only; nothing here is claimed to run)
+hypotheses: <pointer+count to candidate classifications, e.g. "12 candidate roles — see Doc-type table">
+open_questions: <pointer+count to Handoff unknowns + contradiction candidates; never 'none' if any exist>
+evidence_level: n/a (structural signals only; no evidence claims)
+next_handoff: project-state-reconstructor
+handoff_requirements: <what PSR needs: corpus root + candidate list to verify + contradiction pairs>
 status: read-only inventory (candidates + signals; nothing verified as running)
 last_verified: <YYYY-MM-DDTHH:MM:SSZ>
 ---

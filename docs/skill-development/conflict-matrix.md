@@ -8,8 +8,8 @@ source_documents:
   - docs/skill-development/current-skills-audit.md
   - docs/skill-development/system-architecture.md
   - docs/研究软件文档Skills系统_设计与创建指南.md (§14.3)
-status: DECIDED for Phase-1 pairs; PROJECTED for not-yet-built pairs (marked)
-last_verified: 2026-07-30T09:47:06Z
+status: DECIDED for Phase-1 pairs; §1 control-flow cluster now LIVE (Batch-3 skeletons, manual-only); PROJECTED for not-yet-built pairs (marked)
+last_verified: 2026-08-05
 -->
 
 > **Purpose.** For every pair of skills that could plausibly co-trigger, state whether they may run together, who dominates, and the hand-off rule. A pair marked **DENY** with no resolution is a *release blocker* (acceptance §15.4).
@@ -24,9 +24,11 @@ These share adjacent surfaces ("messy files" / "messy docs" / "fuzzy algorithm")
 
 | A | B | Co-run | Dominant | Hand-off rule | Row |
 |---|---|:---:|---|---|---|
-| `numerical-research-software-design` | `scientific-workspace-reconstruction` | DENY | routing decision | If a numerical idea lives inside a messy workspace, **reconstruction runs first** (recover facts), then hands the recovered state to the design flow. Never both at once. | PROJECTED |
-| `numerical-research-software-design` | `documentation-refactor` | DENY | routing decision | If the idea is buried in messy docs, **refactor/curate first** only if docs block understanding; otherwise design flow proceeds and refactor is a later handoff. One at a time. | PROJECTED |
-| `scientific-workspace-reconstruction` | `documentation-refactor` | SEQ | reconstruction | Files-and-code mess → reconstruction; if the *residue* is a doc corpus, reconstruction hands off to refactor after state is known. Doc-only input → refactor directly. | PROJECTED |
+| `numerical-research-software-design` | `scientific-workspace-reconstruction` | DENY | routing decision | If a numerical idea lives inside a messy workspace, **reconstruction runs first** (recover facts), then hands the recovered state to the design flow. Never both at once. | LIVE¹ |
+| `numerical-research-software-design` | `documentation-refactor` | DENY | routing decision | If the idea is buried in messy docs, **refactor/curate first** only if docs block understanding; otherwise design flow proceeds and refactor is a later handoff. One at a time. | LIVE¹ |
+| `scientific-workspace-reconstruction` | `documentation-refactor` | SEQ | reconstruction | Files-and-code mess → reconstruction; if the *residue* is a doc corpus, reconstruction hands off to refactor after state is known. Doc-only input → refactor directly. | LIVE¹ |
+
+**¹ Built 2026-08-05 (Batch 3, v0 skeletons) — all three are `experimental` + `disable-model-invocation: true` + manual/user-invoked-only, so auto co-trigger is currently impossible by construction. These DENY/SEQ rules are the design target enforced *before* any of them flips to `auto_trigger` (creation-roadmap §3 gate). Each flow's own `conflict/*.yaml` encodes the cluster cases.**
 
 **Disambiguator (from `system-architecture.md` §5):** route by the **dominant artifact type** after a read-only forensic/state pass. When ambiguous, `goal-scope-and-workflow-elicitor` asks exactly **one** routing question; no flow launches until it resolves.
 

@@ -3,3 +3,8 @@ tests/corpus/upstream/
 
 # python environment
 .venv/
+
+# python compiled cache (never track — recompiled locally; see batch2.5 directive §12)
+__pycache__/
+*.pyc
+*.pyo

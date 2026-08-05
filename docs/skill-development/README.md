@@ -5,7 +5,7 @@ generated_by_skill: (manual, Phase-1)
 skill_version: n/a
 source_commit: mattpocock/skills vendored snapshot (plugin.json v1.2.0; no pinned commit)
 source_documents: [docs/prompt.md, docs/研究软件文档Skills系统_设计与创建指南.md]
-status: DECIDED (Phase-1 complete; DQE v0.4.1 advisory freeze; Batch 2 decoupled + in progress)
+status: DECIDED (Phase-1 complete; DQE v0.4.1 advisory freeze; Batch 2 built + light-passed; Batch 2.5 integration DONE; Batch 3 v0 skeletons BUILT)
 last_verified: 2026-08-05
 -->
 
@@ -13,7 +13,7 @@ last_verified: 2026-08-05
 > **workspace-only** and isolated from the live Claude Code loader (versioned via GitHub). Nothing
 > is installed or auto-triggered without explicit user approval.
 
-## Phase-1 ✅ · DQE **v0.4.1 FROZEN (advisory / profile-scoped)** · Batch-2 gate **DECOUPLED** · Batch 2 **4/4 built + light-passed**
+## Phase-1 ✅ · DQE **v0.4.1 FROZEN (advisory / profile-scoped)** · Batch 2 **4/4 built + light-passed** · Batch 2.5 **integration DONE** · Batch 3 **3 v0 skeletons BUILT**
 
 > **Scope correction (2026-08-05).** DQE reached a reliable **advisory** state (v0.4.1). Rather than keep
 > expanding its test system toward a *universal automatic terminal gate*, we **froze it as advisory /
@@ -78,14 +78,25 @@ Runner uv-venv: `.venv/` (pyyaml). See [evals/skills/README.md](../../evals/skil
 - **Real-task gap** — ≥2 real historical project tasks per skill must be supplied by the user; current task-quality cases are environment-grounded, not verbatim (constraint D.8).
 - **Not yet executed** — multi-turn runs; task-quality soft-scoring for PSR/GSWE/UDM; standalone reader-agent pass. (Batch-1→2 hardening.)
 
-## Next (Batch 2 — all four skills BUILT + light-round PASSED)
+## Next (Batch 3 v0 skeletons BUILT; Batch 4/5 atoms are next)
 
-All four Batch-2 skills exist and passed their light first round (trigger 32/32, read-only shadow runs, reader
-discipline-checks green, no-skill comparison): **`workspace-forensics-and-inventory`** (read-only inventory) →
-**`document-information-architect`** (design the HF-13 split) → **`research-question-and-literature-planner`**
-([ADAPT] thin scope+route over lit-review/wos-research/deep-research) → **`research-evidence-synthesizer`**
-([ADAPT] design-facing evidence map; never retrieves). All stay `experimental` + manual-only. Reports:
-[batch2-skills-eval-2026-08-05.md](reports/batch2-skills-eval-2026-08-05.md) +
-[batch2-workspace-forensics-eval-2026-08-05.md](reports/batch2-workspace-forensics-eval-2026-08-05.md).
-Next: Batch 3 control flows, or a real RQLP→lit-review→RES chain to validate the research adapters end-to-end.
-See [creation-roadmap.md](creation-roadmap.md) §2-§3.
+The four Batch-2 skills passed their light round, and **Batch 2.5** then proved they **compose through explicit,
+deterministically-checked artifact interfaces with no chat dependence** — two real chains, one run each:
+**Track A** `forensics(document-corpus) → PSR → goals → IA → DQE-advisory → reader` (over the real
+`docs/skill-development/` corpus) and **Track B** `RQLP → lit-review(real, 5 sources) → RES → UDM → DQE-advisory
+→ reader`. A minimal 12-field handoff interface is frozen ([`references/interfaces/`](../../references/interfaces/)
++ `interface_check.py`); all §7 exit conditions met; **0 SKILL_DEFECT / 0 INTERFACE_DEFECT**; sources unchanged;
+`.pyc` hygiene done; architecture §8 gate-rule corrected to *advisory checkpoint*. All four Batch-2 skills stay
+`experimental` + manual-only. Report:
+[batch2_5-integration-2026-08-05.md](reports/batch2_5-integration-2026-08-05.md) (earlier:
+[batch2-skills-eval](reports/batch2-skills-eval-2026-08-05.md) +
+[batch2-workspace-forensics-eval](reports/batch2-workspace-forensics-eval-2026-08-05.md)).
+**Batch 3 then built the three L1 control-flow skeletons** — `documentation-refactor`,
+`scientific-workspace-reconstruction`, `numerical-research-software-design` — as v0 orchestrators that route the
+atoms, record a `flow-state`, and **stop honestly (`BLOCKED`) at their missing Batch-4/5 capabilities** (two
+reuse the Batch-2.5 chains; one ran a live prefix on the eval harness). All `flow_state_check`-green +
+reader-green; all `experimental` + manual-only. Report:
+[batch3-skeletons-2026-08-05.md](reports/batch3-skeletons-2026-08-05.md). **Next options:** a full
+trigger/conflict sub-agent run on the 3 flows (the gate before any `auto_trigger`), or start **Batch 4** (the
+numerical-design atoms) / **Batch 5** (the doc/workspace executor atoms) that unblock the flows. See
+[creation-roadmap.md](creation-roadmap.md) §3–§5.

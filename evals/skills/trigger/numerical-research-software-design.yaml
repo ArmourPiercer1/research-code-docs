@@ -1,0 +1,14 @@
+skill: numerical-research-software-design
+skill_version: "0.1.0"
+dataset_version: 1
+# Batch-3 LIGHT trigger set (directive §13): 3 should-trigger + 3 should-not.
+cases:
+  # ---------- should-trigger (engage the numerical-design control flow) ----------
+  - {id: nrsd-trig-01, set: should-trigger, real: false, input: "We want to design a new constrained-optimization solver core for our simulation code — scope the evidence, then frame the problem, architecture, and algorithm.", notes: "numerical design, end-to-end (evidence -> design)."}
+  - {id: nrsd-trig-02, set: should-trigger, real: true, input: "Design whether/how to base our equality-constrained solver on a manifold-optimization backbone: gather the evidence and drive it toward a design decision.", notes: "the real manifold-transfer design question (Track B is its evidence front)."}
+  - {id: nrsd-trig-03, set: should-trigger, real: false, input: "Scope and design a numerical method for our PDE pipeline — from what's known in the literature through to an algorithm spec and validation plan.", notes: "numerical method design; evidence -> spec -> validation orchestration."}
+
+  # ---------- should-not (decline / route away) ----------
+  - {id: nrsd-not-01, set: should-not, real: false, input: "Our experiment workspace is a mess and we don't know what runs — clean it up first.", expected: {route_to: scientific-workspace-reconstruction}, notes: "code/workspace mess -> reconstruction flow (which then hands recovered state here)."}
+  - {id: nrsd-not-02, set: should-not, real: false, input: "I just need a scoped literature search plan for this question and then someone to run the survey.", expected: {route_to: research-question-and-literature-planner}, notes: "bare literature scope+route -> the atomic adapter, not a full design flow."}
+  - {id: nrsd-not-03, set: should-not, real: false, input: "Reorganize our tangled documentation set into proper documents.", expected: {route_to: documentation-refactor}, notes: "document corpus mess -> the doc-refactor flow."}

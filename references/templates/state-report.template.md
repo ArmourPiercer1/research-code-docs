@@ -3,6 +3,15 @@ generated_by_skill: project-state-reconstructor
 skill_version: 0.1.0
 source_commit: <repo@commit at generation time>
 source_documents: [<repo tree>, <existing status docs treated as claims>]
+artifact_type: project-state-report
+document_lifecycle: IN_REVIEW
+scope: <one line: what state is recovered; excludes designing a target structure (IA's job)>
+facts: <pointer+count to 'What runs (FACT)' rows, each with a locator + E-level>
+hypotheses: <pointer+count to believed-but-unverified claims>
+open_questions: <pointer+count to UNKNOWNs + STALE rows; never 'none' if any UNKNOWN exists>
+evidence_level: <max E-level actually substantiated; do not inflate>
+next_handoff: goal-scope-and-workflow-elicitor
+handoff_requirements: <what the consumer needs: FACT/UNKNOWN split + STALE list + blocking UNKNOWNs>
 status: FACT/UNKNOWN separated below
 last_verified: <YYYY-MM-DDTHH:MM:SSZ>
 ---

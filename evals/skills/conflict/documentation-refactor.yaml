@@ -1,0 +1,32 @@
+skill: documentation-refactor
+skill_version: "0.1.0"
+dataset_version: 1
+# Batch-3 LIGHT conflict set — the highest-risk cluster (conflict-matrix §1): the three L1 flows vs each other,
+# + the "flow vs its own atomic stage" boundary. Correct behavior = exactly ONE L1 flow; never re-implement a stage.
+cases:
+  - id: docref-conf-01
+    set: conflict
+    real: false
+    input: "A promising numerical idea is buried inside a messy documentation set — sort it out."
+    expected: {decision: route_one, route_to: "read-only forensic/state pass + goal-scope-and-workflow-elicitor asks ONE routing question; then exactly one of {documentation-refactor, numerical-research-software-design}"}
+    notes: >
+      conflict-matrix §1 (DENY): numerical-design vs documentation-refactor never co-run. Route by the DOMINANT
+      artifact after a read-only pass: if docs block understanding, refactor first (then hand recovered docs to
+      the design flow); else the design flow proceeds and refactor is a later handoff. Not both at once.
+  - id: docref-conf-02
+    set: conflict
+    real: false
+    input: "The mess is half untracked code/experiments and half contradictory docs — clean it all up."
+    expected: {decision: route_one, route_to: scientific-workspace-reconstruction}
+    notes: >
+      conflict-matrix §1 (SEQ): files-and-code mess -> scientific-workspace-reconstruction FIRST (recover state);
+      if the residue is a doc corpus, IT hands off to documentation-refactor after state is known. documentation-refactor
+      does not itself reconstruct a code workspace.
+  - id: docref-conf-03
+    set: conflict
+    real: false
+    input: "While you refactor the docs, also just go ahead and move the files into the new layout and rewrite the prose."
+    expected: {decision: hold_at_blocked, note: "flow persists the DESIGN plan then stops at flow_status=BLOCKED (blocked_by=content-canonicalization-and-migration + technical-document-rewriter, Batch 5). It must NOT move/rewrite inline."}
+    notes: >
+      directive §10: the skeleton must NOT implement the Batch-5 executor tail inline or auto-move/overwrite. The
+      honest result is a named BLOCKED, not a faked closed loop.

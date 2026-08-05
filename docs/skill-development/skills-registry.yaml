@@ -25,6 +25,7 @@ meta:
   batch2_gate: "DECOUPLED (2026-08-05 scope-correction directive). Batch 2 no longer waits on DQE becoming a universal automatic terminal gate. documentation-quality-evaluator v0.4.1 is FROZEN as an ADVISORY / profile-scoped evaluator; it is sufficient to assist downstream development alongside an independent/human reviewer. New Batch-2 skills are evaluated by DQE-advisory + an independent reviewer + a no-skill comparison (light test set, NOT DQE's heavy corpus) and ship experimental + manual-only. Recommended order: workspace-forensics-and-inventory -> document-information-architect -> research-question-and-literature-planner -> research-evidence-synthesizer."
   phase_e: "DEFERRED to a future promotion gate (2026-08-05). The 61-slot 3-arm admission matrix + the reproducibility-release contract (ADR-DQE-002 / HF-REPRO / a reproducibility checker / 12-slot canary) are NOT built now — they belong to the later experiment-provenance-and-reproducibility capability, not to making DQE 'perfect' before Batch 2. Restart preconditions: >=2 Batch-2 skills done + 5-10 real downstream Skill outputs collected + explicit intent to promote DQE from advisory to a terminal gate (corpus should then be real outputs, not synthetic mutations). Canary-failure evidence + frozen snapshots are PRESERVED: tests/corpus/blind-runs/phase-e-2026-08-05/ and evals/skills/snapshots/{dqe-v0.3.0,dqe-v0.4.0-pre-d16,dqe-v0.4.1-candidate}/."
   v0_4_1_freeze: "DQE v0.4.1 FROZEN as advisory/profile-scoped (2026-08-05). Added a profile-ADMISSION scope guard (SKILL.md Rule 0 + EVALUATOR_CONTRACT): an unsupported profile -> GATE_DECISION=INCOMPLETE / GATE_REASON=unsupported-evaluation-profile. This resolves the halted D-17 canary by SCOPING OUT the controlled+release-gate experiment-report profile (NOT by adopting HF-REPRO): the canary's stable false-ALLOW becomes a safe INCOMPLETE. NO HF-1..15 threshold, no rubric weight, and no gate rules 1-3 changed — the guard sits above them. Report: reports/dqe-v0.4.1-freeze-and-batch2-entry-2026-08-05.md."
+  batch2_5: "Batch 2.5 integration sprint COMPLETE (2026-08-05 directive). Proved the atomic skills compose through explicit, deterministically-checked artifact interfaces with NO chat dependence, before building Batch 3. Two real chains, one run each, <=12 agent slots, 0 reruns: Track A (forensics document-corpus -> PSR -> goals -> IA -> DQE-advisory -> reader) over the real docs/skill-development/ corpus; Track B (RQLP -> lit-review[REAL OpenAlex retrieval, 5 sources] -> RES -> UDM -> DQE-advisory -> reader). Froze a minimal 12-field handoff interface: references/interfaces/README.md + 7 *.schema.md + evals/skills/harness/checkers/interface_check.py (ADVISORY; --advisory-is-hard enforces; opt-in on artifact_type; aliases produced_by_skill/source_artifacts; NO HARD frontmatter_check change). All 12 handoff artifacts PASS interface_check; batch2_5 tree hard_fail=False (plain + --advisory-is-hard). All directive-§7 exit conditions met; 0 SKILL_DEFECT / 0 INTERFACE_DEFECT; 2 TEST_HARNESS nits found+fixed; 1 MISSING_CAPABILITY (documentation-refactor executors are Batch 5 -> IA next_handoff=BLOCKED, correct). Sources unchanged; nothing installed/pushed; all 4 Batch-2 skills stay experimental + manual-only. Architecture §8 gate-rule corrected (DQE = advisory checkpoint, ALLOW auto-triggers nothing). .pyc hygiene done. OQ-4 OPEN (evidence says keep RQLP+RES separate). Report: reports/batch2_5-integration-2026-08-05.md."
   v0_2_upgrade: "Batch-1 skills upgraded to 0.2.0 from real vendored references (agent-skills/github-awesome-copilot/research-paper-writing-skills MIT; academic-research-skills CC-BY-NC ideas-only). Per-method attribution in references/documentation-methodology/upstream-method-matrix.md. Regression re-eval: see reports/batch1-eval-run-2026-07-30.md (v0.2 section)."
   v0_3_upgrade: "documentation-quality-evaluator -> 0.3.0 after a hybrid-roadmap false-pass. Added anti-erosion/no-PASS-prediction discipline, structural gates HF-13/HF-14a/HF-14b/HF-15, decomposed HF-12A-E (doc-only vs source-needing -> DOCUMENT_QUALITY vs FACTUAL_VALIDITY), roadmap rubric + non-compensatory scoring, two-layer reader, structured KEY=VALUE verdict, 5 SIGNAL checkers + isolated grading harness. Anchor golden-negative (eoopt roadmap) now FAILs with HF-13/14a/14b/15 (recall 1.0, false_pass 0); B1 comprehensive-report PASSes (no HF-13 over-fire); trigger+conflict 28/28 no-regression. Report: reports/dqe-v0.3-upgrade-2026-07-30.md."
   v0_4_upgrade: "documentation-quality-evaluator -> 0.4.0 -> 0.4.1 (ADR-DQE-001 ACCEPTED). 0.4.0: caller-supplied evaluation_profile (provenance_policy/decision_mode NEVER silently inferred), profile-aware HF-9 (external/legacy docs not hard-failed for missing local front-matter), two-axis verdict QUALITY_BAND(quality) vs GATE_DECISION(may-proceed) with DOCUMENT_QUALITY compat map + EVALUATION_PROFILE echo, document_lifecycle vocab distinct from claim-status, HF-14b profile-severity map. HF-12A/HF-15 logic + HF-13/HF-14a thresholds UNCHANGED. 0.4.1: D-16 gate-composition fix (deterministic 3-rule GATE_DECISION; rubric total + FACTUAL_VALIDITY gate QUALITY_BAND only). Diagnostic 8/8 (dataset_version 4). OQ-REPRO=A: no HF-REPRO gate added. Frozen bundles under evals/skills/snapshots/. Phase E admission matrix pending. Reports: reports/dqe-v0.4-{skill-change-summary,diagnostic-matrix,oq-repro-decision,defect-ledger}.md + reports/dqe-v0.4.1-diagnostic-close.md."
@@ -292,9 +293,108 @@ skills:
 # PLANNED — later batches (not created yet; here so the roster is complete)
 # -----------------------------------------------------------------------------
 
-  - {name: numerical-research-software-design,        version: "0.0.0", status: planned, layer: L1-control, class: orchestrate, invocation: manual-only, auto_trigger: false, batch: 3, purpose: "Control flow: fuzzy numerical idea -> stable design spec.", conflicts: [scientific-workspace-reconstruction, documentation-refactor]}
-  - {name: scientific-workspace-reconstruction,       version: "0.0.0", status: planned, layer: L1-control, class: orchestrate, invocation: manual-only, auto_trigger: false, batch: 3, purpose: "Control flow: messy dev-test-experiment workspace -> reconstructed, reproducible structure.", conflicts: [numerical-research-software-design, documentation-refactor, improve-codebase-architecture]}
-  - {name: documentation-refactor,                    version: "0.0.0", status: planned, layer: L1-control, class: orchestrate, invocation: manual-only, auto_trigger: false, batch: 3, purpose: "Control flow: messy/contradictory doc corpus -> audited, canonicalized, rewritten doc system.", conflicts: [numerical-research-software-design, scientific-workspace-reconstruction, technical-document-rewriter]}
+# -----------------------------------------------------------------------------
+# BATCH 3 — three control-flow skeletons (v0; 2026-08-05 directive §9-§10)
+#   L1 orchestrators: route to existing atoms, persist artifacts, record flow-state, STOP HONESTLY (BLOCKED)
+#   at missing Batch-4/5 capabilities. Ship experimental + manual/user-invoked-only. Auto co-trigger is
+#   impossible by construction (disable_model_invocation:true); conflict-matrix §1 governs the cluster.
+# -----------------------------------------------------------------------------
+
+  - name: documentation-refactor
+    version: "0.1.0"
+    status: experimental
+    layer: L1-control
+    class: orchestrate
+    owner: research-code-dev
+    purpose: >
+      Orchestrate the end-to-end restructure of a messy/mixed-responsibility DOCUMENT CORPUS: route
+      forensics(document-corpus) -> project-state-reconstructor -> goal-scope-and-workflow-elicitor ->
+      document-information-architect, then hand the design plan to migration+rewrite+review. v0 SKELETON:
+      routes/persists/records flow-state and STOPS HONESTLY (BLOCKED) at the Batch-5 executor tail. Never
+      inventories/reconstructs/designs/moves/rewrites itself — every stage is delegated.
+    invocation: manual-only
+    auto_trigger: false
+    disable_model_invocation: true
+    upstream_dependencies: [workspace-forensics-and-inventory, project-state-reconstructor, goal-scope-and-workflow-elicitor, document-information-architect]
+    downstream_outputs: [flow-state, "(routes the 7 handoff artifacts of its chain)"]
+    conflicts: [scientific-workspace-reconstruction, numerical-research-software-design, technical-document-rewriter, content-canonicalization-and-migration]  # conflict-matrix §1: exactly ONE L1 flow
+    replaces: null
+    replaced_by: null
+    write_scope: {read_only: true, creates_new_files: true, may_overwrite: false, may_move: false, may_delete: false, requires_user_approval: false, requires_isolated_branch: false}
+    context_budget: {default_reads: [target-corpus, upstream-artifacts-to-resume], max_scope: "routes to atoms; does not itself whole-scan", whole_repo_allowed: false}
+    required_tools: [Read, Grep, Glob, Bash]
+    norm_sources: []
+    status_vocab: true
+    license_sources:
+      - {method: "orchestrator: route + persist + record, never do the work; honest capability boundary", src: "mattpocock/skills wayfinder@snapshot", license: MIT, adoption: method-borrow}
+      - {method: "flow-state contract + honest-BLOCKED", src: "batch2.5/batch3 directive §10.1 + flow-state.schema.md", license: internal, adoption: adapt}
+    evals: {trigger: "authored (3 should-trigger + 3 should-not routing cases; §13 light skeleton round — not yet sub-agent-run)", conflict: "authored (3 cluster cases per conflict-matrix §1: DENY/SEQ vs the other 2 L1 flows + hold-at-BLOCKED vs its own executor tail)", e2e: "pass (worked BLOCKED flow-state orchestrating the REAL Batch-2.5 Track-A artifacts; flow_state_check PASS)", reader_test: "pass (HONEST_BLOCKED=YES, NO_FAKED_COMPLETION=YES, NO_AUTO_AUTHORIZATION=YES, READER_CAN_ACT=YES)"}
+    last_evaluated: "2026-08-05"
+    notes: "Batch-3 control flow #1 (most complete runnable prefix; Track A is its integration fixture). v0 SKELETON: honest BLOCKED at content-canonicalization-and-migration + technical-document-rewriter + living-design-maintainer (Batch 5, not built). Stays experimental + manual-only; must pass the control-flow conflict eval before any auto_trigger. Evidence: evals/skills/results/batch3/documentation-refactor/flow-state-docs-skill-development.md."
+
+  - name: scientific-workspace-reconstruction
+    version: "0.1.0"
+    status: experimental
+    layer: L1-control
+    class: orchestrate
+    owner: research-code-dev
+    purpose: >
+      Orchestrate recovery of a messy dev-test-experiment CODE WORKSPACE into a known state: route
+      forensics(workspace) -> project-state-reconstructor -> goal-scope-and-workflow-elicitor, then hand off
+      to workspace-architecture+provenance+migration. v0 SKELETON: routes/persists/records flow-state and STOPS
+      HONESTLY (BLOCKED) at dev-test-experiment-workspace-architect (Batch 5). Never designs a layout or moves
+      files itself.
+    invocation: manual-only
+    auto_trigger: false
+    disable_model_invocation: true
+    upstream_dependencies: [workspace-forensics-and-inventory, project-state-reconstructor, goal-scope-and-workflow-elicitor]
+    downstream_outputs: [flow-state, "(routes inventory-report/project-state-report/goal-scope-note)"]
+    conflicts: [documentation-refactor, numerical-research-software-design, improve-codebase-architecture]  # conflict-matrix §1: exactly ONE L1 flow
+    replaces: null
+    replaced_by: null
+    write_scope: {read_only: true, creates_new_files: true, may_overwrite: false, may_move: false, may_delete: false, requires_user_approval: false, requires_isolated_branch: false}
+    context_budget: {default_reads: [target-workspace, upstream-artifacts-to-resume], max_scope: "routes to atoms; does not itself whole-scan", whole_repo_allowed: false}
+    required_tools: [Read, Grep, Glob, Bash]
+    norm_sources: []
+    status_vocab: true
+    license_sources:
+      - {method: "orchestrator: route + persist + record, never do the work; honest capability boundary", src: "mattpocock/skills wayfinder@snapshot", license: MIT, adoption: method-borrow}
+      - {method: "flow-state contract + honest-BLOCKED", src: "batch3 directive §9.2/§10.1 + flow-state.schema.md", license: internal, adoption: adapt}
+    evals: {trigger: "authored (3 should-trigger + 3 should-not routing cases; §13 light skeleton round)", conflict: "authored (3 cluster cases per conflict-matrix §1: SEQ->documentation-refactor / DENY->numerical + hold-at-BLOCKED vs workspace-architect)", e2e: "pass (LIVE prefix run: forensics(workspace)->PSR->goals on the REAL evals/skills/harness/ workspace, read-only proven; flow-state BLOCKED; flow_state_check PASS)", reader_test: "pass (HONEST_BLOCKED=YES, NO_FAKED_COMPLETION=YES, NO_AUTO_AUTHORIZATION=YES, READER_CAN_ACT=YES)"}
+    last_evaluated: "2026-08-05"
+    notes: "Batch-3 control flow #2. v0 SKELETON: honest BLOCKED at dev-test-experiment-workspace-architect (Batch 5). The LIVE prefix e2e also gave forensics WORKSPACE-mode coverage (complementing Track A's document-corpus mode) + PSR 'structured-to-run != runs' (E2 static cap, no execution). Stays experimental + manual-only. Evidence: evals/skills/results/batch3/scientific-workspace-reconstruction/."
+
+  - name: numerical-research-software-design
+    version: "0.1.0"
+    status: experimental
+    layer: L1-control
+    class: orchestrate
+    owner: research-code-dev
+    purpose: >
+      Orchestrate the DESIGN of a numerical/scientific-computing effort: route state -> goal/scope ->
+      literature-scope -> (delegated) retrieval -> evidence synthesis -> decision register (the evidence base),
+      then hand off to numerical problem-framing/architecture/spec/prototype/validation/roadmap. v0 SKELETON:
+      routes/persists/records flow-state and STOPS HONESTLY (BLOCKED) at the Batch-4 numerical-design core.
+      Never frames/architects/specs/prototypes itself; never retrieves (delegates to the installed stack).
+    invocation: manual-only
+    auto_trigger: false
+    disable_model_invocation: true
+    upstream_dependencies: [project-state-reconstructor, goal-scope-and-workflow-elicitor, research-question-and-literature-planner, lit-review, research-evidence-synthesizer, uncertainty-and-decision-manager]
+    downstream_outputs: [flow-state, "(routes literature-search-plan/research-evidence-map/decision-register)"]
+    conflicts: [documentation-refactor, scientific-workspace-reconstruction]  # conflict-matrix §1: exactly ONE L1 flow; §2: delegates retrieval, never competes with lit-review
+    replaces: null
+    replaced_by: null
+    write_scope: {read_only: true, creates_new_files: true, may_overwrite: false, may_move: false, may_delete: false, requires_user_approval: false, requires_isolated_branch: false}
+    context_budget: {default_reads: [design-question, upstream-artifacts-to-resume], max_scope: "routes to atoms + delegates retrieval; does not itself search", whole_repo_allowed: false}
+    required_tools: [Read, Grep, Glob, Bash]
+    norm_sources: [hypotheses, candidates]
+    status_vocab: true
+    license_sources:
+      - {method: "orchestrator: route + persist + record, never do the work; honest capability boundary", src: "mattpocock/skills wayfinder@snapshot", license: MIT, adoption: method-borrow}
+      - {method: "flow-state contract + honest-BLOCKED; delegate retrieval (never compete with L3)", src: "batch3 directive §9.3/§10 + conflict-matrix §2", license: internal, adoption: adapt}
+    evals: {trigger: "authored (3 should-trigger + 3 should-not routing cases; §13 light skeleton round)", conflict: "authored (3 cluster cases per conflict-matrix §1/§2: DENY->reconstruction / delegate-retrieval->planner+lit-review + hold-at-BLOCKED vs the Batch-4 core)", e2e: "pass (worked BLOCKED flow-state consulting the REAL Batch-2.5 Track-B evidence base; flow_state_check PASS)", reader_test: "pass (HONEST_BLOCKED=YES, NO_FAKED_COMPLETION=YES, NO_FACT_UPGRADE=YES, NO_AUTO_AUTHORIZATION=YES, READER_CAN_ACT=YES)"}
+    last_evaluated: "2026-08-05"
+    notes: "Batch-3 control flow #3 (THIRD by design: its numerical-design core atoms are Batch 4, not built — directive §9.3). v0 SKELETON: honest BLOCKED at research-software-problem-framer + scientific-software-architect + algorithm-technical-spec-author + scientific-prototype-experiment + scientific-validation-and-benchmark-planner + research-software-roadmap-author (Batch 4). Reuses Track B as its evidence front; carries E2 cap + 2 E0 assumptions, no fact-upgrade. Stays experimental + manual-only. Evidence: evals/skills/results/batch3/numerical-research-software-design/."
 
   - {name: research-software-problem-framer,          version: "0.0.0", status: planned, layer: L2-atomic, class: design,   batch: 4}
   - {name: scientific-software-architect,             version: "0.0.0", status: planned, layer: L2-atomic, class: design,   batch: 4, conflicts: [codebase-design]}

@@ -1,0 +1,14 @@
+skill: scientific-workspace-reconstruction
+skill_version: "0.1.0"
+dataset_version: 1
+# Batch-3 LIGHT trigger set (directive §13): 3 should-trigger + 3 should-not.
+cases:
+  # ---------- should-trigger (engage the workspace-reconstruction control flow) ----------
+  - {id: swr-trig-01, set: should-trigger, real: false, input: "This research repo is a mess — a pile of scripts, unclear which one actually runs the experiment, results scattered and some stale. Reconstruct it into a known state.", notes: "code/experiment workspace + unclear-what-runs = the flow."}
+  - {id: swr-trig-02, set: should-trigger, real: true, input: "Reconstruct the state of our eval harness workspace (evals/skills/harness/): inventory what's there, figure out what actually runs and what's tested, and settle the intended dev–test flow.", notes: "the real evals/skills/harness/ workspace; recover→state→goal."}
+  - {id: swr-trig-03, set: should-trigger, real: false, input: "We inherited someone's experiment folder with no README; nobody knows what's entry point vs scratch vs output. Recover it before we touch anything.", notes: "inherited messy workspace; read-only recovery first."}
+
+  # ---------- should-not (decline / route away) ----------
+  - {id: swr-not-01, set: should-not, real: false, input: "Our docs/ folder is a tangle of overlapping and contradictory documents — restructure the doc set.", expected: {route_to: documentation-refactor}, notes: "DOCUMENT corpus mess -> the doc-refactor L1 flow, not workspace reconstruction."}
+  - {id: swr-not-02, set: should-not, real: false, input: "Should we base our constrained solver on a manifold-optimization backbone? Frame the design.", expected: {route_to: numerical-research-software-design}, notes: "a numerical DESIGN question -> the numerical L1 flow."}
+  - {id: swr-not-03, set: should-not, real: false, input: "Just give me a read-only inventory of what files are in this repo — don't reconstruct anything.", expected: {route_to: workspace-forensics-and-inventory}, notes: "inventory only -> the atomic skill; no flow."}

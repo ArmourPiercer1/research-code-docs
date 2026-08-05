@@ -3,6 +3,15 @@ generated_by_skill: research-evidence-synthesizer
 skill_version: 0.1.0
 source_commit: <repo@commit at generation time>
 source_documents: [<retrieved evidence bundle / literature-ingest store>, <the design decision it informs>]
+artifact_type: research-evidence-map
+document_lifecycle: IN_REVIEW
+scope: <one line: which decision this organizes evidence for; no retrieval; no fact upgrade>
+facts: none (paper/analogy capped ≤ E2; any in-project trial isolated at its own level — D.8)
+hypotheses: <pointer+count to claim–evidence matrix rows (E-level + channel each)>
+open_questions: <pointer+count to Unresolved gaps (mark any routed back to RQLP); never 'none' if a gap exists>
+evidence_level: <max E-level, capped by channel: cross-domain-analogy ≤ E2; unevidenced assumption = E0>
+next_handoff: uncertainty-and-decision-manager
+handoff_requirements: <what the register needs: per-claim E-level+channel + transfer card assumptions+E-cap + unresolved gaps>
 status: evidence map (CANDIDATE-level; no project-verified fact asserted; nothing retrieved here)
 last_verified: <YYYY-MM-DDTHH:MM:SSZ>
 -->

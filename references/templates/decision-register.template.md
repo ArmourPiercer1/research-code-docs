@@ -3,6 +3,15 @@ generated_by_skill: uncertainty-and-decision-manager
 skill_version: 0.1.0
 source_commit: <repo@commit at generation time>
 source_documents: [goal-scope-note.md, evidence-matrix.md, prototype-results.md]
+artifact_type: decision-register
+document_lifecycle: IN_REVIEW
+scope: <one line: which decisions this tracks; records state, does not decide the gate>
+facts: <pointer+count to FACT/VERIFIED/BASELINE/DECIDED entries (locator + E-level each; only E3+ = verified)>
+hypotheses: <pointer+count to HYPOTHESIS/CANDIDATE entries (disposition needs-evidence/needs-experiment)>
+open_questions: <pointer+count to OPEN/DEFERRED entries; never 'none' if any item is unsettled>
+evidence_level: <E-level range across entries; paper/analogy carry the RES cap ≤ E2; project entries stand alone>
+next_handoff: <documentation-quality-evaluator (advisory) | human decision>
+handoff_requirements: <what the reviewer needs: per-entry status+evidence+locator + supersede chain + unresolved gaps>
 status: DECIDED (register is the live source for uncertainty)
 last_verified: <YYYY-MM-DDTHH:MM:SSZ>
 ---

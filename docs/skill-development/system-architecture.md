@@ -9,7 +9,7 @@ source_documents:
   - docs/研究软件文档Skills系统_设计与创建指南.md  (third-party design guide — fine-tuned here, not followed verbatim)
   - docs/skill-development/current-skills-audit.md  (Phase-A audit)
 status: DECIDED (architecture v0.1 for Phase 1) with OPEN items explicitly listed
-last_verified: 2026-07-30T09:47:06Z
+last_verified: 2026-08-05  (§3.3/§gate-rule DQE terminal-gate wording revised → advisory checkpoint, Batch-2.5 §8)
 -->
 
 > **Status of this document:** `architecture v0.1`, DECIDED for Phase 1 scope, `experimental` for everything downstream of the first four skills. It **fine-tunes** the third-party guide to the *actual* environment found in the audit. Where this document diverges from the guide, the divergence is marked **[ADAPT]** with a reason.
@@ -145,7 +145,18 @@ workspace-forensics-and-inventory (document-corpus mode, read-only)
 → living-design-maintainer
 ```
 
-**Gate rule:** `documentation-quality-evaluator` is the terminal gate of all three chains. No chain "completes" without passing its hard gates.
+**Gate rule (revised 2026-08-05 — Batch-2.5 §8 architecture-consistency fix).**
+`documentation-quality-evaluator` is a **quality checkpoint**, **not** a universal automatic release gate.
+Its v0.4.1 posture is **advisory / profile-scoped** (see `skills-registry.yaml` meta `batch2_gate`/`phase_e`):
+
+- **Supported profile** → DQE emits an **advisory** report; a **human / orchestrator makes the decision**.
+  A chain does not silently "complete" on a DQE `ALLOW`; the advisory informs a human/gate.
+- **Unsupported profile** (e.g. `controlled + release-gate experiment-report`) → `GATE_DECISION=INCOMPLETE`
+  / `GATE_REASON=unsupported-evaluation-profile`; the flow routes to a human or a future dedicated capability.
+- A DQE **`ALLOW` does NOT auto-trigger** any action: **publishing, file move, file delete, file overwrite,
+  skill install, or enabling auto-trigger.** Every such action requires an explicit human/orchestrator step.
+
+The heavier "universal automatic terminal gate" promotion (**Phase E**) is **deferred**, not adopted.
 
 ---
 

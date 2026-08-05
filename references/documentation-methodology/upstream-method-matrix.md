@@ -10,7 +10,7 @@ source_documents:
   - docs/skill-development/current-skills-audit.md
   - 4x method-extraction sub-agent reports (2026-07-30)
 status: DECIDED (v0.2) — extended per skill as methods are adopted
-last_verified: 2026-07-30T09:47:06Z
+last_verified: 2026-08-05  (§2.9 Batch-3 control-flow attribution added)
 -->
 
 > **Purpose (constraint D.2, guide §9 / §14.7).** Every rule adopted into a new skill records **where it came from**, **its license**, **how we adopted it** (copy / adapt / method-borrow / ideas-only), and **its boundary**. No wholesale concatenation of upstream `SKILL.md` (constraint D.1).
@@ -157,6 +157,20 @@ Boundary vs the **installed** research-writing stack: `literature-synthesis` / `
 writing-facing; this skill is *design-decision-facing* (method transfer + E-levels feeding the decision
 register). It consumes `evidence-extraction` units + `lit-review` / `literature-ingest` output; it never
 retrieves (conflict-matrix §44–46, §50). OQ-4 (possible merge with §2.7) remains open.
+
+### 2.9 Batch-3 control flows (v0.1.0 — `documentation-refactor`, `scientific-workspace-reconstruction`, `numerical-research-software-design`)
+
+All three L1 skeletons share one borrowed method; the rest is internal composition.
+
+| Method | Source | License | Adoption | Boundary |
+|---|---|---|---|---|
+| **Orchestrator: route + persist + record decisions, never do the work** | mattpocock `wayfinder` | MIT | method-borrow | The flow routes to existing atoms and records a flow-state; it never inventories/reconstructs/designs/moves/rewrites itself. |
+| **Flow-state contract + honest-BLOCKED** (a `BLOCKED` must name `blocked_by`) | internal (directive §10.1 + `references/interfaces/flow-state.schema.md`) | internal | adapt | The skeleton stops at the first missing Batch-4/5 capability with a *named* BLOCKED — never a faked closed loop or a silent stop. |
+| **Delegate retrieval; never compete with the installed L3 stack** (numerical flow) | internal (conflict-matrix §2) | internal | adapt | Routes scope to `research-question-and-literature-planner` → `lit-review`; the flow itself never retrieves. |
+
+Boundary vs the atoms: a control flow **composes** Batch-1/2 atoms and (future) Batch-4/5 atoms; it adds no
+new writing rule of its own. Auto co-trigger is impossible while all three stay `experimental` + manual-only
+(conflict-matrix §1). Evidence: `evals/skills/results/batch3/**` (three worked BLOCKED flow-states).
 
 ---
 

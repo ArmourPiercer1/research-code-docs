@@ -8,8 +8,8 @@ source_documents:
   - docs/研究软件文档Skills系统_设计与创建指南.md (§10, §16)
   - docs/skill-development/system-architecture.md
   - docs/skill-development/current-skills-audit.md
-status: DECIDED for Batch 1; Batch 2 IN PROGRESS (decoupled from DQE terminal-gate promotion, 2026-08-05); PLANNED for Batches 3-5
-last_verified: 2026-08-05
+status: DECIDED for Batch 1; Batch 2 built + light-passed; Batch 2.5 integration DONE; Batch 3 v0 skeletons BUILT (2026-08-05); PLANNED for Batch 4-5
+last_verified: 2026-08-05  (Batch 3 three v0 control-flow skeletons built + light-validated; §3 updated)
 -->
 
 > **Principle (guide §17).** The quality bar is not "all files generated" but: recover facts before designing; write unknowns as unknown; turn research questions into surveys/experiments, not fake plans; keep stable design / dynamic state / paper evidence / session notes separate; recognize simple tasks; improve via evals, not vibes.
@@ -18,9 +18,9 @@ last_verified: 2026-08-05
 
 ---
 
-## 0. Batch 0 — governance & eval foundation (THIS deliverable)
+## 0. Batch 0 — governance & eval foundation
 
-**Status: IN PROGRESS (this commit).**
+**Status: COMPLETE (Batch 0 delivered 2026-07-30).** Current phase lives in `skills-registry.yaml` + `reports/runlog.md`, not here (this is the plan, not the status tracker — the volatile-state→pointer rule). As of 2026-08-05: Batch 1 done, Batch 2 built + light-passed, **Batch 2.5 integration sprint done** (§2.5).
 
 - [x] Directory isolation (`.claude/skills/`, `references/`, `evals/skills/`, `docs/skill-development/`).
 - [x] Audit (`current-skills-audit.md`).
@@ -30,8 +30,8 @@ last_verified: 2026-08-05
 - [x] Registry (`skills-registry.yaml`).
 - [x] Upstream method matrix (`references/documentation-methodology/upstream-method-matrix.md`).
 - [x] Eval harness + schema + deterministic checkers (`evals/skills/`).
-- [ ] Batch-1 four skill **drafts** (experimental + manual-only) — created in this deliverable.
-- [ ] Run trigger + conflict evals + one e2e case (this deliverable).
+- [x] Batch-1 four skill **drafts** (experimental + manual-only) — created.
+- [x] Run trigger + conflict evals + one e2e case.
 
 **Exit criterion for Batch 0:** the four drafts exist, the eval sets exist, and `documentation-quality-evaluator` passes its own trigger + basic self-consistency evals. Only then does Batch 2 unlock.
 
@@ -78,13 +78,47 @@ Trigger 32/32 · 4 read-only shadow runs (targets verified untouched) · 4 reade
 
 ---
 
+## 2.5 Batch 2.5 — integration sprint (DONE 2026-08-05)
+
+**Status: COMPLETE.** Per the `Batch2_5集成冲刺与Batch3最小控制流开发计划.md` directive, before building the
+Batch-3 orchestration layer we proved the atomic skills **compose through explicit, deterministically-checked
+artifact interfaces with no chat dependence**. Two real chains, one main run each, ≤12 agent slots, 0 reruns:
+
+- **Track A (document-corpus):** `forensics(document-corpus) → PSR → goals → IA → DQE-advisory → reader` over
+  the real `docs/skill-development/` corpus. Exercised the previously-unrun forensics doc-corpus + IA multi-doc
+  modes; found genuine staleness in our own docs (incl. the §0 "Batch 0 IN PROGRESS" fixed above); IA stops at
+  an honest `next_handoff: BLOCKED` (its executors are Batch 5). Saved as `documentation-refactor`'s first
+  integration fixture.
+- **Track B (research-evidence):** `RQLP → lit-review(real, 5 sources) → RES → UDM → DQE-advisory → reader`.
+  RES held the cross-domain transfer at E2, isolated two E0 assumptions, routed the gaps back to RQLP; UDM
+  registered 1 HYPOTHESIS + 5 OPEN + 1 DEFERRED, 0 DECIDED. No literature→project-fact upgrade.
+
+**Frozen (directive §5):** a minimal 12-field handoff interface — `references/interfaces/` (README + 7
+`*.schema.md`) + `evals/skills/harness/checkers/interface_check.py` (ADVISORY; `--advisory-is-hard` enforces).
+All §7 exit conditions met; **0 SKILL_DEFECT, 0 INTERFACE_DEFECT**; all sources unchanged; `.pyc` hygiene done;
+architecture §8 gate-rule wording corrected. All four Batch-2 skills stay `experimental` + manual-only.
+Full write-up: [reports/batch2_5-integration-2026-08-05.md](reports/batch2_5-integration-2026-08-05.md).
+
+**OQ-4:** stays OPEN — evidence gathered says **keep RQLP + RES separate** (RES adds real channel/E-cap/gap
+structure; merging would re-mix planning with synthesis). Revisit after Batch 3.
+
+---
+
 ## 3. Batch 3 — three control-flow skeletons
 
-| # | Skill | Scope of v0 |
+**Status: ALL THREE v0 SKELETONS BUILT + light-validated (2026-08-05).** Each routes existing Batch-1/2 atoms,
+records a `flow-state` (§10.1 contract + `flow_state_check.py`), verifies each hand-off, and **stops honestly
+(`flow_status=BLOCKED`) at its missing Batch-4/5 capability** — no faked closed loops. Build order per the
+directive §9 (most-complete runnable prefix first): `documentation-refactor` → `scientific-workspace-reconstruction`
+→ `numerical-research-software-design`. Three worked BLOCKED flow-states (two reuse the real Batch-2.5 chains;
+one ran a **live** prefix on `evals/skills/harness/`), all `flow_state_check`-green + reader-green. Report:
+[reports/batch3-skeletons-2026-08-05.md](reports/batch3-skeletons-2026-08-05.md).
+
+| # | Skill | v0 result (built) |
 |---|---|---|
-| 9 | `numerical-research-software-design` | Orchestrates existing atoms only; carries routing + gates, minimal writing rules. |
-| 10 | `scientific-workspace-reconstruction` | Orchestrates forensics→state→goals→architect→migration; enforces ordering. |
-| 11 | `documentation-refactor` | Orchestrates forensics(doc)→state→IA→canonicalize→rewrite→evaluate. |
+| 9 | `numerical-research-software-design` | Evidence front (RQLP→lit-review→RES→UDM, reusing Track B); honest BLOCKED at the Batch-4 numerical-design core. **THIRD by design** (its core atoms don't exist). |
+| 10 | `scientific-workspace-reconstruction` | forensics(workspace)→PSR→goals (ran LIVE on the harness); honest BLOCKED at `dev-test-experiment-workspace-architect` (Batch 5). |
+| 11 | `documentation-refactor` | forensics(doc)→PSR→goals→IA (reusing Track A); honest BLOCKED at migration+rewriter+maintainer (Batch 5). Most complete prefix. |
 
 **Must pass the control-flow conflict eval** (`conflict-matrix.md` §1) before any of the three flips to `auto_trigger`. Until then, all three are user-invoked.
 

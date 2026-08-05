@@ -8,7 +8,8 @@ HF-13/14/15; they NEVER block or change the exit code). Prints a JSON summary an
 non-zero if any HARD gate fails.
 
     HARD:     frontmatter_check (HF-9), status_vocab_check (HF-3/HF-10)
-    ADVISORY: markdown_links_check, placeholders_check
+    ADVISORY: markdown_links_check, placeholders_check, interface_check (batch2.5 handoff contract),
+              flow_state_check (batch3 control-flow status contract)
     SIGNAL:   state_number_consistency (HF-14a), completion_open_conflict (HF-14b),
               roadmap_stage_fields (HF-6/HF-15), agent_session_residue (HF-13/HF-8),
               artifact_role_mixing (HF-13)
@@ -30,6 +31,8 @@ import frontmatter_check          # noqa: E402
 import status_vocab_check         # noqa: E402
 import markdown_links_check       # noqa: E402
 import placeholders_check         # noqa: E402
+import interface_check             # noqa: E402
+import flow_state_check            # noqa: E402
 import state_number_consistency   # noqa: E402
 import completion_open_conflict   # noqa: E402
 import roadmap_stage_fields       # noqa: E402
@@ -37,7 +40,8 @@ import agent_session_residue      # noqa: E402
 import artifact_role_mixing       # noqa: E402
 
 HARD = [("frontmatter", frontmatter_check), ("status_vocab", status_vocab_check)]
-ADVISORY = [("markdown_links", markdown_links_check), ("placeholders", placeholders_check)]
+ADVISORY = [("markdown_links", markdown_links_check), ("placeholders", placeholders_check),
+            ("interface", interface_check), ("flow_state", flow_state_check)]
 # SIGNAL: advisory candidates for the model. `ok=True` = no candidate. NEVER sets hard_fail.
 SIGNAL = [
     ("state_numbers", state_number_consistency),

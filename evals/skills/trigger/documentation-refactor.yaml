@@ -1,0 +1,16 @@
+skill: documentation-refactor
+skill_version: "0.1.0"
+dataset_version: 1
+# Batch-3 LIGHT trigger set (directive §13): 3 should-trigger + 3 should-not.
+# "should-trigger" = engage the L1 flow (route the corpus through the chain, emit a flow-state).
+# "should-not" = decline / route to an atomic skill or another L1 flow. Cluster conflicts live in the conflict yaml.
+cases:
+  # ---------- should-trigger (engage the doc-refactor control flow) ----------
+  - {id: docref-trig-01, set: should-trigger, real: false, input: "Our docs/ folder is a mess — a dozen overlapping files, contradictory status across them, duplicated decisions, some stale. Take it through a proper end-to-end restructure.", notes: "multi-doc corpus + tangled + end-to-end restructure = the flow."}
+  - {id: docref-trig-02, set: should-trigger, real: true, input: "Restructure the whole docs/skill-development/ governance corpus: figure out what's real, design the target doc-set with one canonical home per thing, and drive it to a fix.", notes: "the real Track-A corpus; end-to-end governed refactor."}
+  - {id: docref-trig-03, set: should-trigger, real: false, input: "This project's documentation set has grown organically and nobody knows which doc owns what; recover the facts, design the architecture, and orchestrate the cleanup.", notes: "corpus-scale; needs recover→design→cleanup orchestration."}
+
+  # ---------- should-not (decline / route away) ----------
+  - {id: docref-not-01, set: should-not, real: false, input: "Our ROADMAP.md is one file that mixes a vision, a plan, and a status log — design how to split it.", expected: {route_to: document-information-architect}, notes: "ONE document -> the atomic IA skill; no flow needed."}
+  - {id: docref-not-02, set: should-not, real: false, input: "Our code/experiment workspace is a mess — untracked scripts, unclear what runs. Reconstruct it.", expected: {route_to: scientific-workspace-reconstruction}, notes: "code/workspace mess (not docs) -> the other L1 flow."}
+  - {id: docref-not-03, set: should-not, real: false, input: "Just grade this one design doc against our quality bar.", expected: {route_to: documentation-quality-evaluator}, notes: "grading one doc -> DQE; not a refactor flow."}
