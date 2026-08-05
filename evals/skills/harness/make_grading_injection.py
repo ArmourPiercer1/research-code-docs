@@ -157,6 +157,37 @@ CONFIDENCE=<HIGH|MEDIUM|LOW>
 """
 
 
+BASELINE_CONTRACT = """\
+You are a general, capable documentation reviewer. You are given ONE documentation artifact and an
+evaluation profile. You do NOT have any specialized rubric, hard-gate catalog, checklist, or grading skill
+— use your own judgment. You have NO project context beyond the document below; do NOT invent facts to fill
+gaps (a gap you must fill is a finding ABOUT the document, not your failure).
+
+Judge the document for its declared artifact_type under the given profile, and emit a two-axis verdict.
+Field meanings (these are the ONLY thing you are told about the output; the reasoning is yours):
+- QUALITY_BAND = holistic quality of the document: PASS (good) / PARTIAL (a real defect) / FAIL
+  (fundamentally deficient).
+- GATE_DECISION = may this proceed in the caller's workflow? ALLOW / BLOCK (a defect must be fixed first) /
+  INCOMPLETE (a required section/input is missing, or you cannot tell without more info). The profile's
+  `decision_mode` sets the stance: `audit` = advisory (a should-fix defect is reported, not release-blocked
+  → often PARTIAL/ALLOW); `release-gate` = strict (an unresolved release-critical defect → BLOCK; a missing
+  required section/input → INCOMPLETE). `provenance_policy: external` = an upstream/3rd-party doc: do NOT
+  block it merely for missing local project traceability front-matter; `controlled` = an internal doc
+  expected to carry that front-matter.
+- FACTUAL_VALIDITY = VERIFIED / PARTIALLY_VERIFIED / UNVERIFIED (UNVERIFIED if you did not open the cited
+  sources).
+- FINDING_CODES = stable kebab-case names for the real issues you found (e.g. missing-code-version,
+  missing-rollback, volatile-in-stable, unsupported-claim, mixed-responsibilities). Report the reasons.
+
+End with the compact block, verbatim keys:
+QUALITY_BAND=<PASS|PARTIAL|FAIL>
+GATE_DECISION=<ALLOW|BLOCK|INCOMPLETE>
+FACTUAL_VALIDITY=<VERIFIED|PARTIALLY_VERIFIED|UNVERIFIED>
+FINDING_CODES=[kebab-case, ...]
+CONFIDENCE=<HIGH|MEDIUM|LOW>
+"""
+
+
 def build(role: str, skill: str, target: Path, opts: dict) -> str:
     skill_md = ROOT / ".claude" / "skills" / skill / "SKILL.md"
     parts: list[str] = []
@@ -168,14 +199,43 @@ def build(role: str, skill: str, target: Path, opts: dict) -> str:
                       + (f"{prof}\n" if prof
                          else "(no provenance_policy / decision_mode supplied — you MUST emit "
                               "GATE_DECISION=INCOMPLETE and name the missing fields)\n"))
-        parts += [EVALUATOR_CONTRACT,
-                  "\n===== SKILL DEFINITION (injected) =====\n", _read(skill_md),
-                  "\n===== hard-fail.md =====\n", _read(HARNESS / "hard-fail.md"),
-                  "\n===== rubric.md =====\n", _read(HARNESS / "rubric.md"),
-                  "\n===== canonical-source-map.md =====\n", _read(HARNESS / "canonical-source-map.md"),
+        # --snapshot <dir>: inject a FROZEN evaluator bundle (Phase E arm) instead of the live skill/harness.
+        # Additive: with no --snapshot the behavior is byte-identical to before (live skill + module contract).
+        snap = opts.get("snapshot")
+        if snap:
+            sd = Path(snap)
+            sd = sd if sd.is_absolute() else (ROOT / sd)
+            if not (sd / "SKILL.md").is_file():
+                raise SystemExit(f"--snapshot dir missing SKILL.md: {sd}")
+            contract = _read(sd / "EVALUATOR_CONTRACT.txt")
+            skill_txt = _read(sd / "SKILL.md")
+            hardfail, rubric, csm = (_read(sd / "hard-fail.md"), _read(sd / "rubric.md"),
+                                     _read(sd / "canonical-source-map.md"))
+            src_note = f"\n(evaluator bundle: FROZEN snapshot `{sd.name}` — see its SNAPSHOT-MANIFEST.yaml)\n"
+        else:
+            contract, skill_txt = EVALUATOR_CONTRACT, _read(skill_md)
+            hardfail, rubric, csm = (_read(HARNESS / "hard-fail.md"), _read(HARNESS / "rubric.md"),
+                                     _read(HARNESS / "canonical-source-map.md"))
+            src_note = ""
+        parts += [contract, src_note,
+                  "\n===== SKILL DEFINITION (injected) =====\n", skill_txt,
+                  "\n===== hard-fail.md =====\n", hardfail,
+                  "\n===== rubric.md =====\n", rubric,
+                  "\n===== canonical-source-map.md =====\n", csm,
                   prof_block,
                   f"\n===== TARGET (path: {target.as_posix()}) =====\n", _read(target),
                   "\n===== END TARGET =====\nProduce the full quality report now, ending with the verdict block.\n"]
+    elif role == "baseline":
+        # no-skill baseline arm (Phase E Arm C): target + profile + output-field meanings ONLY.
+        # Deliberately NO hard-fail / rubric / expected labels / case class (§5.3).
+        prof = opts.get("profile")
+        at = opts.get("artifact_type")
+        prof_block = ("\n===== EVALUATION PROFILE (caller-supplied) =====\n"
+                      + (f"artifact_type: {at}\n" if at else "")
+                      + (f"{prof}\n" if prof else "(no provenance_policy / decision_mode supplied)\n"))
+        parts += [BASELINE_CONTRACT, prof_block,
+                  "\n===== DOCUMENT (the ONLY thing you may use) =====\n", _read(target),
+                  "\n===== END DOCUMENT =====\nProduce your review now, ending with the block.\n"]
     elif role == "reader":
         parts += [READER_CONTRACT,
                   f"\n===== DOCUMENT (the ONLY thing you may use) =====\n", _read(target),
@@ -213,6 +273,8 @@ def main(argv: list[str]) -> int:
         opts["artifact_type"] = argv[argv.index("--artifact-type") + 1]
     if "--profile" in argv:
         opts["profile"] = argv[argv.index("--profile") + 1]
+    if "--snapshot" in argv:
+        opts["snapshot"] = argv[argv.index("--snapshot") + 1]
     sys.stdout.reconfigure(encoding="utf-8")  # type: ignore[union-attr]
     print(build(role, skill, target, opts))
     return 0

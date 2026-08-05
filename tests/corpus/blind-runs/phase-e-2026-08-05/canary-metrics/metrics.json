@@ -1,0 +1,286 @@
+{
+  "skill_version": "0.4.1",
+  "dataset_version": "4",
+  "run_id": "phase-e-canary",
+  "candidate_arm": "v0.4.1",
+  "arms": [
+    "v0.4.1"
+  ],
+  "n_runs": 4,
+  "n_candidate_runs": 4,
+  "n_current": 2,
+  "bar": {
+    "gate_expectation_mismatch_count": 1,
+    "terminal_contract_mismatch_count": 0,
+    "golden_negative_false_pass": 1,
+    "golden_positive_false_hard_fail": 0,
+    "required_blocker_recall": 1.0,
+    "required_finding_recall": 0.0,
+    "forbidden_blocker_violation_rate": 0.0,
+    "boundary_pair_ordering_accuracy": 0.0,
+    "three_run_verdict_consistency": 1.0,
+    "max_score_stddev": 0.0,
+    "profile_echo_compliance": 1.0,
+    "checker_execution_compliance": 1.0
+  },
+  "admission_bar_met": false,
+  "arm_comparison": {
+    "v0.4.1": {
+      "gate_expectation_mismatch_count": 1,
+      "terminal_contract_mismatch_count": 0,
+      "golden_negative_false_pass": 1,
+      "golden_positive_false_hard_fail": 0,
+      "required_blocker_recall": 1.0,
+      "required_finding_recall": 0.0,
+      "forbidden_blocker_violation_rate": 0.0,
+      "boundary_pair_ordering_accuracy": 0.0,
+      "three_run_verdict_consistency": 1.0,
+      "max_score_stddev": 0.0,
+      "profile_echo_compliance": 1.0,
+      "checker_execution_compliance": 1.0
+    }
+  },
+  "gate_mismatch_cases": [
+    {
+      "case": "BP-006-release",
+      "expected": "BLOCK",
+      "got": "ALLOW"
+    }
+  ],
+  "terminal_contract_mismatches": [],
+  "checker_noncompliant": [],
+  "negative_false_pass_cases": [
+    "BP-006-release"
+  ],
+  "positive_false_fail_cases": [],
+  "forbidden_violations": [],
+  "boundary_pairs": {
+    "BP-006": false
+  },
+  "stability": {
+    "BP-006-release": {
+      "n": 3,
+      "verdicts": [
+        "ALLOW",
+        "ALLOW",
+        "ALLOW"
+      ],
+      "consistent": true,
+      "blocker_jaccard": 1.0,
+      "score_stddev": null
+    }
+  },
+  "per_run": [
+    {
+      "arm": "v0.4.1",
+      "case_id": "BP-006-audit",
+      "class": "boundary-pass",
+      "pair_id": "BP-006",
+      "run_kind": "current",
+      "run_idx": 1,
+      "run_key": "v041__BP-006-audit__1",
+      "expected": "PASS",
+      "got": "PASS",
+      "exp_gate": "ALLOW",
+      "got_gate": "ALLOW",
+      "gate_mismatch": false,
+      "quality_band": "PARTIAL",
+      "profile_echoed": true,
+      "required": [],
+      "forbidden": [
+        "HF-13",
+        "HF-14A",
+        "HF-14B",
+        "HF-15",
+        "HF-9"
+      ],
+      "reported": [],
+      "recall": null,
+      "forbidden_violation": [],
+      "req_find_codes": [
+        "missing-code-version",
+        "missing-execution-entry",
+        "missing-hyperparameters",
+        "missing-environment",
+        "missing-reproduction-tolerance"
+      ],
+      "got_find": [
+        "missing-evidence-levels",
+        "missing-traceability-frontmatter",
+        "non-reproducible-data-access"
+      ],
+      "finding_recall": 0.0,
+      "total_score": null,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "PASS",
+      "checker_status": "COMPLETE",
+      "files_checked": 1,
+      "terminal_green": false,
+      "exp_terminal_green": false,
+      "tcontract_mismatch": false,
+      "checker_ok": true,
+      "checker_target_ok": true
+    },
+    {
+      "arm": "v0.4.1",
+      "case_id": "BP-006-release",
+      "class": "boundary-fail",
+      "pair_id": "BP-006",
+      "run_kind": "current",
+      "run_idx": 1,
+      "run_key": "v041__BP-006-release__1",
+      "expected": "FAIL",
+      "got": "PASS",
+      "exp_gate": "BLOCK",
+      "got_gate": "ALLOW",
+      "gate_mismatch": true,
+      "quality_band": "PARTIAL",
+      "profile_echoed": true,
+      "required": [],
+      "forbidden": [
+        "HF-13",
+        "HF-14A",
+        "HF-14B",
+        "HF-15",
+        "HF-9"
+      ],
+      "reported": [],
+      "recall": null,
+      "forbidden_violation": [],
+      "req_find_codes": [
+        "missing-code-version",
+        "missing-execution-entry",
+        "missing-hyperparameters",
+        "missing-environment",
+        "missing-reproduction-tolerance",
+        "reader-cannot-reproduce"
+      ],
+      "got_find": [
+        "broken-evidence-figure",
+        "broken-inference-notebook",
+        "metric-imprecision",
+        "missing-training-hyperparameters",
+        "restricted-data-access"
+      ],
+      "finding_recall": 0.0,
+      "total_score": null,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "PASS",
+      "checker_status": "COMPLETE",
+      "files_checked": 1,
+      "terminal_green": false,
+      "exp_terminal_green": false,
+      "tcontract_mismatch": false,
+      "checker_ok": true,
+      "checker_target_ok": true
+    },
+    {
+      "arm": "v0.4.1",
+      "case_id": "BP-006-release",
+      "class": "boundary-fail",
+      "pair_id": "BP-006",
+      "run_kind": "repeat",
+      "run_idx": 2,
+      "run_key": "v041__BP-006-release__2",
+      "expected": "FAIL",
+      "got": "PASS",
+      "exp_gate": "BLOCK",
+      "got_gate": "ALLOW",
+      "gate_mismatch": true,
+      "quality_band": "FAIL",
+      "profile_echoed": true,
+      "required": [],
+      "forbidden": [
+        "HF-13",
+        "HF-14A",
+        "HF-14B",
+        "HF-15",
+        "HF-9"
+      ],
+      "reported": [],
+      "recall": null,
+      "forbidden_violation": [],
+      "req_find_codes": [
+        "missing-code-version",
+        "missing-execution-entry",
+        "missing-hyperparameters",
+        "missing-environment",
+        "missing-reproduction-tolerance",
+        "reader-cannot-reproduce"
+      ],
+      "got_find": [
+        "broken-evidence-links",
+        "inaccessible-training-data",
+        "missing-code-version",
+        "missing-hyperparameters",
+        "not-release-ready",
+        "not-reproducible",
+        "unverified-metrics"
+      ],
+      "finding_recall": 0.3333333333333333,
+      "total_score": null,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "FAIL",
+      "checker_status": "COMPLETE",
+      "files_checked": 1,
+      "terminal_green": false,
+      "exp_terminal_green": false,
+      "tcontract_mismatch": false,
+      "checker_ok": true,
+      "checker_target_ok": true
+    },
+    {
+      "arm": "v0.4.1",
+      "case_id": "BP-006-release",
+      "class": "boundary-fail",
+      "pair_id": "BP-006",
+      "run_kind": "repeat",
+      "run_idx": 3,
+      "run_key": "v041__BP-006-release__3",
+      "expected": "FAIL",
+      "got": "PASS",
+      "exp_gate": "BLOCK",
+      "got_gate": "ALLOW",
+      "gate_mismatch": true,
+      "quality_band": "PARTIAL",
+      "profile_echoed": true,
+      "required": [],
+      "forbidden": [
+        "HF-13",
+        "HF-14A",
+        "HF-14B",
+        "HF-15",
+        "HF-9"
+      ],
+      "reported": [],
+      "recall": null,
+      "forbidden_violation": [],
+      "req_find_codes": [
+        "missing-code-version",
+        "missing-execution-entry",
+        "missing-hyperparameters",
+        "missing-environment",
+        "missing-reproduction-tolerance",
+        "reader-cannot-reproduce"
+      ],
+      "got_find": [
+        "broken-evidence-links",
+        "gated-training-data",
+        "metrics-unverified",
+        "missing-hyperparameters",
+        "not-reproducible"
+      ],
+      "finding_recall": 0.16666666666666666,
+      "total_score": null,
+      "factual_validity": "UNVERIFIED",
+      "reader_test": "PASS",
+      "checker_status": "COMPLETE",
+      "files_checked": 1,
+      "terminal_green": false,
+      "exp_terminal_green": false,
+      "tcontract_mismatch": false,
+      "checker_ok": true,
+      "checker_target_ok": true
+    }
+  ]
+}

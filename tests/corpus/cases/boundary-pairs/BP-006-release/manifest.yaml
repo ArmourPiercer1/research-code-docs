@@ -34,6 +34,7 @@ expected:
   document_quality: FAIL                    # compat map of a non-ALLOW gate
   quality_band: PARTIAL                      # A/B consensus: PARTIAL (identical body to the audit side)
   gate_decision: BLOCK                      # a controlled reproducibility doc gated for release, that cannot be reproduced
+  terminal_green: false                     # §3: BLOCK -> never a green terminal gate
   factual_validity_allowed: [UNVERIFIED, PARTIALLY_VERIFIED]
   reader_test: FAIL
   required_blockers: []                     # NO dedicated HF-REPRO; BLOCK via rubric + non-compensatory rule

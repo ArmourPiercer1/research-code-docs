@@ -110,3 +110,38 @@ re-check. **No skill file was modified** (SKILL.md / hard-fail.md / rubric.md / 
   non-reproducible controlled release-gate doc BLOCKs on existing HF-12A/E, and its external+audit twin ALLOWs.
 - Nothing installed, pushed, or auto-triggered this round.
 
+### Addendum — candidate 0.4.1 + Phase E safety pre-flight (2026-08-05)
+
+Driven by `docs/third-party-suggestions/DQE_D3决策与PhaseE安全准入计划.md` (`D16_DECISION=ACCEPT`,
+`CANDIDATE_VERSION=0.4.1`, `PHASE_E=APPROVED_WITH_PRECONDITIONS`, `BACKGROUND_WORKFLOW_FOR_ADMISSION=FORBIDDEN`).
+**No hard-gate threshold changed.** This entry is corpus/harness/governance only; the skill's *judging* logic
+is byte-identical to the D-16 build (only the declared version string moved 0.4.0→0.4.1).
+
+- **Candidate versioned 0.4.1** (D-16 is an observable behavior change, so it does not share 0.4.0's number).
+  Synced: `SKILL.md`, `skills-registry.yaml` (was stale at 0.3.0 → 0.4.1, still `experimental`),
+  `dqe-v0.4-skill-change-summary.md` + `dqe-v0.4-diagnostic-matrix.md` (immutable historical bodies + forward
+  banners), `last_verified: 2026-08-05`.
+- **Three hash-verified frozen bundles** under `evals/skills/snapshots/` (`scripts/build_skill_snapshots.py`):
+  `dqe-v0.3.0` (git 279c0ce, single-axis), `dqe-v0.4.0-pre-d16` (git 14959a8, two-axis, no D-16),
+  `dqe-v0.4.1-candidate` (working tree, D-16). v0.3 is extracted from **git history**, not rebuilt from memory.
+  Each carries a `SNAPSHOT-MANIFEST.yaml` with per-file SHA-256; the checker layer is **held constant** across
+  arms (recorded, not varied).
+- **63M-token runaway → `HARNESS_ORCHESTRATION_FAILURE`** (see `reports/dqe-v0.4.1-diagnostic-close.md` §1).
+  No corpus/skill/results were written by it. Structural fix: Phase E launches **only** from a static,
+  pre-counted, hash-verified plan; a background Workflow is forbidden for admission.
+- **New/updated tooling:** `scripts/build_skill_snapshots.py`, `scripts/make_phase_e_plan.py` (static plan),
+  `scripts/validate_eval_plan.py` (aborts before the first agent on string-`runs`, dup run_key, >`MAX_EVAL_RUNS=64`,
+  snapshot hash mismatch, non-gold case — adversarially tested); `aggregate_eval_results.py` gains
+  `terminal_green` derivation (§3), `terminal_contract_mismatch_count`, `checker_execution_compliance`, and
+  arm-aware scoring + comparison (backward-compatible single-arm mode); `make_grading_injection.py` gains an
+  additive `--snapshot` read-path (frozen bundle injection) + `--role baseline` (no-skill arm). Live evaluator
+  behavior with no `--snapshot` is unchanged.
+- **Manifests:** BP-006-audit / BP-006-release gain `expected.terminal_green: false` (the unambiguous cases —
+  reader FAIL / BLOCK). Manifest validator: 25 live, 0 errors.
+- **Static Phase E plan** `tests/corpus/blind-runs/phase-e-2026-08-05/phase-e-plan.json`: **61 slots**
+  (Arm A v0.4.1 = 25 live ×1 + 5 stability ×2 = 35; Arm B frozen-v0.3 = 13-case diagnostic subset ×1;
+  Arm C no-skill = same 13 ×1). Expected ≈ 5.6M tokens; hard ceiling 7.0M. Validated 0 errors.
+- Nothing installed, pushed, or auto-triggered. Skill stays `disable-model-invocation: true`, `experimental`;
+  promotion to `provisional-gate` remains GATED on the Phase E admission bar (not yet run at time of writing).
+
+

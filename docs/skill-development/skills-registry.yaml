@@ -25,6 +25,7 @@ meta:
   batch2_gate: "UNLOCKED but PROVISIONAL. documentation-quality-evaluator passed BASIC evals, but a v0.3 audit found a hybrid-roadmap FALSE-PASS: it is NOT yet a terminal quality gate. Do not treat its PASS as auto-approval for downstream skills until the v1.0 admission bar (full golden suite, severe-issue recall >=90%, false-pass=0, 3-round regression) is met. New skills still ship experimental + manual-only."
   v0_2_upgrade: "Batch-1 skills upgraded to 0.2.0 from real vendored references (agent-skills/github-awesome-copilot/research-paper-writing-skills MIT; academic-research-skills CC-BY-NC ideas-only). Per-method attribution in references/documentation-methodology/upstream-method-matrix.md. Regression re-eval: see reports/batch1-eval-run-2026-07-30.md (v0.2 section)."
   v0_3_upgrade: "documentation-quality-evaluator -> 0.3.0 after a hybrid-roadmap false-pass. Added anti-erosion/no-PASS-prediction discipline, structural gates HF-13/HF-14a/HF-14b/HF-15, decomposed HF-12A-E (doc-only vs source-needing -> DOCUMENT_QUALITY vs FACTUAL_VALIDITY), roadmap rubric + non-compensatory scoring, two-layer reader, structured KEY=VALUE verdict, 5 SIGNAL checkers + isolated grading harness. Anchor golden-negative (eoopt roadmap) now FAILs with HF-13/14a/14b/15 (recall 1.0, false_pass 0); B1 comprehensive-report PASSes (no HF-13 over-fire); trigger+conflict 28/28 no-regression. Report: reports/dqe-v0.3-upgrade-2026-07-30.md."
+  v0_4_upgrade: "documentation-quality-evaluator -> 0.4.0 -> 0.4.1 (ADR-DQE-001 ACCEPTED). 0.4.0: caller-supplied evaluation_profile (provenance_policy/decision_mode NEVER silently inferred), profile-aware HF-9 (external/legacy docs not hard-failed for missing local front-matter), two-axis verdict QUALITY_BAND(quality) vs GATE_DECISION(may-proceed) with DOCUMENT_QUALITY compat map + EVALUATION_PROFILE echo, document_lifecycle vocab distinct from claim-status, HF-14b profile-severity map. HF-12A/HF-15 logic + HF-13/HF-14a thresholds UNCHANGED. 0.4.1: D-16 gate-composition fix (deterministic 3-rule GATE_DECISION; rubric total + FACTUAL_VALIDITY gate QUALITY_BAND only). Diagnostic 8/8 (dataset_version 4). OQ-REPRO=A: no HF-REPRO gate added. Frozen bundles under evals/skills/snapshots/. Phase E admission matrix pending. Reports: reports/dqe-v0.4-{skill-change-summary,diagnostic-matrix,oq-repro-decision,defect-ledger}.md + reports/dqe-v0.4.1-diagnostic-close.md."
 
 # -----------------------------------------------------------------------------
 # BATCH 1 — created in this deliverable (drafts; experimental; manual-only)
@@ -32,7 +33,7 @@ meta:
 skills:
 
   - name: documentation-quality-evaluator
-    version: "0.3.0"
+    version: "0.4.1"
     status: experimental
     layer: L2-atomic
     class: evaluate
@@ -60,9 +61,9 @@ skills:
       - {method: "severity taxonomy + reverse-outline", src: "addyosmani/agent-skills code-review-and-quality + research-paper-writing", license: MIT, adoption: method-borrow}
       - {method: "two-pass adversarial reader", src: "addyosmani/agent-skills doubt-driven-development", license: MIT, adoption: method-borrow}
       - {method: "HF-13/14/15 + HF-12A-E + non-compensatory + structured verdict + 5 signal checkers", src: "reports/documentation-quality-evaluator_独立检查失败复盘与升级要求.md (v0.3 audit)", license: internal, adoption: adapt}
-    evals: {trigger: pass, conflict: pass, task_quality: "partial (anchor golden-negative FAIL recall=1.0/false_pass=0 + B1 over-strictness PASS; full N/P/B suite + ablation deferred to v0.4)", reader_test: "protocol authored + anchor reader-failures specified; full standalone run deferred to v0.4"}
-    last_evaluated: "2026-07-30"
-    notes: "v0.3: fixed a hybrid-roadmap FALSE-PASS. Anchor (eoopt roadmap) now FAILs with HF-13/14a/14b/15 (was FAIL-on-HF-9-only + predict-PASS). Terminal-gate status PROVISIONAL until v1.0 admission bar. Stays manual-only (D.3)."
+    evals: {trigger: pass, conflict: pass, task_quality: "v0.4 diagnostic 8/8 (13 cases x3=39 runs, dataset_version 4) after the D-16 gate-composition fix; profile-aware HF-9 + two-axis verdict + OQ-REPRO=A confirmed. Phase E 3-arm admission matrix (v0.4.1 / frozen-v0.3 / no-skill) not yet run.", reader_test: "two-layer protocol authored + anchor reader-failures specified; full standalone run folded into Phase E"}
+    last_evaluated: "2026-08-05"
+    notes: "v0.4.1 CANDIDATE (D-16 gate-composition fix; thresholds unchanged, observable behavior changed). Bumped 0.3.0->0.4.0 (profile-aware HF-9, two-axis QUALITY_BAND/GATE_DECISION, document_lifecycle vocab, HF-14b profile severity; ADR-DQE-001 ACCEPTED) ->0.4.1 (D-16). Diagnostic 8/8. Status stays experimental/manual-only; promotion to provisional-gate is GATED on the Phase E admission matrix. Terminal-gate authority PROVISIONAL. Frozen bundles: evals/skills/snapshots/{dqe-v0.3.0,dqe-v0.4.0-pre-d16,dqe-v0.4.1-candidate}."
 
   - name: project-state-reconstructor
     version: "0.2.0"

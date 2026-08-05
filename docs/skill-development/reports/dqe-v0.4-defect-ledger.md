@@ -317,6 +317,40 @@ evidence in `docs/testing/corpus-repair-report-v4.md`):
   closes at 8/8.
 - **status:** IMPLEMENTED + verified (2026-08-04).
 
+### D-17 — D-16 severs the OQ-REPRO=A BLOCK path (found by the Phase E canary on BP-006-release)
+- **category:** CONTRACT (D-16 × OQ-REPRO=A collision) — surfaced 2026-08-05
+- **evidence:** Phase E canary re-ran `BP-006-release` (controlled + release-gate, a non-reproducible ResNet
+  recipe: no hyperparameters/command, private data, broken figure+notebook, unreconciled "2% below published"
+  headline) **3× on the frozen `dqe-v0.4.1-candidate` bundle → GATE_DECISION=ALLOW ×3 (stable;
+  three_run_verdict_consistency=1.0)**. Run 2 emitted `QUALITY_BAND=FAIL` + `READER_TEST=FAIL` +
+  `finding_codes=[not-reproducible, missing-code-version, missing-hyperparameters, inaccessible-training-data,
+  broken-evidence-links, unverified-metrics, not-release-ready]` and **still ALLOWed**. Aggregated:
+  `gate_expectation_mismatch_count=1`, `golden_negative_false_pass=1`, `boundary_pair_ordering=0.0`. Both blind
+  reviewers (adjudication-v4c) BLOCK this body; gold gate = BLOCK.
+- **root cause:** **D-16** made GATE_DECISION depend ONLY on a hard-gate BLOCKER (else missing-required ⇒
+  INCOMPLETE, else ALLOW) and explicitly barred the rubric total + FACTUAL_VALIDITY from moving the gate.
+  **OQ-REPRO=A** (`HF_REPRO=NOT_ADOPTED`, `required_blockers: []`) relied on precisely the rubric
+  non-compensatory rule + reader Layer-2 to BLOCK a non-reproducible controlled release doc **without** a
+  dedicated gate. D-16 removed that path, so the default resolves to a **false ALLOW** unless the evaluator
+  happens to map the reproducibility gaps onto HF-12A/E (a judgment call). The earlier D.3 sample fired
+  HF-12A/E (BLOCK×3); the canary sample did not (ALLOW×3). The gate is **framing-dependent**; the D-16 default
+  is ALLOW. **This retroactively falsifies the D.3 "BLOCK×3 / 8/8 / OQ-REPRO=A confirmed-by-skill" claim.**
+- **decision:** DEFERRED TO USER — the fix amends one of two user-accepted rulings (D-16 vs OQ-REPRO=A) so it
+  is not the agent's to choose. Candidate resolutions (see canary-summary + checkpoint):
+  (A) **decision-mode-aware non-compensatory→gate path:** amend D-16 so that under `release-gate` a
+  critical-dimension FAIL or a reader Layer-2 "cannot-reproduce/cannot-execute" on the core question yields
+  BLOCK (audit stays ALLOW — preserves the D-16 audit fix and BP-006-audit ALLOW);
+  (B) **adopt HF-REPRO** (reverse `HF_REPRO=NOT_ADOPTED`): a reproducibility hard gate that fires BLOCKER
+  under controlled+release-gate when code-version/execution-entry/environment/tolerance are absent — cleanest
+  under D-16, but reverses OQ-REPRO=A;
+  (C) **release-gate missing-reproducibility ⇒ INCOMPLETE** (rule 1): classify absent recipe/hyperparameters
+  as a missing required input → non-ALLOW (would change the pair's fail-side gold BLOCK→INCOMPLETE; both are
+  non-ALLOW so ordering holds).
+- **change:** NONE yet (Phase E HALTED at canary; no skill/contract edit made). ≥2/3-stable-reproduction bar
+  for touching behavior is MET (3/3). Evidence:
+  `tests/corpus/blind-runs/phase-e-2026-08-05/{canary-summary.md,canary-raw.json,canary-metrics/}`.
+- **status:** OPEN — awaiting user decision (A/B/C) before any skill/contract change or Phase E relaunch.
+
 ## Bottom line (evidence-based)
 
 **Of the report's proposed skill fixes F1–F4, only F1 (HF-9 profile-gating) survives the evidence.**
@@ -326,7 +360,13 @@ over-modification of the skill**: the next (separately-approved) skill pass shou
 profile-gating and re-run, not a broad F1–F4 sweep.
 
 **D.3 addendum (2026-08-04):** the diagnostic also caught one genuine v0.4 text gap (**D-16**, audit-mode
-gate composition) which is now fixed and re-verified stable. The OQ-REPRO=A decision (BP-006 pair) is
-confirmed by blind A/B **and** by the skill: a non-reproducible controlled release-gate doc BLOCKs via
-HF-12A/E **without** any dedicated HF-REPRO, and the audit twin ALLOWs — the two-axis model holds.
+gate composition) which is now fixed and re-verified stable.
+
+**Phase E canary correction (2026-08-05):** the D.3-era claim that "a non-reproducible controlled release-gate
+doc BLOCKs via HF-12A/E without any dedicated HF-REPRO, confirmed by the skill" is **NOT robust** — see
+**D-17**. Re-run 3× on the frozen candidate, `BP-006-release` **stably ALLOWs** (even at QUALITY_BAND=FAIL /
+READER_TEST=FAIL), because **D-16 severed the rubric/reader path OQ-REPRO=A relied on**. OQ-REPRO=A holds for
+the *blind human reviewers* (both BLOCK) but **not for the skill under the D-16 gate**. Phase E is HALTED at
+the canary pending a user decision (D-17 options A/B/C). The two-axis model itself is intact; the gap is the
+missing decision-mode-aware path from a reproducibility failure to a non-ALLOW gate.
 

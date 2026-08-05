@@ -1,14 +1,21 @@
 <!--
 generated_by_skill: (manual, v0.4 Phase C — review aid)
-skill_version: documentation-quality-evaluator 0.4.0
+skill_version: documentation-quality-evaluator 0.4.0 (superseded by 0.4.1 — D-16 gate-composition fix; see reports/dqe-v0.4.1-diagnostic-close.md)
 source_documents:
   - docs/skill-development/adr/ADR-DQE-001-evaluation-profile-and-verdict-axes.md (ACCEPTED)
   - docs/testing/DQE_v4_待决策项回复与下一阶段开发计划.md (Phase C scope)
-status: for user review before the Phase E admission matrix
-last_verified: 2026-08-02
+status: v0.4.0 review guide (immutable) — superseded by candidate 0.4.1 (D-16); diagnostic now 8/8; Phase E admission matrix in progress
+last_verified: 2026-08-05
 -->
 
 # DQE v0.4 skill-change summary (review guide)
+
+> **Version note (2026-08-05):** this guide documents the **0.4.0** change set (the 7/8 diagnostic build).
+> The candidate has since advanced to **0.4.1** via the **D-16** gate-composition fix (deterministic 3-rule
+> `GATE_DECISION`; **no threshold changed**), closing the diagnostic at **8/8**. The 1 open item below
+> (OQ-REPRO) resolved to **Option A** (no HF-REPRO). See `reports/dqe-v0.4.1-diagnostic-close.md`. The body
+> below is kept **immutable** as the historical 0.4.0 record.
+
 
 Everything the v0.4 round changed in the **skill + harness**, file by file, with what to check. Scope was
 deliberately **minimal** (ADR-DQE-001 + the plan's Phase C): profile-aware HF-9, two-axis verdict,

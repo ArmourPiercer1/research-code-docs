@@ -33,6 +33,7 @@ expected:
   document_quality: PASS                    # compat map of GATE_DECISION=ALLOW (NOT a claim that overall quality is PASS)
   quality_band: PARTIAL                     # the reproducibility defect IS surfaced -> holistic quality PARTIAL
   gate_decision: ALLOW                      # advisory audit of an external doc: report, do not release-block
+  terminal_green: false                     # §3: ALLOW but reader_test=FAIL + FACTUAL_VALIDITY UNVERIFIED -> NOT a green terminal gate
   factual_validity_allowed: [UNVERIFIED, PARTIALLY_VERIFIED]
   reader_test: FAIL
   required_blockers: []

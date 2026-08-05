@@ -1,14 +1,22 @@
 <!--
 generated_by_skill: (manual, v0.4 Phase D)
-skill_version_under_test: documentation-quality-evaluator 0.4.0
+skill_version_under_test: documentation-quality-evaluator 0.4.0 (== the frozen 0.4.0-pre-d16 bundle)
 corpus: dataset_version 4
 raw: tests/corpus/blind-runs/diag-2026-08-02/raw-results.json
 metrics: evals/skills/results/documentation-quality-evaluator/diag-2026-08-02/metrics.json
-status: 7/8 diagnostic conditions PASS; 1 open decision (OQ-REPRO / GN-EXP-REPRO-001) before the full admission matrix
-last_verified: 2026-08-02
+status: 7/8 on 0.4.0-pre-d16 → RESOLVED: OQ-REPRO=A + D-16 fix → diagnostic 8/8 on candidate 0.4.1 (see reports/dqe-v0.4.1-diagnostic-close.md)
+last_verified: 2026-08-05
 -->
 
 # DQE v0.4 diagnostic matrix (Phase D)
+
+> **Version note (2026-08-05):** this matrix ran on **0.4.0-pre-d16** (now frozen at
+> `evals/skills/snapshots/dqe-v0.4.0-pre-d16/`). Its 1 open item — OQ-REPRO / GN-EXP-REPRO-001 — resolved to
+> **Option A** (no dedicated HF-REPRO gate), and the audit-gate instability it foreshadowed was fixed by
+> **D-16** (deterministic 3-rule `GATE_DECISION`). On candidate **0.4.1** the diagnostic **closes 8/8**. This
+> report is kept **immutable** as the historical 0.4.0 record; the close-out is in
+> `reports/dqe-v0.4.1-diagnostic-close.md`.
+
 
 **13 cases × 3 = 39 isolated v0.4 evaluators; 39/39 returned a verdict, 0 errors** (6 mid-run stalls
 auto-retried; ~3.6M tokens, 15 min). Each evaluator loaded the v0.4 skill + hard-fail + rubric + the
