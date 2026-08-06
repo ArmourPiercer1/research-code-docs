@@ -13,7 +13,7 @@ last_verified: 2026-08-05
 > **workspace-only** and isolated from the live Claude Code loader (versioned via GitHub). Nothing
 > is installed or auto-triggered without explicit user approval.
 
-## Phase-1 ✅ · DQE **v0.4.1 FROZEN (advisory / profile-scoped)** · Batch 2 **4/4 built + light-passed** · Batch 2.5 **integration DONE** · Batch 3 **3 v0 skeletons BUILT**
+## Phase-1 ✅ · DQE **v0.4.1 FROZEN (advisory / profile-scoped)** · Batch 2 **4/4 built + light-passed** · Batch 2.5 **integration DONE** · Batch 3 **3 v0 skeletons BUILT + routing 27/27** · Batch 5 doc-refactor **FIRST REAL CLOSED LOOP**
 
 > **Scope correction (2026-08-05).** DQE reached a reliable **advisory** state (v0.4.1). Rather than keep
 > expanding its test system toward a *universal automatic terminal gate*, we **froze it as advisory /
@@ -96,7 +96,16 @@ deterministically-checked artifact interfaces with no chat dependence** — two 
 atoms, record a `flow-state`, and **stop honestly (`BLOCKED`) at their missing Batch-4/5 capabilities** (two
 reuse the Batch-2.5 chains; one ran a live prefix on the eval harness). All `flow_state_check`-green +
 reader-green; all `experimental` + manual-only. Report:
-[batch3-skeletons-2026-08-05.md](reports/batch3-skeletons-2026-08-05.md). **Next options:** a full
-trigger/conflict sub-agent run on the 3 flows (the gate before any `auto_trigger`), or start **Batch 4** (the
-numerical-design atoms) / **Batch 5** (the doc/workspace executor atoms) that unblock the flows. See
-[creation-roadmap.md](creation-roadmap.md) §3–§5.
+[batch3-skeletons-2026-08-05.md](reports/batch3-skeletons-2026-08-05.md). **Then Sprint 6 (2026-08-06):**
+**Sprint 6A** ran the 3 flows' authored trigger/conflict sets through isolated evaluators + independent reviewers
+— **27/27 routing, DENY co-run 0, SEQ correct, 3/3 spot-checks concordant** (not promotion; all stay
+experimental/manual-only). **Sprint 6B** built the **Batch-5 doc-refactor executor subset**
+(`content-canonicalization-and-migration` · `technical-document-rewriter` · `living-design-maintainer`, each
+dry-run/candidate/proposal-only with its own checker) and closed `documentation-refactor`'s **first real,
+end-to-end, non-faked vertical slice** on the real Track-A corpus: `flow_status=COMPLETE` for the
+dry-run+candidate scope, **corpus byte-for-byte untouched**, D-1/D-4 left OPEN, safety-negative correctly
+`BLOCKED`. Report:
+[sprint6-routing-and-first-closed-loop-2026-08-06.md](reports/sprint6-routing-and-first-closed-loop-2026-08-06.md).
+**Next (directive §10):** **Batch 4** — the numerical-design atoms (two slices: problem-framer/architect/
+spec-author, then prototype/validation/roadmap) — which is what lets `numerical-research-software-design` cross
+its BLOCKED. See [creation-roadmap.md](creation-roadmap.md) §3–§5.

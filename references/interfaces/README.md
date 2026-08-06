@@ -37,6 +37,26 @@ smallest contract that lets one skill's output be consumed by the next.
 
 Each has a `<name>.schema.md` in this directory that specializes the common header below.
 
+### Batch-5 additive extension (`documentation-refactor` executor tail)
+
+Building the Batch-5 doc-refactor executors (directive `Batch3后续_首个闭环垂直切片与分层测试节奏计划.md` §6)
+added **three new downstream handoff types**. This is **additive** — it introduces new producer/consumer types
+the seven-interface table above already anticipated (its `document-artifact-map` row named
+`content-canonicalization-and-migration` + `technical-document-rewriter` as its future consumers). It **re-means
+none** of the seven and changes no existing field, so the freeze stays `batch2.5-v1` (not a `-v2` re-freeze).
+Each new type carries the same common header and is validated by `interface_check.py`, plus its own structural
+checker.
+
+| `artifact_type` | produced by | consumed by | structural checker |
+|---|---|---|---|
+| `migration-map` | `content-canonicalization-and-migration` | `technical-document-rewriter`, human (apply-approval) | `migration_map_check.py` |
+| `rewrite-provenance-report` | `technical-document-rewriter` | `documentation-quality-evaluator` (advisory), `living-design-maintainer` | `rewrite_provenance_check.py` |
+| `maintenance-impact-report` | `living-design-maintainer` | human / orchestrator | `maintenance_impact_check.py` |
+
+The **candidate rewritten documents** themselves (the `candidate-doc-set/`) are *documents*, not handoff
+artifacts: they carry traceability front-matter (so `frontmatter_check` passes) but **no** `artifact_type`, so
+`interface_check` skips them by design.
+
 ## The common frozen header (every handoff artifact carries this)
 
 Every handoff artifact carries these fields in its front-matter block (a YAML `---` header **or** a leading

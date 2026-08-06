@@ -328,9 +328,9 @@ skills:
     license_sources:
       - {method: "orchestrator: route + persist + record, never do the work; honest capability boundary", src: "mattpocock/skills wayfinder@snapshot", license: MIT, adoption: method-borrow}
       - {method: "flow-state contract + honest-BLOCKED", src: "batch2.5/batch3 directive §10.1 + flow-state.schema.md", license: internal, adoption: adapt}
-    evals: {trigger: "authored (3 should-trigger + 3 should-not routing cases; §13 light skeleton round — not yet sub-agent-run)", conflict: "authored (3 cluster cases per conflict-matrix §1: DENY/SEQ vs the other 2 L1 flows + hold-at-BLOCKED vs its own executor tail)", e2e: "pass (worked BLOCKED flow-state orchestrating the REAL Batch-2.5 Track-A artifacts; flow_state_check PASS)", reader_test: "pass (HONEST_BLOCKED=YES, NO_FAKED_COMPLETION=YES, NO_AUTO_AUTHORIZATION=YES, READER_CAN_ACT=YES)"}
-    last_evaluated: "2026-08-05"
-    notes: "Batch-3 control flow #1 (most complete runnable prefix; Track A is its integration fixture). v0 SKELETON: honest BLOCKED at content-canonicalization-and-migration + technical-document-rewriter + living-design-maintainer (Batch 5, not built). Stays experimental + manual-only; must pass the control-flow conflict eval before any auto_trigger. Evidence: evals/skills/results/batch3/documentation-refactor/flow-state-docs-skill-development.md."
+    evals: {trigger: "PASS (Sprint 6A isolated evaluator: 3 should-trigger + 3 should-not correct; part of 27/27 across the 3 flows)", conflict: "PASS (Sprint 6A: 3 cluster cases correct — SEQ->reconstruction, DENY-defer, hold-at-BLOCKED vs own executor tail; DENY co-run=0; independent reviewer concordant)", e2e: "pass (worked BLOCKED flow-state on Track-A) + FIRST REAL CLOSED LOOP (Sprint 6B: forensics->PSR->goals->IA->migration->rewriter->DQE-advisory->maintainer->flow-state COMPLETE for dry-run scope; corpus untouched; all checkers green)", reader_test: "pass (Batch-3 skeleton reader + Sprint-6B closure reader GOOD profile: canonical homes/candidates/decisions/approvals identified; NOT moved/published/D-1-decided)"}
+    last_evaluated: "2026-08-06"
+    notes: "Batch-3 control flow #1. Sprint 6A routing/conflict validation PASSED (not promotion — stays experimental/manual-only). Sprint 6B closed its FIRST REAL vertical slice: the Batch-5 executor tail (content-canonicalization-and-migration + technical-document-rewriter + living-design-maintainer) is now BUILT, so the flow COMPLETEs for the dry-run+candidate scope (apply-mode = separate explicit write-approval; safety-negative correctly BLOCKED). Must still pass the full control-flow conflict eval before any auto_trigger. Evidence: evals/skills/results/batch3/{documentation-refactor/,routing-conflict-validation-2026-08-05.md,documentation-refactor-closure/}."
 
   - name: scientific-workspace-reconstruction
     version: "0.1.0"
@@ -360,9 +360,9 @@ skills:
     license_sources:
       - {method: "orchestrator: route + persist + record, never do the work; honest capability boundary", src: "mattpocock/skills wayfinder@snapshot", license: MIT, adoption: method-borrow}
       - {method: "flow-state contract + honest-BLOCKED", src: "batch3 directive §9.2/§10.1 + flow-state.schema.md", license: internal, adoption: adapt}
-    evals: {trigger: "authored (3 should-trigger + 3 should-not routing cases; §13 light skeleton round)", conflict: "authored (3 cluster cases per conflict-matrix §1: SEQ->documentation-refactor / DENY->numerical + hold-at-BLOCKED vs workspace-architect)", e2e: "pass (LIVE prefix run: forensics(workspace)->PSR->goals on the REAL evals/skills/harness/ workspace, read-only proven; flow-state BLOCKED; flow_state_check PASS)", reader_test: "pass (HONEST_BLOCKED=YES, NO_FAKED_COMPLETION=YES, NO_AUTO_AUTHORIZATION=YES, READER_CAN_ACT=YES)"}
-    last_evaluated: "2026-08-05"
-    notes: "Batch-3 control flow #2. v0 SKELETON: honest BLOCKED at dev-test-experiment-workspace-architect (Batch 5). The LIVE prefix e2e also gave forensics WORKSPACE-mode coverage (complementing Track A's document-corpus mode) + PSR 'structured-to-run != runs' (E2 static cap, no execution). Stays experimental + manual-only. Evidence: evals/skills/results/batch3/scientific-workspace-reconstruction/."
+    evals: {trigger: "PASS (Sprint 6A isolated evaluator: 3 should-trigger + 3 should-not correct; part of 27/27)", conflict: "PASS (Sprint 6A: 3 cluster cases correct — SEQ->documentation-refactor / DENY-defer->numerical + hold-at-BLOCKED vs workspace-architect; DENY co-run=0; independent reviewer concordant on the hardest DENY)", e2e: "pass (LIVE prefix run: forensics(workspace)->PSR->goals on the REAL evals/skills/harness/ workspace, read-only proven; flow-state BLOCKED; flow_state_check PASS)", reader_test: "pass (HONEST_BLOCKED=YES, NO_FAKED_COMPLETION=YES, NO_AUTO_AUTHORIZATION=YES, READER_CAN_ACT=YES)"}
+    last_evaluated: "2026-08-06"
+    notes: "Batch-3 control flow #2. Sprint 6A routing/conflict validation PASSED (not promotion — stays experimental/manual-only). v0 SKELETON: honest BLOCKED at dev-test-experiment-workspace-architect (Batch 5, still not built). The LIVE prefix e2e also gave forensics WORKSPACE-mode coverage + PSR 'structured-to-run != runs' (E2 static cap, no execution). Can reuse the now-built living-design-maintainer later. Stays experimental + manual-only. Evidence: evals/skills/results/batch3/scientific-workspace-reconstruction/ + routing-conflict-validation-2026-08-05.md."
 
   - name: numerical-research-software-design
     version: "0.1.0"
@@ -392,9 +392,9 @@ skills:
     license_sources:
       - {method: "orchestrator: route + persist + record, never do the work; honest capability boundary", src: "mattpocock/skills wayfinder@snapshot", license: MIT, adoption: method-borrow}
       - {method: "flow-state contract + honest-BLOCKED; delegate retrieval (never compete with L3)", src: "batch3 directive §9.3/§10 + conflict-matrix §2", license: internal, adoption: adapt}
-    evals: {trigger: "authored (3 should-trigger + 3 should-not routing cases; §13 light skeleton round)", conflict: "authored (3 cluster cases per conflict-matrix §1/§2: DENY->reconstruction / delegate-retrieval->planner+lit-review + hold-at-BLOCKED vs the Batch-4 core)", e2e: "pass (worked BLOCKED flow-state consulting the REAL Batch-2.5 Track-B evidence base; flow_state_check PASS)", reader_test: "pass (HONEST_BLOCKED=YES, NO_FAKED_COMPLETION=YES, NO_FACT_UPGRADE=YES, NO_AUTO_AUTHORIZATION=YES, READER_CAN_ACT=YES)"}
-    last_evaluated: "2026-08-05"
-    notes: "Batch-3 control flow #3 (THIRD by design: its numerical-design core atoms are Batch 4, not built — directive §9.3). v0 SKELETON: honest BLOCKED at research-software-problem-framer + scientific-software-architect + algorithm-technical-spec-author + scientific-prototype-experiment + scientific-validation-and-benchmark-planner + research-software-roadmap-author (Batch 4). Reuses Track B as its evidence front; carries E2 cap + 2 E0 assumptions, no fact-upgrade. Stays experimental + manual-only. Evidence: evals/skills/results/batch3/numerical-research-software-design/."
+    evals: {trigger: "PASS (Sprint 6A isolated evaluator: 3 should-trigger + 3 should-not correct; part of 27/27)", conflict: "PASS (Sprint 6A: 3 cluster cases correct — DENY-defer->reconstruction / delegate-retrieval->planner+lit-review + hold-at-BLOCKED vs the Batch-4 core; DENY co-run=0; independent reviewer concordant on the hardest DENY)", e2e: "pass (worked BLOCKED flow-state consulting the REAL Batch-2.5 Track-B evidence base; flow_state_check PASS)", reader_test: "pass (HONEST_BLOCKED=YES, NO_FAKED_COMPLETION=YES, NO_FACT_UPGRADE=YES, NO_AUTO_AUTHORIZATION=YES, READER_CAN_ACT=YES)"}
+    last_evaluated: "2026-08-06"
+    notes: "Batch-3 control flow #3 (THIRD by design: its numerical-design core atoms are Batch 4, not built — directive §9.3). Sprint 6A routing/conflict validation PASSED (not promotion). v0 SKELETON: honest BLOCKED at the 6 Batch-4 numerical-design atoms (still not built — Batch 4 is the NEXT recommended slice, directive §10). Reuses Track B as its evidence front; E2 cap + 2 E0 assumptions, no fact-upgrade. Stays experimental + manual-only. Evidence: evals/skills/results/batch3/numerical-research-software-design/ + routing-conflict-validation-2026-08-05.md."
 
   - {name: research-software-problem-framer,          version: "0.0.0", status: planned, layer: L2-atomic, class: design,   batch: 4}
   - {name: scientific-software-architect,             version: "0.0.0", status: planned, layer: L2-atomic, class: design,   batch: 4, conflicts: [codebase-design]}
@@ -406,9 +406,117 @@ skills:
   - {name: dev-test-experiment-workspace-architect,   version: "0.0.0", status: planned, layer: L2-atomic, class: design,     batch: 5}
   - {name: experiment-provenance-and-reproducibility, version: "0.0.0", status: planned, layer: L2-atomic, class: maintain,   batch: 5}
   - {name: workspace-migration-planner,               version: "0.0.0", status: planned, layer: L2-atomic, class: migration,  batch: 5, write_scope: {requires_user_approval: true}, note: "dry-run map first."}
-  - {name: content-canonicalization-and-migration,    version: "0.0.0", status: planned, layer: L2-atomic, class: migration,  batch: 5, write_scope: {requires_user_approval: true}, note: "dry-run map first."}
-  - {name: technical-document-rewriter,               version: "0.0.0", status: planned, layer: L2-atomic, class: rewrite,    batch: 5, write_scope: {may_overwrite: false}, note: "never overwrites originals.", conflicts: [documentation-refactor]}
-  - {name: living-design-maintainer,                  version: "0.0.0", status: planned, layer: L2-atomic, class: maintain,    batch: 5}
+
+# -----------------------------------------------------------------------------
+# BATCH 5 (doc-refactor executor subset) — BUILT 2026-08-06 (directive Batch3后续 §6)
+#   The 3 executors that close the FIRST real documentation-refactor vertical slice. All v0:
+#   dry-run / candidate-output / proposal-only. Ship experimental + orchestrator-only. Each has its own
+#   deterministic checker; each proved on the REAL Track-A corpus in one closed loop (corpus untouched).
+# -----------------------------------------------------------------------------
+
+  - name: content-canonicalization-and-migration
+    version: "0.1.0"
+    status: experimental
+    layer: L2-atomic
+    class: migration
+    batch: 5
+    owner: research-code-dev
+    purpose: >
+      Turn a document-information-architect split plan into a DRY-RUN migration map (per-source disposition,
+      supersession map, link-update, rollback). v0: read-only w.r.t. the corpus, creates new plan files only,
+      may_move/delete/overwrite=false. One primary disposition per source (or explicit DEFERRED); retired docs
+      superseded never deleted; every unresolved decision carried, never decided.
+    invocation: orchestrator-only
+    auto_trigger: false
+    disable_model_invocation: true
+    upstream_dependencies: [document-information-architect, project-state-reconstructor]
+    downstream_outputs: [migration-map]
+    conflicts: [document-information-architect, technical-document-rewriter, workspace-migration-planner]
+    replaces: null
+    replaced_by: null
+    write_scope: {read_only: true, creates_new_files: true, may_overwrite: false, may_move: false, may_delete: false, requires_user_approval: false, requires_isolated_branch: false}
+    context_budget: {default_reads: [document-artifact-map, canonical-source-map, open-decisions, project-state-report], max_scope: "the IA hand-off; no re-inventory/re-verify", whole_repo_allowed: false}
+    required_tools: [Read, Grep, Glob, Bash]
+    norm_sources: []
+    status_vocab: true
+    checker: migration_map_check.py
+    license_sources:
+      - {method: "supersede-don't-delete lifecycle", src: "addyosmani/agent-skills documentation-and-adrs@7829ffd", license: MIT, adoption: method-borrow}
+      - {method: "checkable locator (source/target is a real path)", src: "addyosmani/agent-skills source-driven-development@7829ffd", license: MIT, adoption: method-borrow}
+      - {method: "dry-run-first, approval-gated migration", src: "working-constraints + directive Batch3后续 §6.1", license: internal, adoption: adapt}
+    evals: {trigger: "pass (routing: 3 should-trigger + 3 should-not; part of the 24/24 Batch-5 combined routing eval)", conflict: "pass (2 boundary: execute/delete -> hold-at-BLOCKED explicit-write-approval; pick-canonical -> defer-open-decision)", shadow: "pass (real closed-loop stage on Track-A -> migration-map.md; 11 dispositions, 10 decision-gated; migration_map_check + interface_check PASS; corpus untouched git-verified)", reader_test: "pass (closure reader GOOD: identifies dispositions/DEFERRED/decisions; NOT moved/deleted)", checker_selftest: "pass (GOOD block PASS; planted defects all caught: may_move true, target==source, dup primary, missing source, dropped decision)"}
+    last_evaluated: "2026-08-06"
+    notes: "Batch-5 doc-refactor executor #1. v0 dry-run planner; may_move/delete/overwrite=false; apply-mode requires SEPARATE explicit user write-approval (not this skill). No-skill baseline (comparison) silently decided D-1/D-4; this skill DEFERRED them. Stays experimental + orchestrator-only. Evidence: evals/skills/results/batch3/documentation-refactor-closure/migration-map.md."
+
+  - name: technical-document-rewriter
+    version: "0.1.0"
+    status: experimental
+    layer: L2-atomic
+    class: rewrite
+    batch: 5
+    owner: research-code-dev
+    purpose: >
+      Write CANDIDATE rewritten documents (new files in an isolated candidate dir) from a migration-map, plus a
+      rewrite-provenance report + unresolved-content list. v0: creates_new_files only, may_overwrite/move/delete=
+      false; source files byte-for-byte unchanged (sha256 re-verified). Never upgrades OPEN/HYPOTHESIS to FACT;
+      never silently drops source content; preserves conflicts (does not adjudicate).
+    invocation: orchestrator-only
+    auto_trigger: false
+    disable_model_invocation: true
+    upstream_dependencies: [content-canonicalization-and-migration, project-state-reconstructor, uncertainty-and-decision-manager]
+    downstream_outputs: [candidate-doc-set, rewrite-provenance-report]
+    conflicts: [document-information-architect, content-canonicalization-and-migration, documentation-refactor]
+    replaces: null
+    replaced_by: null
+    write_scope: {read_only: false, creates_new_files: true, may_overwrite: false, may_move: false, may_delete: false, requires_user_approval: false, requires_isolated_branch: false}
+    context_budget: {default_reads: [migration-map, selected-source-docs, project-state-report, decision-register], max_scope: "the migration-map dispositions + their sources", whole_repo_allowed: false}
+    required_tools: [Read, Grep, Glob, Write, Bash]
+    norm_sources: [hypotheses, candidates]
+    status_vocab: true
+    checker: rewrite_provenance_check.py
+    license_sources:
+      - {method: "no unverified upgrade (claim keeps its evidence status)", src: "addyosmani/agent-skills source-driven-development@7829ffd", license: MIT, adoption: method-borrow}
+      - {method: "claim disposition: weaken-or-remove, never invent support", src: "research-paper-writing paper-review.md@77e7c2c", license: MIT, adoption: method-borrow}
+      - {method: "preserve the conflict, do not adjudicate", src: "addyosmani/agent-skills doubt-driven-development@7829ffd", license: MIT, adoption: method-borrow}
+      - {method: "candidate-output never overwrite (source sha256 unchanged)", src: "working-constraints + directive Batch3后续 §6.2", license: internal, adoption: adapt}
+    evals: {trigger: "pass (routing: 3 should-trigger + 3 should-not; part of the 24/24 combined eval)", conflict: "pass (2 boundary: overwrite-originals -> hold-at-BLOCKED explicit-write-approval; hypothesis-as-fact -> refuse-fact-upgrade)", shadow: "pass (real closed-loop stage on Track-A -> 2 candidate docs + rewrite-provenance-report; source sha256 re-verified unchanged; completion=PARTIAL; D-1/D-4 left OPEN; rewrite_provenance_check + interface_check PASS)", reader_test: "pass (closure reader: candidates identified as DRAFT, NOT published)", checker_selftest: "pass (planted defects caught: may_overwrite, hash-tamper, candidate==source, empty provenance, COMPLETE-while-unresolved)"}
+    last_evaluated: "2026-08-06"
+    notes: "Batch-5 doc-refactor executor #2. v0 candidate-output-only; NEVER overwrites originals (hash-verified). No fact-upgrade (D.8). Apply-mode = separate explicit write-approval. Stays experimental + orchestrator-only. Evidence: evals/skills/results/batch3/documentation-refactor-closure/{candidate-doc-set/,rewrite-provenance-report.md}."
+
+  - name: living-design-maintainer
+    version: "0.1.0"
+    status: experimental
+    layer: L2-atomic
+    class: maintain
+    batch: 5
+    owner: research-code-dev
+    purpose: >
+      Given a change event + canonical-source-map + decision register, emit a maintenance-impact report +
+      PROPOSED canonical updates + stale-reference list + verification checklist. v0: read-only w.r.t. canonical
+      docs, creates new proposal files only, may_overwrite=false, auto_accept_candidates=false, auto_publish=
+      false. Every proposed update points at a KNOWN canonical home; single source of truth; no volatile-into-
+      stable; a candidate is never marked canonical while unapproved.
+    invocation: orchestrator-only
+    auto_trigger: false
+    disable_model_invocation: true
+    upstream_dependencies: [technical-document-rewriter, document-information-architect, uncertainty-and-decision-manager]
+    downstream_outputs: [maintenance-impact-report]
+    conflicts: [documentation-quality-evaluator, document-information-architect, handoff]
+    replaces: null
+    replaced_by: null
+    write_scope: {read_only: true, creates_new_files: true, may_overwrite: false, may_move: false, may_delete: false, requires_user_approval: false, requires_isolated_branch: false}
+    context_budget: {default_reads: [accepted-candidate-docs, canonical-source-map, change-event, decision-register], max_scope: "the change + the canonical map; no re-design", whole_repo_allowed: false}
+    required_tools: [Read, Grep, Glob, Bash]
+    norm_sources: []
+    status_vocab: true
+    checker: maintenance_impact_check.py
+    license_sources:
+      - {method: "canonical home per role + supersede-don't-edit", src: "addyosmani/agent-skills documentation-and-adrs@7829ffd", license: MIT, adoption: method-borrow}
+      - {method: "keep stable-design/dynamic-state/evidence/session separate", src: "研究软件文档Skills系统_设计与创建指南.md §17", license: internal, adoption: adapt}
+      - {method: "propose-only, no auto-accept/no auto-publish", src: "working-constraints + directive Batch3后续 §6.3", license: internal, adoption: adapt}
+    evals: {trigger: "pass (routing: 3 should-trigger + 3 should-not; part of the 24/24 combined eval)", conflict: "pass (2 boundary: apply/publish -> hold-at-BLOCKED explicit-write-approval; unapproved-canonical + volatile-into-stable -> refuse)", shadow: "pass (real closed-loop stage on Track-A -> maintenance-impact-report; 5 proposed updates all approved:false, 4/5 decision-blocked; single-source-of-truth held; maintenance_impact_check + interface_check PASS; corpus untouched)", reader_test: "pass (closure reader: maintenance implications identified; nothing published)", checker_selftest: "pass (planted defects caught: auto_publish, volatile-into-stable, unapproved mark-canonical, candidate-as-canonical, dual home)"}
+    last_evaluated: "2026-08-06"
+    notes: "Batch-5 doc-refactor executor #3. v0 proposal-only; edits/publishes NOTHING; candidate != canonical while unapproved. Reusable later by scientific-workspace-reconstruction. Stays experimental + orchestrator-only. Evidence: evals/skills/results/batch3/documentation-refactor-closure/maintenance-impact-report.md."
 
   # [ADAPT] additions beyond the guide's 20
   - {name: scientific-validity-review,                version: "0.0.0", status: planned, layer: L2-atomic, class: evaluate,  batch: 5, note: "keep scientific checks OUT of code-review; separate axis.", conflicts: []}

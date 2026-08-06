@@ -1,0 +1,15 @@
+skill: technical-document-rewriter
+skill_version: "0.1.0"
+dataset_version: 1
+# Batch-5 LIGHT trigger set (directive Batch3后续 §7.2): 3 should-trigger + 3 should-not.
+# "should-trigger" = write the CANDIDATE rewritten docs (new files) from a migration-map. "should-not" = route away.
+cases:
+  # ---------- should-trigger (write candidate docs) ----------
+  - {id: rew-trig-01, set: should-trigger, real: false, input: "We have the migration map — now write the candidate restructured documents into a NEW folder, following the dispositions. Don't overwrite the originals.", notes: "migration-map exists + wants the candidate doc bodies written = this skill."}
+  - {id: rew-trig-02, set: should-trigger, real: true, input: "Produce the candidate rewritten docs for the docs/skill-development restructure from the migration map, with a provenance report mapping each candidate to its source ranges; leave the originals untouched.", notes: "the real Track-A migration; candidate output + provenance."}
+  - {id: rew-trig-03, set: should-trigger, real: false, input: "Write the new versions of these documents as new files following the migration plan, keeping every OPEN item open and citing the source range for each change.", notes: "candidate rewrite; no fact upgrade, source-traced."}
+
+  # ---------- should-not (route away) ----------
+  - {id: rew-not-01, set: should-not, real: false, input: "Decide the target architecture and which doc should own each responsibility.", expected: {route_to: document-information-architect}, notes: "designing the IA -> IA, not the rewriter."}
+  - {id: rew-not-02, set: should-not, real: false, input: "Plan which section moves where and what supersedes what — the migration map.", expected: {route_to: content-canonicalization-and-migration}, notes: "the migration map -> the migration planner; the rewriter consumes it."}
+  - {id: rew-not-03, set: should-not, real: false, input: "Grade whether the resulting document meets our quality bar.", expected: {route_to: documentation-quality-evaluator}, notes: "grading -> DQE."}

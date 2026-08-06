@@ -1,0 +1,15 @@
+skill: living-design-maintainer
+skill_version: "0.1.0"
+dataset_version: 1
+# Batch-5 LIGHT trigger set (directive Batch3后续 §7.2): 3 should-trigger + 3 should-not.
+# "should-trigger" = produce a maintenance-impact report (proposals only). "should-not" = route away.
+cases:
+  # ---------- should-trigger (maintenance-impact proposal) ----------
+  - {id: ldm-trig-01, set: should-trigger, real: false, input: "We accepted the candidate docs — work out which canonical docs this change touches and PROPOSE the updates, plus a stale-reference list and a verification checklist. Don't edit anything.", notes: "a change event + wants impact + proposals (no edit) = this skill."}
+  - {id: ldm-trig-02, set: should-trigger, real: true, input: "Given the accepted restructure of docs/skill-development, produce a maintenance-impact report: impacted canonical homes, proposed updates, stale references, verification checklist. Proposals only, nothing published.", notes: "the real Track-A corpus; proposal-only maintenance."}
+  - {id: ldm-trig-03, set: should-trigger, real: false, input: "A key decision just changed — which canonical docs go stale, and what updates do you propose? Don't touch the canonical files.", notes: "change event -> impact + proposals; read-only w.r.t. canonical docs."}
+
+  # ---------- should-not (route away) ----------
+  - {id: ldm-not-01, set: should-not, real: false, input: "Grade whether this document meets our quality bar.", expected: {route_to: documentation-quality-evaluator}, notes: "grading -> DQE, not maintenance."}
+  - {id: ldm-not-02, set: should-not, real: false, input: "Design the target doc-set and canonical homes from scratch.", expected: {route_to: document-information-architect}, notes: "designing the IA -> IA; the maintainer consumes the canonical-source-map."}
+  - {id: ldm-not-03, set: should-not, real: false, input: "Write the candidate rewritten documents.", expected: {route_to: technical-document-rewriter}, notes: "writing candidate bodies -> rewriter."}

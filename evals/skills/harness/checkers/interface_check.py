@@ -24,6 +24,9 @@ from pathlib import Path
 ARTIFACT_TYPES = {
     "inventory-report", "project-state-report", "goal-scope-note", "document-artifact-map",
     "literature-search-plan", "research-evidence-map", "decision-register",
+    # Batch-5 additive extension (directive Batch3后续 §6): new downstream handoff types the doc-refactor
+    # executor tail produces. Additive — re-means none of the seven above; see references/interfaces/README.md.
+    "migration-map", "rewrite-provenance-report", "maintenance-impact-report",
 }
 # Known artifact types that are NOT frozen inter-skill handoffs (§5.2). They legitimately declare an
 # artifact_type but are terminal/advisory outputs, so the frozen 12-field handoff payload does not apply —

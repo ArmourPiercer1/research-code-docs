@@ -1,0 +1,16 @@
+skill: content-canonicalization-and-migration
+skill_version: "0.1.0"
+dataset_version: 1
+# Batch-5 LIGHT trigger set (directive Batch3后续 §7.2): 3 should-trigger + 3 should-not.
+# "should-trigger" = engage the dry-run migration planner (produce a migration-map from the IA hand-off).
+# "should-not" = route to another skill. Boundary/conflict (execute vs plan, decide-silently) live in the conflict yaml.
+cases:
+  # ---------- should-trigger (engage the migration planner) ----------
+  - {id: ccm-trig-01, set: should-trigger, real: false, input: "We have the artifact-map and canonical-source-map from the information architect — now produce the DRY-RUN migration map: which section goes where, what supersedes what, a rollback plan. Don't move anything yet.", notes: "IA hand-off exists + wants the executable-later migration plan = this skill."}
+  - {id: ccm-trig-02, set: should-trigger, real: true, input: "Turn the docs/skill-development artifact-map's split plan (S1–S9) into a concrete dry-run migration map with a supersession map and a rollback plan; leave the original files untouched.", notes: "the real Track-A artifact-map; dry-run migration planning."}
+  - {id: ccm-trig-03, set: should-trigger, real: false, input: "Plan how we'd actually reorganize these docs into the new layout — every source section's destination, retired docs superseded (not deleted), pointers to update — as a plan, no execution.", notes: "corpus-scale migration planning; dry-run only."}
+
+  # ---------- should-not (route away) ----------
+  - {id: ccm-not-01, set: should-not, real: false, input: "Design how this mixed doc-set should be split into proper documents and which doc owns what.", expected: {route_to: document-information-architect}, notes: "designing the target IA -> IA; this skill consumes that output."}
+  - {id: ccm-not-02, set: should-not, real: false, input: "Write the actual new content of the restructured documents.", expected: {route_to: technical-document-rewriter}, notes: "writing the doc bodies -> rewriter, not the migration planner."}
+  - {id: ccm-not-03, set: should-not, real: false, input: "Grade this one document against our quality bar.", expected: {route_to: documentation-quality-evaluator}, notes: "grading -> DQE."}

@@ -1,16 +1,21 @@
+<!--
+generated_by_skill: technical-document-rewriter
+skill_version: 0.1.0
+source_commit: 07b5306
+source_documents: [docs/skill-development/creation-roadmap.md]
+document_lifecycle: DRAFT
+last_verified: 2026-08-06T00:00:00Z
+-->
+
 # Creation Roadmap — Research-Software Documentation Skills System
 
-<!--
-generated_by_skill: (manual, Phase-1 governance authoring)
-skill_version: n/a
-source_commit: mattpocock/skills vendored snapshot (plugin.json v1.2.0; no pinned commit)
-source_documents:
-  - docs/研究软件文档Skills系统_设计与创建指南.md (§10, §16)
-  - docs/skill-development/system-architecture.md
-  - docs/skill-development/current-skills-audit.md
-status: DECIDED for Batch 1; Batch 2 built + light-passed; Batch 2.5 integration DONE; Batch 3 v0 skeletons BUILT + Sprint 6A routing/conflict PASS; Batch-5 doc-refactor executor subset BUILT + FIRST REAL CLOSED LOOP (2026-08-06); PLANNED for Batch 4 + rest of Batch 5
-last_verified: 2026-08-06  (Sprint 6A routing 27/27 + Sprint 6B doc-refactor executor subset built + first real closed loop; §3/§5 updated)
--->
+<!-- CANDIDATE REWRITE — split S1 (migration-map disposition: DEFERRED, blocked_by D-1). The §0/§1
+     volatile progress-tracker and the per-batch "Status: ..." lead markers that reported live phase state
+     (source creation-roadmap.md lines 11-12, 23, 40, 59-62, 81-83, 109) are dynamic state; per the
+     volatile-state -> pointer rule they are removed from this stable plan and replaced by pointers. The
+     pointer TARGET is left UNRESOLVED: D-1 (canonical status owner) is OPEN and is not decided here. The
+     plan, definitions of done, exit criteria, decision points, and open questions are preserved unchanged;
+     no stale figure is re-numbered. -->
 
 > **Principle (guide §17).** The quality bar is not "all files generated" but: recover facts before designing; write unknowns as unknown; turn research questions into surveys/experiments, not fake plans; keep stable design / dynamic state / paper evidence / session notes separate; recognize simple tasks; improve via evals, not vibes.
 > **Gate rule (constraint D.3 / prompt E).** No new skill auto-triggers until it passes trigger+conflict evals. `documentation-quality-evaluator` had to pass its own **basic** evals before Batch 2 began — it grades everything after it. It did (trigger 28/28 + discriminative e2e).
@@ -20,7 +25,11 @@ last_verified: 2026-08-06  (Sprint 6A routing 27/27 + Sprint 6B doc-refactor exe
 
 ## 0. Batch 0 — governance & eval foundation
 
-**Status: COMPLETE (Batch 0 delivered 2026-07-30).** Current phase lives in `skills-registry.yaml` + `reports/runlog.md`, not here (this is the plan, not the status tracker — the volatile-state→pointer rule). As of 2026-08-06: Batch 1 done, Batch 2 built + light-passed, **Batch 2.5 integration sprint done** (§2.5), Batch 3 v0 skeletons built + **Sprint 6A routing/conflict PASS**, and the **Batch-5 doc-refactor executor subset built + first real closed loop** (§5).
+**Batch-0 completion state and current project phase ->** the canonical status owner (**PENDING decision D-1**).
+This section is the **plan** — Batch-0's deliverable checklist and its exit criterion — not the status tracker
+(the volatile-state -> pointer rule). The cross-batch "as of <date>: Batch 1 done, Batch 2 built, Batch 2.5
+done" progress line that stood here is removed, not re-dated; current phase is not restated while its
+canonical home is undecided.
 
 - [x] Directory isolation (`.claude/skills/`, `references/`, `evals/skills/`, `docs/skill-development/`).
 - [x] Audit (`current-skills-audit.md`).
@@ -37,7 +46,7 @@ last_verified: 2026-08-06  (Sprint 6A routing 27/27 + Sprint 6B doc-refactor exe
 
 ---
 
-## 1. Batch 1 — quality & fact foundation (THIS deliverable)
+## 1. Batch 1 — quality & fact foundation
 
 Order is fixed by dependency (guide §10.2):
 
@@ -56,10 +65,13 @@ Order is fixed by dependency (guide §10.2):
 
 ## 2. Batch 2 — document structure & research-evidence adapters
 
-**Status: ALL FOUR BUILT + light-round PASSED (2026-08-05).** Decoupled from "DQE reaches `active`" (see the scope-correction note above).
-DQE v0.4.1 (advisory) + an independent reviewer + a no-skill comparison was a sufficient eval posture for these.
-All ship **experimental + `disable-model-invocation: true`** (manual/orchestrator-only) until their own auto-trigger evals pass.
-Trigger 32/32 · 4 read-only shadow runs (targets verified untouched) · 4 reader discipline-checks green. Report: `reports/batch2-skills-eval-2026-08-05.md`.
+**Batch-2 build/eval status ->** the canonical status owner (**PENDING decision D-1**). The design posture is
+the stable part and is preserved: Batch 2 is **decoupled** from "DQE reaches `active`" (see the
+scope-correction note above) — DQE v0.4.1 (advisory) + an independent reviewer + a no-skill comparison is the
+intended eval posture — and all Batch-2 skills ship **experimental + `disable-model-invocation: true`**
+(manual/orchestrator-only) until their own auto-trigger evals pass. (The self-reported light-round counts —
+"4/4 built, trigger 32/32, shadow/reader green" — and the run report are self-reported / HYPOTHESIS-level per
+the state report; they route to the status owner and are not re-asserted here.)
 
 **Recommended build order** (lowest-risk / most-reused first — not the guide's numbering):
 
@@ -78,26 +90,27 @@ Trigger 32/32 · 4 read-only shadow runs (targets verified untouched) · 4 reade
 
 ---
 
-## 2.5 Batch 2.5 — integration sprint (DONE 2026-08-05)
+## 2.5 Batch 2.5 — integration sprint
 
-**Status: COMPLETE.** Per the `Batch2_5集成冲刺与Batch3最小控制流开发计划.md` directive, before building the
-Batch-3 orchestration layer we proved the atomic skills **compose through explicit, deterministically-checked
-artifact interfaces with no chat dependence**. Two real chains, one main run each, ≤12 agent slots, 0 reruns:
+**Batch-2.5 completion state ->** the canonical status owner (**PENDING decision D-1**). The sprint's purpose
+and its frozen deliverable are the stable part and are preserved: per the
+`Batch2_5集成冲刺与Batch3最小控制流开发计划.md` directive, before building the Batch-3 orchestration layer the
+atomic skills were exercised to show they **compose through explicit, deterministically-checked artifact
+interfaces with no chat dependence** — two real chains, one main run each, ≤12 agent slots:
 
 - **Track A (document-corpus):** `forensics(document-corpus) → PSR → goals → IA → DQE-advisory → reader` over
   the real `docs/skill-development/` corpus. Exercised the previously-unrun forensics doc-corpus + IA multi-doc
-  modes; found genuine staleness in our own docs (incl. the §0 "Batch 0 IN PROGRESS" fixed above); IA stops at
-  an honest `next_handoff: BLOCKED` (its executors are Batch 5). Saved as `documentation-refactor`'s first
-  integration fixture.
+  modes; found genuine staleness in our own docs; IA stops at an honest `next_handoff: BLOCKED` (its executors
+  are Batch 5). Saved as `documentation-refactor`'s first integration fixture.
 - **Track B (research-evidence):** `RQLP → lit-review(real, 5 sources) → RES → UDM → DQE-advisory → reader`.
   RES held the cross-domain transfer at E2, isolated two E0 assumptions, routed the gaps back to RQLP; UDM
   registered 1 HYPOTHESIS + 5 OPEN + 1 DEFERRED, 0 DECIDED. No literature→project-fact upgrade.
 
 **Frozen (directive §5):** a minimal 12-field handoff interface — `references/interfaces/` (README + 7
 `*.schema.md`) + `evals/skills/harness/checkers/interface_check.py` (ADVISORY; `--advisory-is-hard` enforces).
-All §7 exit conditions met; **0 SKILL_DEFECT, 0 INTERFACE_DEFECT**; all sources unchanged; `.pyc` hygiene done;
-architecture §8 gate-rule wording corrected. All four Batch-2 skills stay `experimental` + manual-only.
-Full write-up: [reports/batch2_5-integration-2026-08-05.md](reports/batch2_5-integration-2026-08-05.md).
+All four Batch-2 skills stay `experimental` + manual-only. (The sprint's self-reported outcomes — "§7 exit
+conditions met, 0 SKILL_DEFECT / 0 INTERFACE_DEFECT, sources unchanged, architecture §8 gate-rule wording
+corrected" — and the full write-up report route to the status owner; they are not re-asserted in this plan.)
 
 **OQ-4:** stays OPEN — evidence gathered says **keep RQLP + RES separate** (RES adds real channel/E-cap/gap
 structure; merging would re-mix planning with synthesis). Revisit after Batch 3.
@@ -106,29 +119,21 @@ structure; merging would re-mix planning with synthesis). Revisit after Batch 3.
 
 ## 3. Batch 3 — three control-flow skeletons
 
-**Status: ALL THREE v0 SKELETONS BUILT + light-validated (2026-08-05).** Each routes existing Batch-1/2 atoms,
-records a `flow-state` (§10.1 contract + `flow_state_check.py`), verifies each hand-off, and **stops honestly
-(`flow_status=BLOCKED`) at its missing Batch-4/5 capability** — no faked closed loops. Build order per the
-directive §9 (most-complete runnable prefix first): `documentation-refactor` → `scientific-workspace-reconstruction`
-→ `numerical-research-software-design`. Three worked BLOCKED flow-states (two reuse the real Batch-2.5 chains;
-one ran a **live** prefix on `evals/skills/harness/`), all `flow_state_check`-green + reader-green. Report:
-[reports/batch3-skeletons-2026-08-05.md](reports/batch3-skeletons-2026-08-05.md).
+**Batch-3 build/validation status ->** the canonical status owner (**PENDING decision D-1**). The design is the
+stable part and is preserved: each flow routes existing Batch-1/2 atoms, records a `flow-state` (§10.1 contract
++ `flow_state_check.py`), verifies each hand-off, and **stops honestly (`flow_status=BLOCKED`) at its missing
+Batch-4/5 capability** — no faked closed loops. Build order per the directive §9 (most-complete runnable prefix
+first): `documentation-refactor` → `scientific-workspace-reconstruction` → `numerical-research-software-design`.
+(The self-reported "all three built / light-validated / all-green" counts and the run report route to the
+status owner; they are not re-asserted in this plan.)
 
-| # | Skill | v0 result (built) |
+| # | Skill | v0 design (routing + honest-BLOCKED stop) |
 |---|---|---|
 | 9 | `numerical-research-software-design` | Evidence front (RQLP→lit-review→RES→UDM, reusing Track B); honest BLOCKED at the Batch-4 numerical-design core. **THIRD by design** (its core atoms don't exist). |
-| 10 | `scientific-workspace-reconstruction` | forensics(workspace)→PSR→goals (ran LIVE on the harness); honest BLOCKED at `dev-test-experiment-workspace-architect` (Batch 5). |
+| 10 | `scientific-workspace-reconstruction` | forensics(workspace)→PSR→goals (ran a live prefix on the harness); honest BLOCKED at `dev-test-experiment-workspace-architect` (Batch 5). |
 | 11 | `documentation-refactor` | forensics(doc)→PSR→goals→IA (reusing Track A); honest BLOCKED at migration+rewriter+maintainer (Batch 5). Most complete prefix. |
 
 **Must pass the control-flow conflict eval** (`conflict-matrix.md` §1) before any of the three flips to `auto_trigger`. Until then, all three are user-invoked.
-
-**Sprint 6A (2026-08-06) — routing/conflict validation PASSED, but NOT promotion.** The three flows' authored
-trigger/conflict sets were run through isolated evaluators + independent reviewers: **27/27 routing correct, DENY
-co-run = 0, SEQ order correct, all 3 independent spot-checks concordant**. This eliminates obvious routing errors
-but is explicitly *not* the full promotion bar — all three stay `experimental` + `auto_trigger:false` +
-manual-only ([routing-conflict-validation](../../evals/skills/results/batch3/routing-conflict-validation-2026-08-05.md)).
-**Sprint 6B (2026-08-06)** then built the Batch-5 doc-refactor executor subset (§5) and closed
-`documentation-refactor`'s **first real vertical slice** — see §5.
 
 **After Batch 3**, optionally down-rank the dormant references (`grill-with-docs`, `ask-matt`, broad `research`/`prototype`) — but since they are not installed, this is a documentation action, not a live change.
 
@@ -142,20 +147,9 @@ These shape development direction, so they build on the fact-recovery + evidence
 
 ## 5. Batch 5 — workspace & refactor specialists + maintenance
 
-**Doc-refactor executor subset: BUILT 2026-08-06** (directive `Batch3后续` §6 — the first real vertical slice).
-`content-canonicalization-and-migration` (dry-run map) · `technical-document-rewriter` (candidate output, never
-overwrites) · `living-design-maintainer` (proposal only) are **built, light-passed, and closed the first real
-`documentation-refactor` loop** (dry-run + candidate-output scope; corpus untouched; safety-negative BLOCKED).
-Each ships `experimental` + orchestrator-only with its own deterministic checker (`migration_map_check` /
-`rewrite_provenance_check` / `maintenance_impact_check`). Report:
-[reports/sprint6-routing-and-first-closed-loop-2026-08-06.md](reports/sprint6-routing-and-first-closed-loop-2026-08-06.md).
+`dev-test-experiment-workspace-architect` · `experiment-provenance-and-reproducibility` · `workspace-migration-planner` (dry-run first) · `content-canonicalization-and-migration` · `technical-document-rewriter` (never overwrite) · `living-design-maintainer`.
 
-**Still PLANNED (not built):** `dev-test-experiment-workspace-architect` · `experiment-provenance-and-reproducibility`
-· `workspace-migration-planner` (dry-run first) — the workspace-reconstruction executor trio (directive §10.2,
-after Batch 4). `living-design-maintainer` is reusable there.
-
-Plus the **[ADAPT]** cross-cutting additions when needed: `scientific-validity-review`,
-`technical-primary-source-research`, `research-software-workflow-router`, `setup-research-software-skills`.
+Plus the **[ADAPT]** cross-cutting additions when needed: `scientific-validity-review`, `technical-primary-source-research`, `research-software-workflow-router`, `setup-research-software-skills`.
 
 ---
 

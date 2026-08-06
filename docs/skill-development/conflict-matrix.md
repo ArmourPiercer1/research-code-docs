@@ -8,8 +8,8 @@ source_documents:
   - docs/skill-development/current-skills-audit.md
   - docs/skill-development/system-architecture.md
   - docs/研究软件文档Skills系统_设计与创建指南.md (§14.3)
-status: DECIDED for Phase-1 pairs; §1 control-flow cluster now LIVE (Batch-3 skeletons, manual-only); PROJECTED for not-yet-built pairs (marked)
-last_verified: 2026-08-05
+status: DECIDED for Phase-1 pairs; §1 control-flow cluster LIVE (Sprint 6A routing/conflict PASS, manual-only); §3b doc-refactor executor tail LIVE (Batch-5 built); PROJECTED for not-yet-built pairs (marked)
+last_verified: 2026-08-06
 -->
 
 > **Purpose.** For every pair of skills that could plausibly co-trigger, state whether they may run together, who dominates, and the hand-off rule. A pair marked **DENY** with no resolution is a *release blocker* (acceptance §15.4).
@@ -70,6 +70,22 @@ The four Phase-1 skills are all `experimental` + manual/orchestrator-only, so **
 
 ---
 
+## 3b. Batch-5 doc-refactor executor tail (BUILT 2026-08-06) — SEQ within `documentation-refactor`
+
+The three executors are **orchestrator-only** (reached only by `documentation-refactor`), all v0
+(dry-run / candidate-output / proposal-only). They run **in sequence**, never in parallel; each consumes the
+prior's on-disk artifact. Proven in the first real closed loop (`documentation-refactor-closure/`).
+
+| A | B | Co-run | Dominant | Hand-off / scope rule | Row |
+|---|---|:---:|---|---|---|
+| `document-information-architect` | `content-canonicalization-and-migration` | SEQ | IA → migration | IA designs the split (a plan); migration turns it into a **dry-run** map. Migration never re-designs. | LIVE |
+| `content-canonicalization-and-migration` | `technical-document-rewriter` | SEQ | migration → rewriter | Migration maps dispositions; rewriter writes **candidate** docs (new files) for the non-DEFERRED ones. Rewriter never moves/overwrites. | LIVE |
+| `technical-document-rewriter` | `documentation-quality-evaluator` | SEQ (advisory) | rewriter → DQE | DQE grades the candidate set **read-only**; its ALLOW authorizes nothing (architecture §gate-rule). | LIVE |
+| `technical-document-rewriter` | `living-design-maintainer` | SEQ | rewriter → maintainer | Maintainer proposes the canonical-update impact of the candidates; never edits/publishes/auto-accepts. | LIVE |
+| any executor | the live corpus | **DENY-execute** | — | Moving/deleting/overwriting a live file is **out of v0** — a separate explicit user apply-approval → `BLOCKED:explicit-write-approval-required`. Auto-execution is impossible by construction (`may_move/delete/overwrite=false`, checker-enforced). | LIVE |
+
+---
+
 ## 4. Existing-skill scope conflicts carried from the audit (LIVE — enforced via registry limits)
 
 | A | B | Co-run | Dominant | Rule | Row |
@@ -80,7 +96,7 @@ The four Phase-1 skills are all `experimental` + manual/orchestrator-only, so **
 | `research` (matt) | `lit-review` | DENY-parallel | by source type | Narrow `research` so it does **not** fire on academic-literature tasks (owned by `lit-review`/`wos-research`). This is the one **immediate live** narrowing action. | LIVE |
 | `domain-modeling` | `uncertainty-and-decision-manager` (new) | COND | split by stability | (Duplicate of §3 for visibility) stable→glossary, unstable→register. | LIVE |
 | `improve-codebase-architecture` (ref) | `scientific-workspace-reconstruction` (new) | SEQ | reconstruction | Refactor only **after** forensics+state+goals. Enforced by the workspace chain ordering. | PROJECTED |
-| `handoff` (ref) | `living-design-maintainer` / status docs | DENY-substitution | canonical docs | `handoff` is transient session compression; it must **not** stand in for `current-status.md`/roadmap/ADR/experiment registry/architecture. | LIVE(ref) |
+| `handoff` (ref) | `living-design-maintainer` / status docs | DENY-substitution | canonical docs | `handoff` is transient session compression; it must **not** stand in for `current-status.md`/roadmap/ADR/experiment registry/architecture. The maintainer (BUILT 2026-08-06) enforces this — it never treats a `handoff`/session note as a canonical source (`maintenance_impact_check.py`). | LIVE |
 
 ---
 

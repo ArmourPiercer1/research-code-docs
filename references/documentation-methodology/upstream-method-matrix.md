@@ -10,7 +10,7 @@ source_documents:
   - docs/skill-development/current-skills-audit.md
   - 4x method-extraction sub-agent reports (2026-07-30)
 status: DECIDED (v0.2) — extended per skill as methods are adopted
-last_verified: 2026-08-05  (§2.9 Batch-3 control-flow attribution added)
+last_verified: 2026-08-06  (§2.10-§2.12 Batch-5 doc-refactor executor attribution added)
 -->
 
 > **Purpose (constraint D.2, guide §9 / §14.7).** Every rule adopted into a new skill records **where it came from**, **its license**, **how we adopted it** (copy / adapt / method-borrow / ideas-only), and **its boundary**. No wholesale concatenation of upstream `SKILL.md` (constraint D.1).
@@ -171,6 +171,35 @@ All three L1 skeletons share one borrowed method; the rest is internal compositi
 Boundary vs the atoms: a control flow **composes** Batch-1/2 atoms and (future) Batch-4/5 atoms; it adds no
 new writing rule of its own. Auto co-trigger is impossible while all three stay `experimental` + manual-only
 (conflict-matrix §1). Evidence: `evals/skills/results/batch3/**` (three worked BLOCKED flow-states).
+
+### 2.10 `content-canonicalization-and-migration` (v0.1.0 — Batch 5, doc-refactor executor #1)
+
+| Method | Source | License | Adoption | Boundary |
+|---|---|---|---|---|
+| **Supersede-don't-delete** lifecycle (retired doc → `superseded_by` + `DEPRECATED`, never removed) | agent-skills `documentation-and-adrs` | MIT | method-borrow | A dry-run planner: emits a supersession map, never executes a delete/move. Same source as UDM §2.4, applied to whole docs. |
+| **Checkable locator** (every source/target is a real path) | agent-skills `source-driven-development` | MIT | method-borrow | `migration_map_check.py` verifies source existence + target≠source; a locator that does not resolve is a defect. |
+| **Dry-run-first, approval-gated migration** | internal (working-constraints + directive §6.1) | internal | adapt | v0 `may_move/delete/overwrite=false`; execution is a separate `BLOCKED:explicit-write-approval-required`. |
+
+### 2.11 `technical-document-rewriter` (v0.1.0 — Batch 5, doc-refactor executor #2)
+
+| Method | Source | License | Adoption | Boundary |
+|---|---|---|---|---|
+| **No unverified upgrade** (a claim keeps its evidence status) | agent-skills `source-driven-development` | MIT | method-borrow | Never turns OPEN/HYPOTHESIS/UNKNOWN into FACT; `rewrite_provenance_check.py` + D.8 enforce it. |
+| **Claim disposition: weaken-or-remove, never invent support** | research-paper-writing `paper-review.md` | MIT | method-borrow | A weaker claim is weakened, not propped up with a fabricated citation/number. |
+| **Preserve the conflict, do not adjudicate** | agent-skills `doubt-driven-development` | MIT | method-borrow | Where two sources disagree, both are surfaced labeled; the choice goes to the register/human. |
+| **Candidate-output, never overwrite** (source sha256 unchanged) | internal (working-constraints + directive §6.2) | internal | adapt | Writes only to a candidate dir; the checker re-hashes each source to prove no overwrite. |
+
+### 2.12 `living-design-maintainer` (v0.1.0 — Batch 5, doc-refactor executor #3)
+
+| Method | Source | License | Adoption | Boundary |
+|---|---|---|---|---|
+| **Canonical home per role + supersede-don't-edit** | agent-skills `documentation-and-adrs` | MIT | method-borrow | Every proposed update points at a known canonical home; `maintenance_impact_check.py` rejects candidate/handoff targets. |
+| **Keep stable-design / dynamic-state / evidence / session separate** (the maintenance principle) | design guide §17 | internal | adapt | Volatile content is proposed as a pointer, never copied into a stable doc (the HF-14b rule, checker-enforced). |
+| **Propose-only, no auto-accept / no auto-publish** | internal (working-constraints + directive §6.3) | internal | adapt | v0 edits/publishes nothing; a candidate is never marked canonical while `approved:false`. |
+
+Boundary of all three (directive §11): they are the doc-refactor executor tail — a control flow composes them; they
+add no new *grading* rule (that is DQE) and no new *design* rule (that is IA). Evidence + first real closed loop:
+`evals/skills/results/batch3/documentation-refactor-closure/**`.
 
 ---
 
