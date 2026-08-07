@@ -8,3 +8,6 @@ tests/corpus/upstream/
 __pycache__/
 *.pyc
 *.pyo
+
+# reference materials (local only)
+references/
