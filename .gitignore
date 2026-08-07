@@ -11,3 +11,6 @@ __pycache__/
 
 # reference materials (local only)
 references/
+
+# snapshots
+evals/skills/snapshots/
