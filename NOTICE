@@ -1,0 +1,38 @@
+Research-Code-Docs
+Copyright (c) 2026 research-code-docs project owner (ArmourPiercer1).
+
+This product is an INTERNAL CONTROLLED PREVIEW (v0.1.0-alpha.1). See LICENSE.
+
+-------------------------------------------------------------------------------
+Third-party attributions
+-------------------------------------------------------------------------------
+This product's skills were authored in-house. Their METHODS (not verbatim code)
+were adapted from the following third-party projects. No upstream skill source
+code is redistributed in this release; the vendored copies under `references/`
+are development-time attribution material and are excluded from the release
+archive (see release-manifest.yaml).
+
+MIT-licensed method sources (method-borrow / adapt):
+  - mattpocock/skills            (MIT) — orchestration ("wayfinder"), skill structure,
+                                          grilling/interview methods.
+  - addyosmani/agent-skills      (MIT) — severity taxonomy, reverse-outline, source-driven
+                                          & doubt-driven review, context-engineering tiers.
+  - github/awesome-copilot       (MIT) — codebase-knowledge acquisition / Project Map method.
+                                          (Only the MIT top level was used; the repo also
+                                          contains an Apache-2.0 sub-skill `resemble-detect`
+                                          which was NOT used or redistributed.)
+  - research-paper-writing-skills(MIT) — claim|evidence|status matrix; paper-review method.
+
+CC BY-NC 4.0 (ideas only — NON-COMMERCIAL; NOT redistributed):
+  - academic-research-skills     (CC BY-NC 4.0) — high-level ideas only. No text or code
+                                          from this work is copied or redistributed. Because
+                                          of the NonCommercial term, any COMMERCIAL use of
+                                          this product must not rely on this source; see
+                                          THIRD_PARTY_LICENSES.md.
+
+Reference-only (no license file upstream — NOT redistributed, ideas not relied upon):
+  - anthropics/skills, pengsida/learning-research.
+
+Full detail, per-method mapping, and redistribution guidance:
+  - THIRD_PARTY_LICENSES.md
+  - references/documentation-methodology/upstream-method-matrix.md  (per-rule provenance)

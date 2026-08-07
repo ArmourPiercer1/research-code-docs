@@ -1,0 +1,57 @@
+Research-Code-Docs — Internal Preview License (v0.1.0-alpha.1)
+Copyright (c) 2026 research-code-docs project owner (ArmourPiercer1). All rights reserved.
+
+===============================================================================
+STATUS: INTERNAL CONTROLLED PREVIEW — NOT A PUBLIC RELEASE
+===============================================================================
+
+This software and its accompanying documentation (the "Work") are distributed
+as an INTERNAL, CONTROLLED ALPHA PREVIEW to a small number of named evaluators
+for the SOLE PURPOSE of evaluation and feedback. It is not an open-source
+release and is not licensed for public use, redistribution, or production use.
+
+1. GRANT (limited, revocable, non-transferable)
+   The project owner grants each named preview evaluator a non-exclusive,
+   non-transferable, revocable permission to:
+     (a) install the Work into an ISOLATED workspace,
+     (b) run it MANUALLY in its non-destructive, candidate-output-only mode, and
+     (c) inspect its source and outputs,
+   in each case only to evaluate the Work and report feedback to the owner.
+
+2. RESTRICTIONS
+   Except as permitted in Section 1, you may NOT:
+     - redistribute, publish, sublicense, sell, or host the Work or any
+       substantial part of it;
+     - present the Work publicly as a released or production product;
+     - remove or alter this notice or the attribution files (NOTICE,
+       THIRD_PARTY_LICENSES.md).
+
+3. THIRD-PARTY MATERIAL
+   The Work adapts METHODS (not verbatim code) from third-party projects and,
+   in one case, IDEAS from a CC BY-NC licensed work. Those upstream materials
+   remain under their own licenses. See NOTICE and THIRD_PARTY_LICENSES.md.
+   Nothing in this License grants rights in third-party material beyond what
+   those upstream licenses allow. The vendored `references/` upstreams are
+   present for development attribution and are NOT part of the distributable
+   release (see release-manifest.yaml: exclude_from_distribution).
+
+4. NO WARRANTY
+   THE WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER
+   LIABILITY ARISING FROM, OUT OF, OR IN CONNECTION WITH THE WORK OR ITS USE.
+
+5. FUTURE RELICENSING
+   The project owner MAY, at their sole discretion, release a future version
+   under a different (including open-source) license. This preview License does
+   not commit the owner to any such future license, and does not itself grant
+   any open-source rights.
+
+-------------------------------------------------------------------------------
+NOTE FOR THE OWNER: replace "ArmourPiercer1" with your legal name/entity if you
+intend this notice to have effect, and confirm this is the posture you want
+before creating the v0.1.0-alpha.1 tag. To ship openly instead, replace this
+file with a standard MIT or Apache-2.0 LICENSE and update release-manifest.yaml
+(`release.license`) + NOTICE accordingly.
+-------------------------------------------------------------------------------

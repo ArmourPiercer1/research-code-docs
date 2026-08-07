@@ -1,0 +1,170 @@
+# =============================================================================
+# release-manifest.yaml
+# Research-Code-Docs — machine-readable manifest for the internal-preview Alpha.
+#
+# This is the authoritative description of WHAT this release contains and its
+# SAFETY POSTURE. A preview user (or scripts/preflight.py) reads this to know
+# which workflows are supported, which are experimental, which are unsupported,
+# and that every skill ships manual-only with no destructive writes.
+#
+# Acceptance (directive §2.1):
+#   - release version is unique;
+#   - the skill versions below MATCH docs/skill-development/skills-registry.yaml;
+#   - source_commit is fixed;
+#   - supported / experimental / unsupported are clearly separated.
+#
+# Keep in sync with: VERSION, docs/skill-development/skills-registry.yaml,
+#   THIRD_PARTY_LICENSES.md, SUPPORT_MATRIX.md, KNOWN_LIMITATIONS.md.
+# =============================================================================
+
+release:
+  name: research-code-docs
+  version: 0.1.0-alpha.1
+  channel: internal-preview
+  release_date: "2026-08-06"
+  # Substantive content baseline this release packages: commit 9dc7f18
+  # ("Sprint 6 完成，实现了第一条真实闭环" — the first real documentation-refactor
+  # closed loop). The annotated git tag v0.1.0-alpha.1 points at the PACKAGING
+  # commit that adds this manifest + the release-engineering docs on top of that
+  # baseline; the packaging commit changes no skill logic, no DQE discriminator,
+  # and no skill/flow SKILL.md. So `source_commit` is the code/skill baseline;
+  # the tag marks the packaged commit. (A file cannot embed its own commit SHA.)
+  source_commit: "9dc7f18408d804a15222ca1c31fbfa4e253443e7"
+  audience:
+    - project-owner
+    - 1-3 controlled technical users
+  license: proprietary-internal-preview     # see LICENSE — relicensable later; nothing public yet
+  summary: >
+    Internal controlled preview for research-software documentation governance.
+    Formally supports the MANUAL, NON-DESTRUCTIVE documentation-refactor dry-run
+    and candidate-output workflow. Other workflows are experimental prefixes only.
+    All auto-trigger, destructive writes, and universal terminal-gate approval are OFF.
+
+posture:
+  manual_only: true
+  auto_trigger: false
+  destructive_writes: false
+  installation: explicit-user-action
+  default_install_mode: workspace-local     # <project>/.claude/skills/  (INSTALL.md mode A)
+  user_level_install: not-default           # mode B — offered only with an explicit risk note
+  dqe_mode: advisory-profile-scoped         # an ALLOW authorizes nothing; not a universal terminal gate
+  human_review_required: true
+
+# -----------------------------------------------------------------------------
+# WORKFLOWS — supported vs experimental vs unsupported (kept strictly separate)
+# -----------------------------------------------------------------------------
+supported_workflows:
+  - name: documentation-refactor
+    layer: L1-control
+    scope:
+      - dry-run-migration
+      - candidate-output
+      - advisory-quality-review
+      - maintenance-impact-proposal
+    forbidden:
+      - move
+      - delete
+      - overwrite
+      - auto-publish
+      - auto-accept-candidate
+      - auto-trigger
+    completion_semantics: >
+      flow_status=COMPLETE means the dry-run + candidate scope is complete — NOT that any
+      migration was executed. Apply-mode is a separate, un-granted explicit write-approval.
+
+experimental_workflows:        # prefix-only: route existing atoms, persist artifacts, stop honestly
+  - name: scientific-workspace-reconstruction
+    layer: L1-control
+    posture: honest-BLOCKED
+    blocks_at: dev-test-experiment-workspace-architect    # Batch 5 — not built
+  - name: numerical-research-software-design
+    layer: L1-control
+    posture: honest-BLOCKED
+    blocks_at: numerical-design-core-atoms                # Batch 4 — not built
+
+unsupported:                   # explicitly NOT part of this release
+  - auto-trigger
+  - automatic-publish
+  - destructive-apply
+  - universal-terminal-gate
+  - experiment-release-admission        # DQE returns GATE_DECISION=INCOMPLETE for this profile
+  - full-numerical-design-closed-loop
+  - full-workspace-reconstruction-closed-loop
+
+# -----------------------------------------------------------------------------
+# SKILLS — versions MUST equal docs/skill-development/skills-registry.yaml.
+# Every entry: disable_model_invocation=true, auto_trigger=false (release posture).
+# -----------------------------------------------------------------------------
+skills:
+  # -- L1 control flows --------------------------------------------------------
+  - {name: documentation-refactor,                   version: "0.1.0", layer: L1-control, invocation: manual-only,       disable_model_invocation: true, auto_trigger: false, tier: supported}
+  - {name: scientific-workspace-reconstruction,      version: "0.1.0", layer: L1-control, invocation: manual-only,       disable_model_invocation: true, auto_trigger: false, tier: experimental}
+  - {name: numerical-research-software-design,       version: "0.1.0", layer: L1-control, invocation: manual-only,       disable_model_invocation: true, auto_trigger: false, tier: experimental}
+  # -- L2 atomic — usable as manual advisory tools -----------------------------
+  - {name: documentation-quality-evaluator,          version: "0.4.1", layer: L2-atomic,  invocation: orchestrator-only, disable_model_invocation: true, auto_trigger: false, role: advisory-evaluator}
+  - {name: project-state-reconstructor,              version: "0.2.0", layer: L2-atomic,  invocation: manual-only,       disable_model_invocation: true, auto_trigger: false}
+  - {name: goal-scope-and-workflow-elicitor,         version: "0.2.0", layer: L2-atomic,  invocation: orchestrator-only, disable_model_invocation: true, auto_trigger: false}
+  - {name: uncertainty-and-decision-manager,         version: "0.2.0", layer: L2-atomic,  invocation: orchestrator-only, disable_model_invocation: true, auto_trigger: false}
+  - {name: workspace-forensics-and-inventory,        version: "0.1.0", layer: L2-atomic,  invocation: orchestrator-only, disable_model_invocation: true, auto_trigger: false}
+  - {name: document-information-architect,           version: "0.1.0", layer: L2-atomic,  invocation: orchestrator-only, disable_model_invocation: true, auto_trigger: false}
+  - {name: research-question-and-literature-planner, version: "0.1.0", layer: L2-atomic,  invocation: orchestrator-only, disable_model_invocation: true, auto_trigger: false}
+  - {name: research-evidence-synthesizer,            version: "0.1.0", layer: L2-atomic,  invocation: orchestrator-only, disable_model_invocation: true, auto_trigger: false}
+  - {name: content-canonicalization-and-migration,   version: "0.1.0", layer: L2-atomic,  invocation: orchestrator-only, disable_model_invocation: true, auto_trigger: false, checker: migration_map_check.py}
+  - {name: technical-document-rewriter,              version: "0.1.0", layer: L2-atomic,  invocation: orchestrator-only, disable_model_invocation: true, auto_trigger: false, checker: rewrite_provenance_check.py}
+  - {name: living-design-maintainer,                 version: "0.1.0", layer: L2-atomic,  invocation: orchestrator-only, disable_model_invocation: true, auto_trigger: false, checker: maintenance_impact_check.py}
+
+skill_count: 14
+
+# -----------------------------------------------------------------------------
+# DETERMINISTIC CHECKERS — must be runnable (scripts/preflight.py verifies import).
+# HARD gates block; ADVISORY are enforced with run_checks.py --advisory-is-hard;
+# SIGNAL never block (they surface candidates for the model to adjudicate).
+# -----------------------------------------------------------------------------
+checkers:
+  runner: evals/skills/harness/checkers/run_checks.py
+  hard:     [frontmatter_check, status_vocab_check]
+  advisory: [interface_check, flow_state_check, migration_map_check, rewrite_provenance_check, maintenance_impact_check]
+  signal:   [state_number_consistency, completion_open_conflict, agent_session_residue, artifact_role_mixing, roadmap_stage_fields, markdown_links_check, register_check, placeholders_check]
+
+# -----------------------------------------------------------------------------
+# SUPPORTED OUTPUT ARTIFACTS — the documentation-refactor supported chain (§1.1)
+# -----------------------------------------------------------------------------
+supported_artifacts:
+  - inventory-report
+  - project-state-report
+  - goal-scope-note
+  - document-artifact-map
+  - canonical-source-map
+  - open-decisions
+  - migration-map
+  - candidate-doc-set/
+  - rewrite-provenance-report
+  - quality-advisory
+  - maintenance-impact-report
+  - final-flow-state
+
+# -----------------------------------------------------------------------------
+# THIRD-PARTY — full detail in THIRD_PARTY_LICENSES.md. Method-borrow only; no
+# upstream skill code is redistributed in this release.
+# -----------------------------------------------------------------------------
+third_party:
+  see: THIRD_PARTY_LICENSES.md
+  method_borrow_MIT: [mattpocock-skills, agent-skills, github-awesome-copilot, research-paper-writing-skills]
+  non_commercial_restricted:
+    - {name: academic-research-skills, license: CC-BY-NC-4.0, usage: ideas-only, redistributed: false, public_release_ok: ideas-only-not-verbatim}
+  no_license_reference_only:
+    - {name: anthropics-skills, redistributed: false}
+    - {name: pengsida-learning-research, redistributed: false}
+
+# -----------------------------------------------------------------------------
+# DISTRIBUTION HYGIENE (directive §8.2 / §8.3) — exclude from any release archive
+# -----------------------------------------------------------------------------
+exclude_from_distribution:
+  - .venv/
+  - "**/__pycache__/"
+  - "*.pyc"
+  - "*.pyo"
+  - tests/corpus/upstream/
+  - tests/corpus/blind-runs/
+  - evals/skills/snapshots/
+  - references/            # vendored upstreams — see THIRD_PARTY_LICENSES.md before distributing any subset
