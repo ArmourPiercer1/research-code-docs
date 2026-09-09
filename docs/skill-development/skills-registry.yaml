@@ -40,7 +40,7 @@ skills:
     status: experimental
     layer: L2-atomic
     class: evaluate
-    owner: research-code-dev
+    owner: research-code-docs
     purpose: >
       Judge a documentation artifact against hard gates (HF-1..HF-15) + a weighted soft/roadmap rubric
       under a non-compensatory rule, run a two-layer no-context reader test, and emit a structured
@@ -79,7 +79,7 @@ skills:
     status: experimental
     layer: L2-atomic
     class: audit
-    owner: research-code-dev
+    owner: research-code-docs
     purpose: >
       Recover verifiable project/workspace facts (entry points, real progress, what runs,
       what is tested) into a state report that cleanly separates FACT from UNKNOWN.
@@ -108,7 +108,7 @@ skills:
     status: experimental
     layer: L2-atomic
     class: audit          # elicits; writes only a scope note
-    owner: research-code-dev
+    owner: research-code-docs
     purpose: >
       Structured interview that pins down user goals, scope boundaries, non-goals, and the
       real intended workflow — asking only decisions the user must make, looking up facts itself.
@@ -138,7 +138,7 @@ skills:
     status: experimental
     layer: L2-atomic
     class: maintain
-    owner: research-code-dev
+    owner: research-code-docs
     purpose: >
       Maintain a decision register that tags every item with a status (FACT..STALE) and an
       evidence level (E0..E5), keeping candidates/hypotheses/open questions separate from decided facts.
@@ -172,7 +172,7 @@ skills:
     status: experimental
     layer: L2-atomic
     class: audit
-    owner: research-code-dev
+    owner: research-code-docs
     purpose: >
       Read-only structural inventory of a messy workspace or document corpus: enumerate + classify raw
       artifacts by signal (entry-point candidates, tests, experiment scripts, results, caches, data, docs),
@@ -204,7 +204,7 @@ skills:
     status: experimental
     layer: L2-atomic
     class: design
-    owner: research-code-dev
+    owner: research-code-docs
     purpose: >
       Design the target information architecture for a hybrid doc or doc corpus: separate the doc-roles,
       assign one canonical home per responsibility + info-type, produce an artifact map + split/link/lifecycle
@@ -235,7 +235,7 @@ skills:
     status: experimental
     layer: L2-atomic
     class: research-adapter
-    owner: research-code-dev
+    owner: research-code-docs
     purpose: >
       Thin scoping front-end: turn an open research question into a search plan (scope, inclusion/exclusion,
       stop criteria, evidence standard) and ROUTE to the retrieval stack. Never retrieves or synthesizes.
@@ -264,7 +264,7 @@ skills:
     status: experimental
     layer: L2-atomic
     class: research-adapter
-    owner: research-code-dev
+    owner: research-code-docs
     purpose: >
       Design-facing: turn ALREADY-RETRIEVED evidence into a claim-evidence matrix + method-transfer cards +
       E0-E5 levels + transfer assumptions + gaps (direct / same-domain-indirect / cross-domain-analogy /
@@ -305,7 +305,7 @@ skills:
     status: experimental
     layer: L1-control
     class: orchestrate
-    owner: research-code-dev
+    owner: research-code-docs
     purpose: >
       Orchestrate the end-to-end restructure of a messy/mixed-responsibility DOCUMENT CORPUS: route
       forensics(document-corpus) -> project-state-reconstructor -> goal-scope-and-workflow-elicitor ->
@@ -337,7 +337,7 @@ skills:
     status: experimental
     layer: L1-control
     class: orchestrate
-    owner: research-code-dev
+    owner: research-code-docs
     purpose: >
       Orchestrate recovery of a messy dev-test-experiment CODE WORKSPACE into a known state: route
       forensics(workspace) -> project-state-reconstructor -> goal-scope-and-workflow-elicitor, then hand off
@@ -369,7 +369,7 @@ skills:
     status: experimental
     layer: L1-control
     class: orchestrate
-    owner: research-code-dev
+    owner: research-code-docs
     purpose: >
       Orchestrate the DESIGN of a numerical/scientific-computing effort: route state -> goal/scope ->
       literature-scope -> (delegated) retrieval -> evidence synthesis -> decision register (the evidence base),
@@ -420,7 +420,7 @@ skills:
     layer: L2-atomic
     class: migration
     batch: 5
-    owner: research-code-dev
+    owner: research-code-docs
     purpose: >
       Turn a document-information-architect split plan into a DRY-RUN migration map (per-source disposition,
       supersession map, link-update, rollback). v0: read-only w.r.t. the corpus, creates new plan files only,
@@ -454,7 +454,7 @@ skills:
     layer: L2-atomic
     class: rewrite
     batch: 5
-    owner: research-code-dev
+    owner: research-code-docs
     purpose: >
       Write CANDIDATE rewritten documents (new files in an isolated candidate dir) from a migration-map, plus a
       rewrite-provenance report + unresolved-content list. v0: creates_new_files only, may_overwrite/move/delete=
@@ -489,7 +489,7 @@ skills:
     layer: L2-atomic
     class: maintain
     batch: 5
-    owner: research-code-dev
+    owner: research-code-docs
     purpose: >
       Given a change event + canonical-source-map + decision register, emit a maintenance-impact report +
       PROPOSED canonical updates + stale-reference list + verification checklist. v0: read-only w.r.t. canonical

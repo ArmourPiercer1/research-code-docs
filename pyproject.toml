@@ -1,5 +1,5 @@
 [project]
-name = "research-code-dev-skills"
+name = "research-code-docs-skills"
 version = "0.1.0"
 description = "Governance + eval harness for the research-software documentation Skills system (workspace tooling only)."
 requires-python = ">=3.10"
