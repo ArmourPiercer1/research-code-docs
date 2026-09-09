@@ -10,7 +10,9 @@ last_verified: 2026-07-30T09:47:06Z
 -->
 
 This tree holds the **evaluation suite** for the research-software documentation Skills system.
-It is **workspace-only** — nothing here installs or triggers a skill in the live loader.
+It is **workspace-only** — nothing here installs or triggers a skill in the live loader (the
+deliberate Mode B user-level test install of 2026-08-07 is a separate, documented act — see
+`docs/skill-development/README.md`, "Recorded install state").
 
 ## Why a harness at all
 

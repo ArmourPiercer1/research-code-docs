@@ -13,12 +13,16 @@ skill_version: n/a
 source_commit: mattpocock/skills vendored snapshot (plugin.json v1.2.0; no pinned commit)
 source_documents: [docs/prompt.md, docs/研究软件文档Skills系统_设计与创建指南.md]
 status: DECIDED (Phase-1 complete; DQE v0.4.1 advisory freeze; Batch 2 built + light-passed; Batch 2.5 integration DONE; Batch 3 v0 skeletons BUILT)
-last_verified: 2026-08-05
+last_verified: 2026-09-10
 -->
 
 > Governance home for the research-software documentation **Skills system**. Everything here is
-> **workspace-only** and isolated from the live Claude Code loader (versioned via GitHub). Nothing
-> is installed or auto-triggered without explicit user approval.
+> **workspace-only** and versioned via GitHub; nothing auto-triggers without explicit user approval.
+> **Recorded install state (2026-09-10):** one deliberate **Mode B user-level test install** exists at
+> `~/.claude/skills/` (all 14 skills, installed 2026-08-07, byte-identical to the workspace versions) —
+> an intentional testing fixture per the maintainer, NOT the default mode; all 14 skills carry
+> `disable-model-invocation: true`, so the install is manual-invocation only. Manage via `INSTALL.md`
+> (Mode B) / `UNINSTALL.md`.
 
 ## Phase-1 ✅ · DQE **v0.4.1 FROZEN (advisory / profile-scoped)** · Batch 2 **4/4 built + light-passed** · Batch 2.5 **integration DONE** · Batch 3 **3 v0 skeletons BUILT + routing 27/27** · Batch 5 doc-refactor **FIRST REAL CLOSED LOOP**
 
