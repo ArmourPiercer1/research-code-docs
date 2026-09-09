@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 <!--
 skill_version: 0.4.1
-status: experimental (manual/orchestrator-only until the v0.4.1 admission matrix passes; see docs/skill-development/creation-roadmap.md)
+status: experimental (manual/orchestrator-only; advisory/profile-scoped — FROZEN 2026-08-05; see docs/skill-development/adr/ADR-DQE-001-evaluation-profile-and-verdict-axes.md)
 generated_by_skill: manual authoring; v0.2 upgraded from real references; v0.3 hardened after a hybrid-roadmap false-pass; v0.4 adds ADR-DQE-001 (profile-aware HF-9, two-axis verdict, lifecycle vocab, HF-14b profile severity); v0.4.1 = D-16 gate-composition contract fix (deterministic 3-rule GATE_DECISION derivation; thresholds unchanged, observable behavior changed); v0.4.1 FROZEN 2026-08-05 as an advisory/profile-scoped evaluator — added a profile-ADMISSION scope guard (unsupported profile -> GATE_DECISION=INCOMPLETE / GATE_REASON=unsupported-evaluation-profile); NO HF-1..15 threshold changed; Phase E deferred
 source_commit: addyosmani/agent-skills@7829ffd (MIT); Master-cai/Research-Paper-Writing-Skills@77e7c2c (MIT); Imbad0202/academic-research-skills@2cf3a51 (CC-BY-NC, ideas-only); mattpocock/skills@snapshot(v1.2.0)
 source_documents:

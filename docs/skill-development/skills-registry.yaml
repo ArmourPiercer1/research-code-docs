@@ -309,9 +309,11 @@ skills:
     purpose: >
       Orchestrate the end-to-end restructure of a messy/mixed-responsibility DOCUMENT CORPUS: route
       forensics(document-corpus) -> project-state-reconstructor -> goal-scope-and-workflow-elicitor ->
-      document-information-architect, then hand the design plan to migration+rewrite+review. v0 SKELETON:
-      routes/persists/records flow-state and STOPS HONESTLY (BLOCKED) at the Batch-5 executor tail. Never
-      inventories/reconstructs/designs/moves/rewrites itself — every stage is delegated.
+      document-information-architect, then hand the design plan to migration+rewrite+review+living-maintainer
+      (executor tail built in Sprint 6B 2026-08-06; first real closed loop COMPLETE for dry-run + candidate
+      scope, zero source files changed). Routes/persists/records flow-state; STOPS HONESTLY (BLOCKED,
+      blocked_by=explicit-write-approval-required) when apply is requested without an explicit write-approval.
+      Never inventories/reconstructs/designs/moves/rewrites itself — every stage is delegated.
     invocation: manual-only
     auto_trigger: false
     disable_model_invocation: true

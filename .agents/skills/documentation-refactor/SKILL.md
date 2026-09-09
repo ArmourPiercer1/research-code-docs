@@ -6,8 +6,8 @@ disable-model-invocation: true
 
 <!--
 skill_version: 0.1.0
-status: experimental (manual/user-invoked-only until its control-flow conflict eval passes; v0 SKELETON)
-generated_by_skill: manual authoring (Batch 3, control-flow #1; per 2026-08-05 directive §9.1/§10)
+status: experimental (manual/user-invoked-only until its control-flow conflict eval passes; first real closed loop COMPLETE in Sprint 6B 2026-08-06, dry-run + candidate scope)
+generated_by_skill: manual authoring (Batch 3, control-flow #1; per 2026-08-05 directive §9.1/§10; executor-tail claims corrected 2026-09-10 per Sprint 6B closure)
 source_commit: 7919bc4
 source_documents:
   - docs/skill-development/system-architecture.md §3.3 (the documentation-refactor chain)
@@ -17,16 +17,21 @@ source_documents:
   - references/mattpocock-skills/skills/engineering/wayfinder/SKILL.md (MIT — orchestrator: route + persist decisions, don't do the work; method-borrow)
   - references/documentation-methodology/upstream-method-matrix.md §3.1
   - evals/skills/results/batch2_5/document-chain/ (Track A — the validated runnable prefix; this flow's integration fixture)
-last_verified: 2026-08-05
+  - docs/skill-development/reports/sprint6-routing-and-first-closed-loop-2026-08-06.md (Sprint 6B — first closed loop COMPLETE)
+  - evals/skills/results/batch3/documentation-refactor-closure/ (the closure's artifacts incl. the apply-gate BLOCKED negative)
+last_verified: 2026-09-10
 -->
 
-# Documentation Refactor (L1 control flow · v0 skeleton)
+# Documentation Refactor (L1 control flow · v0)
 
-> **Experimental · manual/user-invoked-only · v0 SKELETON.** This flow **orchestrates**; it does not do any
+> **Experimental · manual/user-invoked-only.** This flow **orchestrates**; it does not do any
 > stage's work itself. Its runnable prefix (inventory → state → goal/scope → information-architecture) is
-> **validated** (Batch-2.5 Track A). Its executor tail (migration → rewrite → living-maintainer) is **Batch 5
-> and not built**, so a real v0 run **stops at `flow_status=BLOCKED`** with a named `blocked_by` — a truthful
-> capability boundary, not a failure. Orchestration pattern (route + persist + record, never do the work)
+> **validated** (Batch-2.5 Track A), and its executor tail (migration → rewrite → review → living-maintainer)
+> was **built in Sprint 6B (2026-08-06)**: the first real closed loop is **COMPLETE for the dry-run +
+> candidate scope** (zero source files changed; every open human decision left undecided). Apply-mode still
+> requires an explicit write-approval: a request to move/overwrite/delete **without** that approval
+> **stops at `flow_status=BLOCKED`, `blocked_by=explicit-write-approval-required`** — a truthful
+> permission boundary, not a failure. Orchestration pattern (route + persist + record, never do the work)
 > adapted from `wayfinder` (MIT), attributed in `upstream-method-matrix.md` §3.1.
 
 ## Purpose
@@ -44,11 +49,12 @@ workspace-forensics-and-inventory  (document-corpus mode, READ-ONLY)   → inven
 → project-state-reconstructor      (verify claims; FACT/UNKNOWN/STALE) → project-state-report
 → goal-scope-and-workflow-elicitor (goal + non-goals + open decisions) → goal-scope-note
 → document-information-architect   (target IA; a PLAN, no move/rewrite)→ document-artifact-map (+ canonical-source-map, open-decisions)
-── v0 SKELETON STOPS HERE (executor tail below is Batch 5, NOT BUILT) ──
-→ content-canonicalization-and-migration  (dry-run move map first)     [BLOCKED: not built]
-→ technical-document-rewriter              (new files only; never overwrite) [BLOCKED: not built]
+── executor tail (built in Sprint 6B; dry-run/candidate scope by default) ──
+→ content-canonicalization-and-migration  (dry-run move map first; may_move/delete/overwrite=false)
+→ technical-document-rewriter              (new files only; never overwrite; candidate output)
 → documentation-quality-evaluator          (ADVISORY review of the result)
-→ living-design-maintainer                  (keep it current)          [BLOCKED: not built]
+→ living-design-maintainer                  (proposal only; approved:false)
+── apply-gate: explicit write-approval required to move/overwrite/delete ──
 ```
 
 At every stage the flow **verifies the hand-off** (does the upstream artifact conform to its
@@ -104,8 +110,17 @@ wants it **restructured / curated end-to-end**, not just one narrow action.
 
 ## v0 expected result
 
-For a real corpus today, the honest v0 result is **`flow_status=BLOCKED`, `blocked_by=content-canonicalization-and-migration + technical-document-rewriter (Batch 5)`**, with the full design prefix completed and handed to a
-human + DQE-advisory. See the worked example: `evals/skills/results/batch3/documentation-refactor/flow-state-docs-skill-development.md` (it orchestrates the real Batch-2.5 Track-A artifacts and stops honestly).
+For a real corpus today, the honest v0 result is **`flow_status=COMPLETE` for
+`requested_scope=dry-run-and-candidate-output`** — the full chain runs (design prefix + dry-run migration-map +
+candidate rewrites + DQE-advisory + maintenance-impact plan) with **zero source files changed** and every open
+human decision left undecided. If the request also asks to **apply** (move/overwrite/delete) **without an
+explicit write-approval**, the honest result is **`flow_status=BLOCKED`,
+`blocked_by=explicit-write-approval-required`** at the apply-gate — the flow does not relax permissions to
+"finish". Worked examples: `evals/skills/results/batch3/documentation-refactor-closure/final-flow-state.md`
+(COMPLETE closure) and `evals/skills/results/batch3/documentation-refactor-closure/flow-state-apply-without-approval-BLOCKED.md`
+(the safety negative). The skeleton-era example
+`evals/skills/results/batch3/documentation-refactor/flow-state-docs-skill-development.md` is historical
+(pre-Sprint 6B, when the executors were not yet built).
 
 ## References to load
 
@@ -115,5 +130,5 @@ human + DQE-advisory. See the worked example: `evals/skills/results/batch3/docum
 ## Scripts to run
 
 - `evals/skills/harness/checkers/interface_check.py <artifact>` — verify each hand-off before the next call.
-- `evals/skills/harness/checkers/flow_state_check.py <flow-state>` — verify the flow-state (honest BLOCKED).
+- `evals/skills/harness/checkers/flow_state_check.py <flow-state>` — verify the flow-state (honest COMPLETE/BLOCKED semantics).
 - `evals/skills/harness/checkers/run_checks.py <run-dir>` — front-matter + status vocab on all outputs.
