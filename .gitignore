@@ -9,8 +9,11 @@ __pycache__/
 *.pyc
 *.pyo
 
-# reference materials (local only)
-references/
+# reference materials (local only) — EXCEPT the frozen handoff contracts:
+# interfaces/ + templates/ are versioned core contracts (reconstruction audit D10)
+references/*
+!references/interfaces/
+!references/templates/
 
 # snapshots
 evals/skills/snapshots/
