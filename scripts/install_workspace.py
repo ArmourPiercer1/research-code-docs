@@ -2,12 +2,17 @@
 """install_workspace.py — copy the Research-Code-Docs release runtime set into an
 ISOLATED target workspace, preserving the repo-relative layout the skills depend on.
 
-Why a curated copy (not just `.claude/skills/`): the skills invoke deterministic
+Why a curated copy (not just `.agents/skills/`): the skills invoke deterministic
 checkers under `evals/skills/harness/checkers/`, load harness reference docs
 (`canonical-source-map.md`, `hard-fail.md`, `rubric.md`), and read
 `references/interfaces|templates`. Those must sit at the SAME relative paths beside
-`.claude/skills/` for a run to work. The 3 executor checkers resolve the workspace
+the skills directory for a run to work. The 3 executor checkers resolve the workspace
 root from their own location (`parents[4]`), so preserving the layout is sufficient.
+
+Skills directory: the source repo keeps skills under `.agents/skills/` (platform-neutral;
+matches the DSH `.agents/skills` convention). The install target uses the same by default;
+pass `--skills-dir .claude/skills` when the target project is a Claude Code workspace
+(Claude Code discovers `<project>/.claude/skills/`, not `.agents/skills/`).
 
 SAFETY (matches the release posture):
   - READ-ONLY with respect to the SOURCE repo (never writes into --source).
@@ -27,8 +32,11 @@ from pathlib import Path
 
 # Runtime set (relative to the source repo root). Directories are copied whole
 # (minus the ignore patterns); files are copied individually.
+# The skills directory is the only path-sensitive entry: the SOURCE layout is
+# .agents/skills; the TARGET layout is chosen by --skills-dir (default: same).
+SKILLS_SRC = ".agents/skills"
 RUNTIME_DIRS = [
-    ".claude/skills",
+    SKILLS_SRC,
     "evals/skills/harness/checkers",
     "references/interfaces",
     "references/templates",
@@ -68,10 +76,14 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="Install the release runtime set into an isolated workspace.")
     ap.add_argument("--target", required=True, help="Isolated workspace directory to install INTO (created if absent).")
     ap.add_argument("--source", default=None, help="Source repo root (default: this script's repo).")
+    ap.add_argument("--skills-dir", default=SKILLS_SRC,
+                    help=f"Where skills are placed in the TARGET (default: {SKILLS_SRC}; "
+                         "use .claude/skills for a Claude Code project).")
     ap.add_argument("--dry-run", action="store_true", help="Print what would be copied; write nothing.")
     ap.add_argument("--force", action="store_true", help="Overwrite existing skills/files in the target.")
     ap.add_argument("--list", action="store_true", help="Print the runtime set and exit.")
     args = ap.parse_args(argv)
+    skills_dst = args.skills_dir.strip("/").strip("\\").replace("\\", "/")
 
     if args.list:
         print("Release runtime set:")
@@ -104,16 +116,16 @@ def main(argv: list[str] | None = None) -> int:
         if not src.exists():
             print(f"ERROR: missing in source: {rel}", file=sys.stderr)
             return 2
-        dst = target / rel
-        if rel == ".claude/skills":
+        dst = target / (skills_dst if rel == SKILLS_SRC else rel)
+        if rel == SKILLS_SRC:
             # per-skill conflict guard
             for skill in sorted(p for p in src.iterdir() if p.is_dir()):
                 sdst = dst / skill.name
                 if sdst.exists() and not args.force:
-                    print(f"  SKIP (exists): .claude/skills/{skill.name}  (use --force to overwrite)")
+                    print(f"  SKIP (exists): {skills_dst}/{skill.name}  (use --force to overwrite)")
                     warned = True
                     continue
-                print(f"  {'would copy' if args.dry_run else 'copy'}: .claude/skills/{skill.name}/")
+                print(f"  {'would copy' if args.dry_run else 'copy'}: {skills_dst}/{skill.name}/")
                 if not args.dry_run:
                     if sdst.exists():
                         shutil.rmtree(sdst)

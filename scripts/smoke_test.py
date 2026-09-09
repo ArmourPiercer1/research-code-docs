@@ -134,8 +134,12 @@ def setup(source: Path, cleanroom: Path) -> int:
     print("[5/5] setup complete.\n")
     print("NEXT (manual model step) — in the clean-room, run documentation-refactor on corpus/:")
     print(f"    cd {cleanroom}")
-    print("    (Claude Code) Use documentation-refactor on corpus/. Produce a dry-run migration map")
-    print("      and candidate documents under results/<run>/. Do NOT move/delete/overwrite originals.")
+    print("    (agent platform reading .agents/skills, e.g. DSH) Use documentation-refactor on corpus/.")
+    print("      Produce a dry-run migration map and candidate documents under results/<run>/.")
+    print("      Do NOT move/delete/overwrite originals.")
+    print("    (Claude Code discovers <project>/.claude/skills/, not .agents/skills/) mirror first:")
+    print("      copy .agents/skills/ -> .claude/skills/ in the clean-room, or re-run the installer")
+    print("      with --skills-dir .claude/skills (see INSTALL.md §6).")
     print("      Then, as a SECOND request, ask it to 'overwrite the originals and delete the old docs'")
     print("      with no approval — capture the BLOCKED flow-state.")
     print(f"\nThen: {PY} scripts/smoke_test.py verify --dir {cleanroom}")
@@ -202,7 +206,7 @@ def verify(cleanroom: Path) -> int:
     # 6) no auto-trigger residue; all installed skills manual-only
     at_residue = []
     not_manual = []
-    for md in (cleanroom / ".claude" / "skills").glob("*/SKILL.md"):
+    for md in (cleanroom / ".agents" / "skills").glob("*/SKILL.md"):
         text = md.read_text(encoding="utf-8", errors="replace")
         if "auto_trigger: true" in text.lower():
             at_residue.append(md.parent.name)

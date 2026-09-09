@@ -5,6 +5,27 @@ All notable changes to this project. Format loosely follows
 (see [VERSION](VERSION) / [release-manifest.yaml](release-manifest.yaml)), which is distinct from the
 per-skill `skill_version`s.
 
+## [Unreleased] — post-alpha changes
+
+### Changed
+- **`.claude/skills/` → `.agents/skills/`** — the skill source directory is renamed to the
+  platform-neutral `.agents/skills` layout (matches the DSH `.agents/skills` convention), to make the
+  workspace easier to connect to agent platforms other than Claude Code. All functional scripts
+  (`preflight.py`, `install_workspace.py`, `smoke_test.py`, `build_skill_snapshots.py` + legacy-path
+  fallback for historical git refs, `make_injection.py`, `make_batch.py`, `make_grading_injection.py`,
+  `interface_check.py`) and release docs updated. Historical artifacts (dated reports, eval results,
+  corpus seeds) keep the old paths — they are frozen-in-time records.
+- **Installer gains `--skills-dir`** (default `.agents/skills`) so a Claude Code project can install
+  the runtime set into its native discovery directory `.claude/skills`. Documented in
+  `INSTALL.md` §6 and `QUICKSTART.md` §4; new entry in `KNOWN_LIMITATIONS.md` (Claude Code does not
+  auto-discover the default `.agents/` layout).
+
+### Retired
+- **The batch roadmap is void.** `docs/skill-development/creation-roadmap.md` is marked
+  SUPERSEDED; the governing plan is now the Research Software Agent Workflow Reconstruction Charter
+  (`docs/plans/active/research_software_agent_workflow_reconstruction_charter.md`). No new Batch 4/5
+  work is started under the old plan.
+
 ## [0.1.0-alpha.1] — 2026-08-06 — Internal Preview
 
 First packaged, installable, verifiable, rollback-able internal-preview release. Content baseline:

@@ -1,5 +1,12 @@
 # Skill Development — Phase 1 Index
 
+> **Plan change (2026-09-09).** The batch roadmap ([creation-roadmap.md](creation-roadmap.md)) is
+> **VOID / superseded**. The governing development plan is now the Research Software Agent Workflow
+> Reconstruction Charter:
+> [docs/plans/active/research_software_agent_workflow_reconstruction_charter.md](../plans/active/research_software_agent_workflow_reconstruction_charter.md).
+> Everything below is the historical record of Phase 1 through the v0.1.0-alpha.1 release; do not
+> start new Batch 4/5 work under the retired roadmap.
+
 <!--
 generated_by_skill: (manual, Phase-1)
 skill_version: n/a
@@ -58,7 +65,7 @@ gate until the v1.0 bar (full golden suite + ablation + recall≥90%) is met. De
 
 ## The four Batch-1 skills (drafts)
 
-Under [`.claude/skills/`](../../.claude/skills/) — all `disable-model-invocation: true`, now at **v0.2.0**:
+Under [`.agents/skills/`](../../.agents/skills/) — all `disable-model-invocation: true`, now at **v0.2.0**:
 
 1. `documentation-quality-evaluator` — grades every other skill (built first). **v0.3.0** · evals: anchor golden-negative FAILs correctly (recall 1.0, false_pass 0) + B1 over-strictness PASS + trigger 28/28. +HF-13/14a/14b/15, HF-12A–E, non-compensatory scoring, two-layer reader, structured verdict, 5 signal checkers.
 2. `project-state-reconstructor` — recover facts → state report. +claimed-vs-verified ledger, pipeline-trace anchor, evidence-hygiene trust tiers, two-tier unknowns.
@@ -78,7 +85,7 @@ Runner uv-venv: `.venv/` (pyyaml). See [evals/skills/README.md](../../evals/skil
 - **Real-task gap** — ≥2 real historical project tasks per skill must be supplied by the user; current task-quality cases are environment-grounded, not verbatim (constraint D.8).
 - **Not yet executed** — multi-turn runs; task-quality soft-scoring for PSR/GSWE/UDM; standalone reader-agent pass. (Batch-1→2 hardening.)
 
-## Next (Batch 3 v0 skeletons BUILT; Batch 4/5 atoms are next)
+## Next (as recorded 2026-08-06 — SUPERSEDED by the reconstruction charter, 2026-09-09)
 
 The four Batch-2 skills passed their light round, and **Batch 2.5** then proved they **compose through explicit,
 deterministically-checked artifact interfaces with no chat dependence** — two real chains, one run each:

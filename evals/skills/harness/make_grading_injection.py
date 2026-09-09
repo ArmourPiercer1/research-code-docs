@@ -201,7 +201,7 @@ CONFIDENCE=<HIGH|MEDIUM|LOW>
 
 
 def build(role: str, skill: str, target: Path, opts: dict) -> str:
-    skill_md = ROOT / ".claude" / "skills" / skill / "SKILL.md"
+    skill_md = ROOT / ".agents" / "skills" / skill / "SKILL.md"
     parts: list[str] = []
     if role == "evaluator":
         prof = opts.get("profile")

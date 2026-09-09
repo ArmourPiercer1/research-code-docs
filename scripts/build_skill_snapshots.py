@@ -32,7 +32,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SNAP = ROOT / "evals" / "skills" / "snapshots"
-SKILL_REL = ".claude/skills/documentation-quality-evaluator/SKILL.md"
+SKILL_REL = ".agents/skills/documentation-quality-evaluator/SKILL.md"
 HARNESS_REL = "evals/skills/harness"
 MGI_REL = f"{HARNESS_REL}/make_grading_injection.py"
 CTX_FILES = ["hard-fail.md", "rubric.md", "canonical-source-map.md"]
@@ -56,6 +56,11 @@ def read_source(ref: str, rel: str) -> bytes:
         return (ROOT / rel).read_bytes()
     out = subprocess.run(["git", "show", f"{ref}:{rel}"], cwd=ROOT,
                          capture_output=True)
+    if out.returncode != 0 and rel.startswith(".agents/"):
+        # Historical commits predate the 2026-09-09 `.claude` -> `.agents` rename.
+        legacy = ".claude/" + rel[len(".agents/"):]
+        out = subprocess.run(["git", "show", f"{ref}:{legacy}"], cwd=ROOT,
+                             capture_output=True)
     if out.returncode != 0:
         raise SystemExit(f"git show {ref}:{rel} failed: {out.stderr.decode('utf-8','replace')[:200]}")
     return out.stdout

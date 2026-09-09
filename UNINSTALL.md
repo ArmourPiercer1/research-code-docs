@@ -11,7 +11,7 @@
 
 | Location | Created by | Safe to delete? |
 |---|---|---|
-| `<workspace>/.claude/skills/<14 skills>/` | install | Yes |
+| `<workspace>/.agents/skills/<14 skills>/` (or `.claude/skills/` when installed with `--skills-dir`) | install | Yes |
 | `<workspace>/evals/`, `references/`, `scripts/`, `VERSION`, `release-manifest.yaml`, `*.md` | install | Yes |
 | `<workspace>/.venv/` | `uv venv` | Yes (regenerable) |
 | `<workspace>/results/…` **or** `evals/skills/results/<run>/…` | a flow run (candidate outputs) | Yes — **but this is your generated work; keep if wanted** |

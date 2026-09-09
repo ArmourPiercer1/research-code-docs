@@ -1,5 +1,11 @@
 # Creation Roadmap — Research-Software Documentation Skills System
 
+> **⛔ VOID / SUPERSEDED (2026-09-09).** This batch roadmap is **retired**. The governing development
+> plan is now the Research Software Agent Workflow Reconstruction Charter:
+> [docs/plans/active/research_software_agent_workflow_reconstruction_charter.md](../plans/active/research_software_agent_workflow_reconstruction_charter.md).
+> Do not start new Batch 4 / Batch-5-remainder work under this roadmap; this file is kept as a
+> historical record of the Phase-1 → v0.1.0-alpha.1 build plan and its outcomes.
+
 <!--
 generated_by_skill: (manual, Phase-1 governance authoring)
 skill_version: n/a
@@ -8,7 +14,7 @@ source_documents:
   - docs/研究软件文档Skills系统_设计与创建指南.md (§10, §16)
   - docs/skill-development/system-architecture.md
   - docs/skill-development/current-skills-audit.md
-status: DECIDED for Batch 1; Batch 2 built + light-passed; Batch 2.5 integration DONE; Batch 3 v0 skeletons BUILT + Sprint 6A routing/conflict PASS; Batch-5 doc-refactor executor subset BUILT + FIRST REAL CLOSED LOOP (2026-08-06); PLANNED for Batch 4 + rest of Batch 5
+status: SUPERSEDED (2026-09-09) — voided by the reconstruction charter (docs/plans/active/); historical record of Batch 0–5 progress through the v0.1.0-alpha.1 release
 last_verified: 2026-08-06  (Sprint 6A routing 27/27 + Sprint 6B doc-refactor executor subset built + first real closed loop; §3/§5 updated)
 -->
 

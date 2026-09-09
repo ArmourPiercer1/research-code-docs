@@ -48,6 +48,12 @@
     Runs so far are on small corpora (tens of docs). Behavior, latency, and context cost on hundreds+ of
     documents have not been systematically measured; expect to chunk large corpora manually.
 
+11. **The default layout is not auto-discovered by Claude Code.**
+    Skills are kept under `.agents/skills/` (platform-neutral; matches the DSH `.agents/skills`
+    convention). Claude Code reads `<project>/.claude/skills/`, so for Claude Code installs use
+    `--skills-dir .claude/skills` (or mirror the directory once — see QUICKSTART §4). Agent platforms
+    that read `.agents/` use the default layout as-is.
+
 ---
 
 **How to report something that looks wrong.** Use the run-feedback record in the release plan (§9.1):

@@ -45,7 +45,7 @@ posture:
   auto_trigger: false
   destructive_writes: false
   installation: explicit-user-action
-  default_install_mode: workspace-local     # <project>/.claude/skills/  (INSTALL.md mode A)
+  default_install_mode: workspace-local     # <project>/.agents/skills/  (INSTALL.md mode A; --skills-dir .claude/skills for Claude Code)
   user_level_install: not-default           # mode B — offered only with an explicit risk note
   dqe_mode: advisory-profile-scoped         # an ALLOW authorizes nothing; not a universal terminal gate
   human_review_required: true

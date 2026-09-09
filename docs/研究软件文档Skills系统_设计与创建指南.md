@@ -548,7 +548,7 @@ references/upstream-skills/
 而不是直接复制到：
 
 ```text
-.claude/skills/
+.agents/skills/
 ```
 
 ---
@@ -602,7 +602,7 @@ references/upstream-skills/
 先创建目录和治理文件：
 
 ```text
-.claude/skills/
+.agents/skills/
 references/upstream-skills/
 references/documentation-methodology/
 evals/skills/
@@ -1085,7 +1085,7 @@ last_verified:
 # 第八部分：推荐目录结构
 
 ```text
-.claude/skills/
+.agents/skills/
 ├── numerical-research-software-design/
 ├── scientific-workspace-reconstruction/
 ├── documentation-refactor/

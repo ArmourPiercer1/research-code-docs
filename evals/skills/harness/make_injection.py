@@ -10,7 +10,7 @@ orchestrator can hand it to an Explore/general sub-agent verbatim.
 Usage:
     python make_injection.py <case.yaml> <case-id> [--skill-md <path>]
 If --skill-md is omitted, it is inferred from the case file's `skill:` field as
-    .claude/skills/<skill>/SKILL.md  (resolved from the repo root).
+    .agents/skills/<skill>/SKILL.md  (resolved from the repo root).
 """
 from __future__ import annotations
 import sys
@@ -56,7 +56,7 @@ def main(argv: list[str]) -> int:
     if "--skill-md" in argv:
         skill_md = Path(argv[argv.index("--skill-md") + 1])
     else:
-        skill_md = REPO_ROOT / ".claude" / "skills" / skill / "SKILL.md"
+        skill_md = REPO_ROOT / ".agents" / "skills" / skill / "SKILL.md"
     if not skill_md.exists():
         print(f"SKILL.md not found: {skill_md}", file=sys.stderr)
         return 2

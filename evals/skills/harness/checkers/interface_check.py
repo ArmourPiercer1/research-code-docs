@@ -58,7 +58,7 @@ PLACEHOLDER = re.compile(r"\b(TODO|TBD|FIXME)\b|\bxxx\b", re.IGNORECASE)
 def _is_placeholder(val: str) -> bool:
     """A value is a placeholder only if it is a BARE stub — the whole value is a single <...> token, or it
     carries an explicit TODO/TBD/FIXME/xxx. A real value that merely *contains* an angle-bracket path pattern
-    (e.g. `.claude/skills/<skill>/SKILL.md`) is NOT a placeholder."""
+    (e.g. `.agents/skills/<skill>/SKILL.md`) is NOT a placeholder."""
     v = val.strip()
     if re.fullmatch(r"<[^>]*>", v):
         return True

@@ -22,7 +22,7 @@ from pathlib import Path
 WORKSPACE = Path(__file__).resolve().parents[1]
 MANIFEST = WORKSPACE / "release-manifest.yaml"
 REGISTRY = WORKSPACE / "docs" / "skill-development" / "skills-registry.yaml"
-SKILLS_DIR = WORKSPACE / ".claude" / "skills"
+SKILLS_DIR = WORKSPACE / ".agents" / "skills"
 CHECKERS_DIR = WORKSPACE / "evals" / "skills" / "harness" / "checkers"
 NAMED_CHECKERS = [
     "interface_check", "flow_state_check", "migration_map_check",
@@ -127,7 +127,7 @@ def check_skills(yaml) -> dict:
     for name, mspec in sorted(man_skills.items()):
         skill_md = SKILLS_DIR / name / "SKILL.md"
         if not skill_md.exists():
-            blocking.append(f"Skill missing on disk: .claude/skills/{name}/SKILL.md")
+            blocking.append(f"Skill missing on disk: .agents/skills/{name}/SKILL.md")
             out["issues"].append(f"{name}: MISSING")
             continue
         out["present"] += 1

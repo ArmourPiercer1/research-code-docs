@@ -30,13 +30,16 @@ Full matrix + the meaning of *supported / tested / experimental / unsupported*:
 
 ## 3. Claude Code / Skills directory requirement
 
-- The skills live under **`.claude/skills/`** inside the workspace. Claude Code, when opened with the
-  **workspace directory as the project root**, discovers all 14 skills there.
+- The skills live under **`.agents/skills/`** inside the workspace — a platform-neutral layout that
+  matches the DSH `.agents/skills` convention. An agent platform that reads `.agents/skills` (e.g. DSH),
+  when opened with the **workspace directory as the project root**, discovers all 14 skills there.
+- **Claude Code note:** Claude Code natively reads `<project>/.claude/skills/`, not `.agents/skills/`.
+  Install with `--skills-dir .claude/skills` (see §6) so a Claude Code project sees the skills.
 - Every skill ships with `disable-model-invocation: true` — it will **only** run when you invoke it
   **manually** (`/<skill-name>` or by explicit request). None auto-trigger.
 - The skills reference their checkers and templates by **workspace-relative path**
   (`evals/skills/harness/checkers/…`, `references/interfaces|templates/…`). This is why the install
-  copies the whole runtime set, not just `.claude/skills/` — see §7.
+  copies the whole runtime set, not just the skills directory — see §7.
 
 ## 4. Required dependencies
 
@@ -72,6 +75,8 @@ Use this when you want the corpus you are refactoring to live in a clean directo
 python scripts/install_workspace.py --target /path/to/isolated-workspace
 python scripts/install_workspace.py --target /path/to/isolated-workspace --dry-run   # preview first
 python scripts/install_workspace.py --list                                            # show the set
+# Claude Code target (its discovery dir is .claude/skills, not .agents/skills):
+python scripts/install_workspace.py --target /path/to/isolated-workspace --skills-dir .claude/skills
 ```
 
 Then in the target:
@@ -87,7 +92,9 @@ PowerShell (Windows) is identical except for path separators; the installer is c
 ### Install modes (per §2.2 of the release plan)
 
 - **Mode A — workspace-local (RECOMMENDED, default for Alpha).** The isolated directory above *is*
-  your Claude Code project root; `.claude/skills/` sits inside it. This is the tested path.
+  your agent project root; `.agents/skills/` sits inside it (default). This is the tested path.
+  For a Claude Code project, add `--skills-dir .claude/skills` so the skills land in Claude Code's
+  discovery directory.
 - **Mode B — user-level (`~/.claude/skills/`) — NOT the default.** Only with an explicit understanding
   of the risk: a user-global copy would make these skills visible to *every* project, and the skills'
   workspace-relative checker/template paths will not resolve outside a workspace that also contains
@@ -107,7 +114,7 @@ never write to a user-global / live loader by default
 Installed into `<workspace>/` (layout preserved so the skills resolve their paths):
 
 ```text
-.claude/skills/<14 skills>/                 the skills (manual-only)
+.agents/skills/<14 skills>/                 the skills (manual-only; .claude/skills/ with --skills-dir)
 evals/skills/harness/checkers/*.py          the deterministic checkers
 evals/skills/harness/{canonical-source-map,hard-fail,rubric}.md   harness reference docs the skills load
 references/interfaces/*.schema.md + README.md   the frozen handoff interfaces
@@ -125,8 +132,8 @@ Your **corpus** (the docs you want refactored) is separate — copy it under the
 
 Before/at install, confirm:
 
-- No **same-named skill** already exists in the target `.claude/skills/` (the installer skips and warns;
-  `--force` overwrites — only after you confirm it is not user-modified).
+- No **same-named skill** already exists in the target skills directory (default `.agents/skills/`)
+  (the installer skips and warns; `--force` overwrites — only after you confirm it is not user-modified).
 - No **different-version** copy is present (compare against [`VERSION`](VERSION) /
   [`release-manifest.yaml`](release-manifest.yaml)).
 - You are **not** overwriting user-modified skills.

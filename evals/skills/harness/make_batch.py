@@ -71,7 +71,7 @@ def main(argv: list[str]) -> int:
         print("usage: make_batch.py <skill-name>", file=sys.stderr)
         return 2
     skill = argv[1]
-    skill_md = (ROOT / ".claude" / "skills" / skill / "SKILL.md").read_text(encoding="utf-8")
+    skill_md = (ROOT / ".agents" / "skills" / skill / "SKILL.md").read_text(encoding="utf-8")
     cases = load_cases("trigger", skill) + load_cases("conflict", skill)
 
     out = [CONTRACT, "\n", ROSTER, "\n===== SKILL UNDER TEST (injected SKILL.md) =====\n", skill_md,

@@ -30,7 +30,17 @@ honestly at a not-yet-built capability. See [SUPPORT_MATRIX.md](SUPPORT_MATRIX.m
 
 ## 4. How to invoke
 
-Open Claude Code with the **workspace directory as the project root**, then ask (manually — nothing
+The skills live under `.agents/skills/` (platform-neutral; an agent platform that reads `.agents/`
+— e.g. DSH — uses the workspace as-is). **Claude Code** reads `<project>/.claude/skills/` instead, so
+for a first-time Claude Code run, mirror the directory once after cloning:
+
+```bash
+mkdir .claude && cp -r .agents/skills .claude/skills        # bash
+# PowerShell: New-Item .claude; Copy-Item .agents/skills .claude/skills -Recurse
+# (or install an isolated workspace with: python scripts/install_workspace.py --target <ws> --skills-dir .claude/skills)
+```
+
+Then open Claude Code with the **workspace directory as the project root**, and ask (manually — nothing
 auto-triggers):
 
 ```text
