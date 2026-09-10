@@ -6,9 +6,9 @@ role: disposition record for the 12-item repair contract (R1–R12) + guide §§
 inputs: research_code_docs_phase1_architecture_repair_guide.md (the contract);
   post-audit-reconciliation.md (R1 evidence); the five revised Phase-1 files;
   revised-phase2-vertical-slice.md
-status: COMPLETE — one explicitly open item remains (the D-1 human ruling, §7 below),
-  which the guide itself requires to be marked rather than silently chosen
-sanitization: de-identified for external review (paths→placeholders; project/vendor names→neutral; see ./README.md; 2026-09-10, repair round)
+status: COMPLETE — all items resolved; D-1 finalized by the final external-review
+  consistency patch (option A); Phase 2 GO
+sanitization: de-identified for external review (paths→placeholders; project/vendor names→neutral; see ./README.md; 2026-09-10, final consistency patch)
 ```
 
 Every review item below carries: **decision** (accept / partially_accept / reject),
@@ -88,7 +88,7 @@ Every review item below carries: **decision** (accept / partially_accept / rejec
 - **change_made:** revised 6-field schema (object_type / epistemic_state /
   decision_state / evidence_level / evidence_state / implementation_state;
   not_applicable added to decision_state AND implementation_state) in File 1 I4(c); the
-  TEST is done: File 1 §I4.1 = 12 real entries (no invented examples) covering all seven
+  TEST is done: File 1 §I4.1 = 13 real entries (no invented examples) covering all seven
   required representations (weakly supported active hypothesis; candidate route not yet
   decided; decided route not yet implemented; rejected route with strong historical
   evidence; claim with no decision/implementation concept; contradicted claim with
@@ -180,14 +180,13 @@ Every review item below carries: **decision** (accept / partially_accept / rejec
 - **change_made:** File 2 §7 replaced with the R9 shape + pointer;
   revised-phase2-vertical-slice.md created (real messy repo → PSR → simplification-audit
   (WFI participates as the audit's mechanical half, documented) → ONE candidate:
-  archive the VOID creation-roadmap → D-1 decision note (proposed/, human ruling gates
-  it) → host implements → focused-verification (A9 minimum subset) → two-axis review →
+  archive the VOID creation-roadmap → D-1 decision note (landed proposed/ at that
+  time — FINAL RULING per the consistency patch P1: option A, decided) → host
+  implements → focused-verification (A9 minimum subset) → two-axis review →
   same-change canonical-owner updates → before/after evidence table); File 5 scenario A
   rewritten to the same shape.
-- **residual_risk:** the D-1 ruling is a HUMAN gate the slice cannot pass by fiat —
-  if the ruling arrives mid-slice, the note moves proposed/→decided/ and the
-  same-change step proceeds; if not, the slice completes with D-1_LEFT_OPEN (a pass
-  state). See §7.
+- **residual_risk:** RESOLVED — the final external-review consistency patch ruled D-1
+  (option A); the note lands decided/ recording the ruling. See §7.
 
 ### R10 — Fix gameable eval criteria
 
@@ -264,7 +263,7 @@ Every review item below carries: **decision** (accept / partially_accept / rejec
 | 1 | Every canonical information type has exactly one authority | PASS | File 3 rows 4a/4b/4c + 6a/6b/6c splits; §2 single-map rule; File 2 §5.1 |
 | 2 | No target document contradicts another on decision-note lifecycle | PASS | File 1 I5(c)(2) = File 2 §5.4 = File 3 row 8 = File 4 A4/G5 (§5.4) = revised slice §6: all `proposed/decided/rejected/archived/` |
 | 3 | No target document uses last_verified as semantic truth | PASS | every remaining occurrence is marked "optional informational, R2" (File 1 Q7, File 2 §5.2/§1.1, File 3 row 2, File 4 G4/repo-bootstrap, File 5 defect 12) |
-| 4 | No schema value mixes object type with decision state | PASS | I4.1 12-entry test; `kind` purged from all five files (grep-verified) |
+| 4 | No schema value mixes object type with decision state | PASS | I4.1 13-entry test; `kind` purged from all five files (grep-verified; final patch P3 re-verified) |
 | 5 | Weak evidence never implies rejection | PASS | I3(a)/(c)(5); File 5 defects 10A/10B; scenario C basis |
 | 6 | Phase 0 labels not mechanically binding on Phase 1 | PASS | matrix header prior/posterior rule; zero current deltas |
 | 7 | Phase 2 contains simplification-audit + focused-verification | PASS | revised slice stages 2 and 6 |
@@ -305,7 +304,7 @@ Every review item below carries: **decision** (accept / partially_accept / rejec
 | 1 | post-audit reconciliation completed | DONE (post-audit-reconciliation.md) |
 | 2 | current-main live defects re-ranked | DONE (reconciliation §1/§2; 14 still-live, 2 partial, 3 resolved) |
 | 3 | decision lifecycle separated from implementation lifecycle | DONE (R3) |
-| 4 | orthogonal state model tested against real entries | DONE (I4.1, 12 real entries) |
+| 4 | orthogonal state model tested against real entries | DONE (I4.1, 13 real entries; final patch P6 re-fit) |
 | 5 | weak-evidence/rejection eval corrected | DONE (10A/10B + scenario C) |
 | 6 | canonical information model has one owner per fact type | DONE (R6 row splits + single map) |
 | 7 | dependency model no longer synchronizes duplicate prose | DONE (R7) |
@@ -331,13 +330,13 @@ Every review item below carries: **decision** (accept / partially_accept / rejec
 Per guide §20: "If any item remains unresolved, mark it explicitly and request human
 review rather than silently choosing."
 
-- **D-1 — canonical "what is next" owner (the slice's decision note):** the revised
-  slice writes the D-1 note to `docs/decision-notes/proposed/` with three named
-  alternatives (status table / register rows / architecture doc) and a stated
-  recommendation (the status table, File 3 row 4b). **The ruling is the user's.** Until
-  it arrives, the slice may complete with D-1_LEFT_OPEN (a defined pass state); the
-  same-change pointer fixes that depend on the ruling are the only stage gated on it.
-  No other gate item is blocked.
+- **D-1 — canonical "what is next" owner: RESOLVED (final external-review consistency
+  patch P1, 2026-09-10): option A accepted** — `docs/plans/active/reconstruction/README.md`
+  status table is the single canonical owner of "current execution status / what is
+  next"; the D-1 note carries decision_state: decided + implementation_state:
+  not_applicable and lands in `docs/decision-notes/decided/` recording the ruling (the
+  slice does not self-decide — P8). The D-1_LEFT_OPEN assertion class remains the
+  standing guard for future decisions. No open items remain.
 
 ## 8. What this round did NOT do (scope record)
 
@@ -345,5 +344,61 @@ review rather than silently choosing."
   the sole live-repo edit, and it is a `meta:` record fix, D6 residual).
 - No Phase-2 execution (the slice is specified, not run).
 - No historical cost figures rewritten (guide §2 rule 6).
-- `docs/plans/` remains git-ignored; this round's documents travel to the review mirror
-  in `docs/reconstruction-external-review/` under the established sanitization rules.
+- `docs/plans/` was git-ignored during the repair round (its documents travel to the
+  review mirror in `docs/reconstruction-external-review/` under the established
+  sanitization rules); the final consistency patch P2 removed the blanket ignore
+  (`docs/plans/active/**` + `docs/plans/archived/**` now trackable; the tracking
+  transition itself is a Phase-2 slice step).
+
+---
+
+## 9. Final external-review consistency patch (2026-09-10)
+
+The final external review returned **ACCEPTED WITH REQUIRED CONSISTENCY PATCH** (Phase 2:
+CONDITIONAL GO) and carried one final ruling. Patch status after execution:
+
+```text
+P1 D-1 ruling (canonical status owner): ACCEPTED A — decided everywhere
+P2 docs/plans tracking fix: FIXED
+P3 deprecated kind field: FIXED (0 live usages in the target set)
+P4 Phase-2 eval/checker scope alignment: FIXED
+P5 artifact quota residue: FIXED (REPORT ONLY + semantic predicates)
+P6 state-space evidence fitting: FIXED (honest coverage; no renamed filler)
+P7 route-table authority: FIXED (register = authority; table = generated view)
+P8 Phase-2 canonical-store creation: FIXED (slice §4.5 + register seed rule)
+```
+
+Focused consistency checks (guide §11), run against the target spec set
+(`phase1/` + `revised-phase2-vertical-slice.md` + this file):
+
+- 11.1 decision consistency: D-1 DECIDED in every target document; option A is the only
+  selected alternative; implementation_state = not_applicable throughout — **PASS**
+- 11.2 tracking consistency: the blanket `docs/plans/` ignore is removed;
+  `docs/plans/active/**` and `docs/plans/archived/**` are trackable (verified via
+  `git check-ignore`); `docs/plans/local/` + `docs/plans/scratch/` are the explicitly
+  ignored ephemeral dirs; the revised slice Stage 5 carries the tracking transition —
+  **PASS**
+- 11.3 schema consistency: zero live `kind` schema usages in the target set (remaining
+  occurrences are historical: the DSH crosswalk's `kind→template` description, the
+  rejected-field discussion in R4/I4.1) — **PASS**
+- 11.4 checker consistency: Phase-2 minimum set = canonical-impact-lint, archive-lint,
+  supersession-lint, decision-note-lint; no Phase-2 gate requires a deferred checker
+  (defect 4 + duplicate-count-decreased moved to the Phase-3 gate) — **PASS**
+- 11.5 eval consistency: eval-plan's Phase-2 exit criteria now restate the revised
+  slice's success criteria (the slice is the named authority for Phase-2 exit) — **PASS**
+- 11.6 artifact metric consistency: persistent_artifact_count is REPORT ONLY (indicator
+  + the five P5 predicates); no hard ≤2 artifact gate remains — **PASS**
+- 11.7 route authority consistency: the decision register is the route authority; the
+  route table is a generated/non-authoritative view in every file that mentions it —
+  **PASS**
+- 11.8 canonical path consistency: every canonical path the slice needs is either
+  present or explicitly created in Phase 2 (slice §4.5: `docs/decision-notes/` +
+  register + seed rule, `docs/canonical-source-map.md`, the tracked plans dirs) —
+  **PASS**
+
+Final status (all acceptance checks above pass):
+
+```text
+Phase 1 architecture: ACCEPTED
+Phase 2 implementation: GO
+```

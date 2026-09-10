@@ -17,7 +17,7 @@ method:       per capability: CURRENT (which existing skill/checker/doc covers i
               second ledger; new skill only for repeated non-trivial judgment/orchestration.
 date:         2026-09-09
 status:       DRAFT-for-review (architecture proposal, pending human review per charter §15)
-sanitization: de-identified for external review (paths→placeholders; project/vendor names→neutral; see ../README.md; 2026-09-10, repair round)
+sanitization: de-identified for external review (paths→placeholders; project/vendor names→neutral; see ../README.md; 2026-09-10, final consistency patch)
 ```
 
 Mechanism-layer vocabulary (§10): SKILL / CONVENTION / AGENTS.md / SCHEMA / CHECKER / TEST /
@@ -298,10 +298,14 @@ mechanisms absent from the crosswalk's M1–M32 register are marked UNKNOWN-CROS
 - **GAP:** active/deferred/rejected alternatives cannot be represented without falsifying
   history (Q15); no next-discriminator field anywhere.
 - **DECISION: SCHEMA + CONVENTION first** (route record = decision-register entry
-  `object_type: route` (R4 schema) + fields goal/status/dependencies/active decisions/open questions/evidence/
-  next discriminator/next action — charter §12.4's own list) **+ CHECKER** (route table
-  consistency: every route's status vocabulary legal, next-discriminator non-empty for
-  active routes) — **SKILL PENDING Phase-3 evidence** (a standalone route-manager skill is
+  `object_type: route` (R4 schema) = the canonical mutable route state, + fields
+  goal/status/dependencies/active decisions/open questions/evidence/next
+  discriminator/next action — charter §12.4's own list; the human-readable route table
+  is a GENERATED view of those register entries, explicitly NOT a second source of
+  truth — final patch P7) **+ CHECKER** (route-table generation/integrity: every route's
+  status vocabulary legal, next-discriminator non-empty for active routes, table
+  derivable from the register — not a semantic sync between two hand-maintained stores)
+  — **SKILL PENDING Phase-3 evidence** (a standalone route-manager skill is
   added only if Phase 3 shows repeated non-trivial ROUTE judgment — the charter §12.4
   caution: avoid the big hierarchy "unless evidence proves it is necessary").
   Justification: today the repeated work is bookkeeping (checker-able); the judgment that
@@ -344,7 +348,7 @@ M31 → RESEARCH-SPECIFIC ADAPTATION REQUIRED.
   discriminate between competing routes") has no mechanism; the Phase-E canary (P4) is the
   one time this question was answered well, by hand, at 0.7M-token cost.
 - **DECISION: SKILL** (`next-discriminating-experiment`, new — "A10") **plus CONVENTION**
-  (its output is a decision-register entry of kind `experiment` with cost bound, so the
+  (its output is a decision-register entry with object_type: experiment + cost bound, so the
   plan is pre-countable — feeding `validate_eval_plan.py`'s existing caps).
   Justification: information-gain / decision-value optimization over competing routes is
   pure repeated non-trivial judgment — the cleanest §10 skill justification in this file;
@@ -501,7 +505,8 @@ M31 → RESEARCH-SPECIFIC ADAPTATION REQUIRED.
 ### 5.1 Canonical-source ownership
 
 - **CURRENT:** `evals/skills/canonical-source-map.md` (10-row harness table) + 4 places
-  assigning canonical homes (§3.3 problem 1) + D-1 OPEN (no decided status owner).
+  assigning canonical homes (§3.3 problem 1) + D-1 (no decided status owner at audit
+  time — now DECIDED by the final ruling, option A: the reconstruction status table).
 - **GAP:** no repo-level owner doc; the harness table is the eval system's fixture, not the
   system's declaration.
 - **DECISION: DOC-FORMAT + CHECKER** (`docs/canonical-source-map.md` = File 3's table,
@@ -598,7 +603,7 @@ evidence recording, §3.11 literature-search planning — the latter already exi
 | Mechanism layer (primary assignment) | Capabilities | Count |
 |---|---|---|
 | SKILL | repo-bootstrap (new), WFI (refine), PSR (keep), simplification-audit (new), CCM (keep + A1 apply mode), GSWE (keep), UDM (keep, §12.6 refine), RQLP (keep), RES (keep), focused-verification (new), next-discriminating-experiment (new), LDM (refine) | 12 (8 existing, 4 new; A1 counted as a mode) |
-| CONVENTION (primary) | route table (12.4 light), experiment-result records, worktree/branch, integration ordering, current-state doc writing, corpus-simplification targets, recovery practice | 7 |
+| CONVENTION (primary) | route table (12.4 light; generated from register route entries — non-authoritative view, P7), experiment-result records, worktree/branch, integration ordering, current-state doc writing, corpus-simplification targets, recovery practice | 7 |
 | AGENTS.md (primary) | executor/task contracts, plan-contract template, ratchet rule, review two-axis rule, Git-only rule | 5 |
 | SCHEMA (primary) | orthogonal decision fields (12.6, revised per R4 — I4.1), decision-note format, dependency-graph fields, provenance fields, persistence field, route record | 6 |
 | CHECKER (primary) | duplicate-fact-lint, canonical-impact-lint (renamed, R2), supersession-lint, archive-lint, release-version-lint, dependency-graph-lint, state-consistency-lint, change-scope, provenance-lint, decision-note-lint (all 10 proposed; Phase-2 minimum set = canonical-impact-lint, archive-lint, supersession-lint, decision-note-lint, R11 — the other six defer with their build phase) + register_check-merge + existing tier kept | 12 (10 new, 2 existing-extended) |

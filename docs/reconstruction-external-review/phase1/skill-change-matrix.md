@@ -11,12 +11,12 @@ scope:        charter §11 proposed portfolio — one entry per: all 14 current 
 schema:       the exact charter §11 YAML schema (all 21 fields per entry)
 inputs:       ../phase0/existing-skill-classification.md (labels — proposed_action MUST
               match; disagreements stated with evidence); ../phase0/current-system-map.md
-              (B/C/E/G); ../phase0/pain-point-evidence.md; both DSH (a separately-maintained agent-harness codebase used as the reference system; hereafter "DSH") intermediates;
+              (B/C/E/G); ../phase0/pain-point-evidence.md; both DSH intermediates;
               phase1/dsh-transferability-crosswalk.md (§7 labels, cited as "crosswalk: Mx");
               File 1 (Q-answers, invariants); File 2 (capability decisions); File 3 (owners)
 date:         2026-09-09
 status:       DRAFT-for-review (architecture proposal, pending human review per charter §15)
-sanitization: de-identified for external review (paths→placeholders; project/vendor names→neutral; see ../README.md; 2026-09-10, repair round)
+sanitization: de-identified for external review (paths→placeholders; project/vendor names→neutral; see ../README.md; 2026-09-10, final consistency patch)
 ```
 
 Label agreement (repair round, R8 — prior/posterior rule): the phase0 classification
@@ -413,7 +413,7 @@ invariants: proposal-only → same-change (refine); approved:false until applied
 mechanical_checks: canonical-impact-lint (new — same-change impact discharge, R2); dead-pointer
   check (new — VOID/archived targets); existing LDM checker (approved:false)
 failure_modes: parallel-artifact disease (S11 — the refine fixes it); missing owner
-  (D-1 OPEN — the slice resolves it, File 2 §7 refinement 1)
+  (D-1 — DECIDED by the final ruling, option A; the slice's note records it, File 2 §7)
 evals: 6 trigger / 2 conflict (eval-coverage-baseline); planted stale-claim case
   (new, File 5 §c defect 1)
 dsh_basis: M30 TAG (dead references are a defect class — the checker half); M12 DT
@@ -552,7 +552,8 @@ proposed_action: keep   # phase0 H1 = KEEP (agreed — "tier model is sound; int
   gap only")
 why_this_must_be_a_skill: N/A — NOT a skill; it is the CHECKER mechanism (charter §10:
   deterministic checker, no skill restating it). Kept as the runner; REFINED by
-  absorbing register_check (H2) and the 10 new lints (File 2 §6) into its tier lists.
+  absorbing register_check (H2) + the 4 Phase-2 minimum lints (File 2 §6) into its tier
+  lists now (the 6 deferred lints join at each build phase, R11).
   Disagreement note vs a naive "keep": the tier bookkeeping already drifts (D5: manifest
   lists markdown_links/placeholders under signal, runner classifies ADVISORY; register_
   check not registered at all) — the runner becomes the SINGLE source of the tier
@@ -684,8 +685,9 @@ proposed_action: keep   # phase0 H5 = KEEP (agreed)
 why_this_must_be_a_skill: N/A — CHECKERS (charter §10's canonical home for everything
   decidable). Kept; EXTENDED: markdown_links_check gains VOID/archived-banner awareness
   (I6), status_vocab_check gains the role-mixing rule (I4), the corpus validators gain
-  the computed census (File 3 row 17). The 10 new lints (File 2 §6) are ADDED as new
-  files in the same tier, not replacements — the planted-defect self-test pattern
+  the computed census (File 3 row 17). The 4 Phase-2 minimum lints (File 2 §6) are
+  ADDED as new files in the same tier now — the 6 deferred lints join at each build
+  phase (R11) — not replacements; the planted-defect self-test pattern
   applies to each (the existing bar, classification H5).
 trigger: preflight / PR / manual
 non_trigger: model-level judgment (DQE/UDM)
@@ -1210,7 +1212,7 @@ evals: scenario B (File 5 §b) — greenfield bootstrap eval on an empty dir
 dsh_basis: M1 TAG (standing orders + budgets); M12 DT (one-home-per-fact from day one);
   M4 DT (pre-release stance as deletion license)
 research_specific_delta: the skeleton includes the RESEARCH surfaces (evidence dir,
-  decision register with routes/experiments kinds) that a software-repo bootstrap omits
+  decision register with route/experiment object_types (R4)) that a software-repo bootstrap omits
 ```
 
 ```yaml
@@ -1311,7 +1313,8 @@ why_this_must_be_a_skill: DECISION-VALUE-FIRST, cost-second optimization (R10.2:
 trigger: ≥2 active routes with an unresolved ranking (register object_type: route, R4)
 non_trigger: a single-route continuation (just the next task); an admitted-profile
   document question (DQE)
-inputs: the route table + evidence maps + register state
+inputs: register state (route entries — the route table is their generated view, P7)
+  + evidence maps
 outputs: the experiment spec (decision_relevance, expected_discrimination, hypothesis
   tested, cost bound, what ranking change would mean what, stop criterion) as a register
   entry object_type: experiment (R4)
@@ -1325,8 +1328,8 @@ downstream: the experiment (external execution), result ingestion (File 2 §3.7)
 invariants: decision value first, cost second (R10.2 — a cheap NON-discriminating
   alternative must lose); cost bound mandatory (pre-countable — the P1 discipline);
   stop criterion mandatory; the output changes a RANKING, not a to-do list (§8.8)
-mechanical_checks: register schema (experiment kind: cost + stop fields required —
-  register_check); validate_eval_plan.py (existing) on the execution
+mechanical_checks: register schema (experiment object_type: cost + stop fields required
+  — register_check); validate_eval_plan.py (existing) on the execution
 failure_modes: task-sequencing masquerade ("continue the next task" — the named anti-
   pattern, §12.5); unbounded experiments (P1 class — the cap); running the big
   experiment first (the P3 class — measure the smallest thing that discriminates)
@@ -1371,8 +1374,10 @@ Rationale: the route OBJECT is needed (Q15: routes cannot be paused/rejected/rev
 without falsifying history today), but the STANDALONE MANAGER SKILL fails the §10 test
 at current scale — route bookkeeping is checker-able, and route-strategy judgment has
 not been exercised at multi-route scale (this repo has run one route at a time).
-Decision: route records = register entries `object_type: route` (R4 schema) + a route table file
-(schema + checker, File 2 §3.3); promotion trigger: Phase 3 evidence of repeated
+Decision: route records = register entries `object_type: route` (R4 schema) = the
+canonical mutable route state; the route table file (File 2 §3.3) is a GENERATED view
+of those entries — non-authoritative, its checker verifies generation integrity (final
+patch P7); promotion trigger: Phase 3 evidence of repeated
 non-trivial route judgment (the charter's own caution: no big hierarchy "unless evidence
 proves it is necessary"). This is the portfolio's largest deliberate NOT-a-skill call.
 
@@ -1384,7 +1389,7 @@ calibration discipline (named budget); A10 carries it.
 ### 5.6 §12.6 Decision model refactor — **ADOPT** → `refine` (UDM + register schema; NOT a new skill)
 Rationale: the conflation is verified (Q11.1; §3.3 prob-5); the charter's own
 instruction was to TEST the schema against real examples BEFORE freezing (File 1 I4) —
-DONE in the repair round (R4): the 12-entry state-space test (File 1 §I4.1, all real
+DONE in the repair round (R4): the 13-entry state-space test (File 1 §I4.1, all real
 entries) passed, with one material deviation: the charter's `kind` split into
 `object_type` + `epistemic_state`, plus `not_applicable` on decision/implementation
 states (per-entry justification in I4.1). The Phase-2 slice then exercises the revised

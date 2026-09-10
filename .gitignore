@@ -18,5 +18,8 @@ references/*
 # snapshots
 evals/skills/snapshots/
 
-# future development plans
-docs/plans/
+# planning state — canonical stores TRACKED (final consistency patch P2):
+#   tracked:  docs/plans/active/**, docs/plans/archived/**
+#   ignored:  docs/plans/local/**, docs/plans/scratch/** (explicit ephemeral dirs)
+docs/plans/local/
+docs/plans/scratch/

@@ -18,7 +18,7 @@ inputs:       charter §14/§15/§20; ../intermediate/eval-coverage-baseline.md 
               hence what evals protect)
 date:         2026-09-09
 status:       DRAFT-for-review (architecture proposal, pending human review per charter §15)
-sanitization: de-identified for external review (paths→placeholders; project/vendor names→neutral; see ../README.md; 2026-09-10, repair round)
+sanitization: de-identified for external review (paths→placeholders; project/vendor names→neutral; see ../README.md; 2026-09-10, final consistency patch)
 ```
 
 Existing machinery REUSED (not rebuilt): `make_injection.py` / `make_batch.py` /
@@ -122,9 +122,10 @@ chain:   PSR (read-only fact recovery)
         → ONE selected evidence-backed candidate ("archive the VOID
           creation-roadmap" — decided in this repair round; I4.1 entry 4)
         → UDM / decision note ONLY for the durable judgment the candidate forces
-          (D-1: which doc owns "what is next" after the roadmap leaves — written to
-          proposed/ awaiting the human ruling; the slice does NOT decide D-1 by fiat —
-          P8 discipline)
+          (D-1: which doc owns "what is next" after the roadmap leaves — DECIDED by
+          the final external-review ruling, option A: the reconstruction status table;
+          the note is written to decided/ recording the ruling — the slice does NOT
+          decide D-1 by fiat — P8 discipline)
         → host agent IMPLEMENTS (real edits: archive move + banner, inbound pointer
           fixes (D9/D12/G4-class), registry meta note cleanup) — no more, no less
         → focused-verification (A9: the smallest relevant subset — preflight +
@@ -134,20 +135,24 @@ chain:   PSR (read-only fact recovery)
           recorded, side by side)
         → same-change canonical-owner update (LDM direction: status table 4b,
           SKILL.md builtness line (D14), README flow count (D1))
-outputs: the archived roadmap + fixed pointers; the D-1 decision note (proposed/ —
-         first durable note; moves to decided/ after the human ruling); the
-         focused-verification record; before/after evidence (lint counts, git diff,
-         0 unrelated files touched); flow-state
+outputs: the archived roadmap + fixed pointers; the D-1 decision note (decided/ —
+         first durable note; records the final ruling, option A); the Phase-2
+         canonical stores (slice §4.5); the focused-verification record;
+         before/after evidence (lint counts, git diff, 0 unrelated files touched);
+         flow-state
 pass:    the simplification candidate is REAL (evidence cited, not asserted); the
          implementation is REAL (git diff, not a completion claim — I7);
          focused-verification selected a STRICT SUBSET of the full gate (I8: fewer
          checks than a full preflight+smoke, all change-relevant ones present);
-         two-axis review recorded; before/after: archive-lint + dead-pointer +
-         canonical-impact-lint GREEN after; the planted defect detected AND named
-         (not silently accepted); 0 silent decisions (D-1_LEFT_OPEN check — the P8
-         assertion); sha256 of untouched files unchanged; NO permanent artifact
-         inflation (the change adds ≤2 persistent artifacts — the decision note + the
-         archived banner — both lifecycle-owned, R10.4)
+         two-axis review recorded; before/after: archive-lint + supersession-lint +
+         decision-note-lint + dead-pointer + canonical-impact-lint GREEN after; the
+         planted defect detected AND named (not silently accepted); 0 silent
+         decisions (D-1_LEFT_OPEN check — the P8 assertion; D-1 itself is DECIDED
+         per the final ruling, option A); sha256 of untouched files unchanged (the
+         change-scope integrity row); NO permanent artifact inflation —
+         persistent_artifact_count is REPORT ONLY: every new artifact carries
+         unique_responsibility/canonical_owner/consumer/lifecycle/archive-or-delete-
+         condition, and the slice fails only on the P5 predicates (R10.4)
 cadence: the slice run itself (Phase 2 entry gate), then once per phase boundary
 ```
 
@@ -171,7 +176,7 @@ outputs: the minimal repo + 1 decision note + 1 guardrail + the ratchet record
 pass:    NO speculative governance tree (asserted: no docs beyond the skeleton set —
          a checker counts them); first guardrail has a NAMED failure mode (decision-
          note-lint); preflight green from day one; the skeleton contains the research
-         surfaces (evidence dir, register with route/experiment kinds)
+         surfaces (evidence dir, register with route/experiment object_types, R4)
 cadence: once at Phase-3 entry (bootstrap is a Phase-3 expansion, File 2 §7 out-of-
          scope list); repeated per new downstream repo the org creates
 ```
@@ -200,7 +205,8 @@ chain:   UDM (hypotheses/candidates for both routes) → RES (evidence synthesis
           discriminating result directly contradicts that route's load-bearing
           premise (an explicit R5 basis, NOT weak evidence E≤2 alone); frozen rejected/
           note with rejection_basis + revisit condition; the other route re-ranked)
-outputs: route table (2 → 1 active + 1 rejected note), the experiment spec (register
+outputs: route state (register entries: 2 → 1 active + 1 rejected note — the route
+         table is the generated view of that state, P7), the experiment spec (register
          entry), the decision-update register entries, the rejected/ note (first
          rejected decision note — the File 3 row 8 format's first use)
 pass:    A10's spec is decision-relevant (ranking-change plausible; a cheap
@@ -213,7 +219,7 @@ pass:    A10's spec is decision-relevant (ranking-change plausible; a cheap
          E-levels on all claims (provenance-lint); the decision update distinguishes
          "strong literature support" from "verified here" (Q16 assertion: no E<3
          claim is phrased as verified)
-cadence: once at Phase-3 entry (route kind + A10 are Phase-3); the canary re-derivation
+cadence: once at Phase-3 entry (route object_type entries + A10 are Phase-3); the canary re-derivation
          doubles as A10's golden case in the atomic suite (§a.2 trigger row)
 ```
 
@@ -319,7 +325,7 @@ cheapest extras included)
 | # | §14.4 metric | How measured here | Pass shape (25 iterations) |
 |---|---|---|---|
 | 1 | active artifact count | census of non-archived docs under the File-3 owner paths | INDICATOR, not a correctness gate (R10.4): track the trend; FAIL on pathological growth (monotone increase without capability gain, duplicate artifact types, one fact carried by multiple artifacts); archive-lint enforces the archive side |
-| 2 | duplicated canonical facts | duplicate-fact-lint output count | ≤2 at every k (0 target; the 2 tolerance = known adjudicated duplicates) |
+| 2 | duplicated canonical facts | duplicate-fact-lint output count | ≤2 at every k (0 target; the 2 tolerance = known adjudicated duplicates) — Phase-3+ metric: measured once duplicate-fact-lint exists (R11); NOT a Phase-2 exit criterion |
 | 3 | stale-reference count | canonical-impact-lint + dead-pointer check | 0 at every k (a stale reference is a defect, not a budget) |
 | 4 | unresolved decisions | register census (OPEN count) | bounded: no monotone growth; each new OPEN has a named owner + next discriminator |
 | 5 | superseded artifacts still active | supersession-lint + archive-lint (active dir, banner present) | 0 at every k |
@@ -327,7 +333,7 @@ cheapest extras included)
 | 7 | token/time cost to reconstruct current state | PSR re-run cost on the fixture (budgeted, ~2,000-line class) | no monotone increase (flat or decreasing — PSR's job is to keep it bounded) |
 | 8 | time to identify the next actionable task | reader test: the "what is next" answer (status-table lookup) | 1 file, ≤1 read (the D5 single-owner rule made measurable) |
 | 9 | Skills involved in a common workflow | census of skill invocations in the scripted common change (doc fix: PSR→LDM→checkers) | INDICATOR (R10.4): track the count; fail on a NEW skill with no unique judgment entering a common workflow, not on the raw number (the anti-role-explosion metric, charter §0) |
-| 10 | artifacts generated per change | per-iteration artifact census (Q14) | INDICATOR (R10.4): the I2/Q14 budget (≤2 persistent + records) is the TARGET, not a gate; correctness = no pathological growth (duplicate artifact types / one fact in multiple artifacts) |
+| 10 | artifacts generated per change | per-iteration artifact census (Q14) | INDICATOR, REPORT ONLY (R10.4 + final patch P5): the count is not a correctness gate; correctness = no pathological growth — two artifacts carry the same canonical fact, an artifact has no consumer or no lifecycle, an artifact exists only for process ceremony, or growth is monotone without capability gain |
 | 11 | rate obsolete machinery is removed | A8 runs (iterations 12 and 24) count deletions/archive-events; the ratchet ratio = removals/additions | R10.3: NO fixed deletion quota; the fixture PLANTS known-obsolete abstractions at iterations 12 and 24, each must be removed/archived WITH justification (a healthy fixture with no obsolete abstraction may have ZERO removals); the ratio is an indicator, not a gate |
 
 ### d.3 "Understandable after many changes" — operational definition
@@ -335,8 +341,9 @@ cheapest extras included)
 A fresh NO-CONTEXT agent (the reader-test role, make_grading_injection's grader with
 no conversation seed) answers, from the Q9 resume set (≤7 files) + `git log` only:
 Q1 what exists / Q2 what is current / Q3 what is decided / Q4 what is next / Q5 what is
-blocked. **Pass: ≥4/5 correct, within a ≤3,000-line read budget, while metric 2 ≤2 and
-metric 3 = 0** — at k=5,10,15,20,25. This is the measurement form of §20 "Long-term
+blocked. **Pass: ≥4/5 correct, within a ≤3,000-line read budget, while metric 3 = 0
+(metric 2 joins at its Phase-3+ checkpoints once duplicate-fact-lint exists — R11)**
+— at k=5,10,15,20,25. This is the measurement form of §20 "Long-term
 maintainability" ("the active workflow corpus remains compact enough for a new agent to
 reconstruct state without reading everything"): if the test passes at k=25, the system
 is understandable after many changes BY MEASUREMENT, not by demo (charter §14.4's
@@ -359,7 +366,7 @@ removed with evidence, not just additions); no metric shows monotone deteriorati
 
 | Layer | Runs | Cadence | Who |
 |---|---|---|---|
-| PREFLIGHT (deterministic) | run_checks.py HARD tier (incl. merged register_check + the 10 new lints), preflight.py (23 checks + 4 extensions), case manifest validation, flow_state_check, interface_check | every commit / every PR (the existing preflight path — no CI exists yet, M10 DN: the hook/CI addition ratchets in after the first concrete miss) | machine |
+| PREFLIGHT (deterministic) | run_checks.py HARD tier (incl. merged register_check + the 4 Phase-2 minimum lints: canonical-impact-lint, archive-lint, supersession-lint, decision-note-lint), preflight.py (23 checks + 4 extensions), case manifest validation, flow_state_check, interface_check — LATER (at each build phase, R11): the deferred checker portfolio joins this row as it is built; the full-10 portfolio is the Phase-3+ state, not active now | every commit / every PR (the existing preflight path — no CI exists yet, M10 DN: the hook/CI addition ratchets in after the first concrete miss) | machine |
 | PREFLIGHT (orchestrated-run) | validate_eval_plan.py + hard caps (MAX_EVAL_RUNS=64, MAX_BATCH_SIZE=4, MAX_RETRIES_PER_SLOT=1) | before ANY orchestrated eval launch (P1 — the pre-launch gate) | machine |
 | PER-SKILL (deterministic) | trigger/conflict scoring (score_trigger/score_all), planted-defect checker self-tests, reader tests | every change to a skill or its cases (the quality-control-plan §6 regression policy — existing) | machine + grader role |
 | MANUAL / PHASE GATE | blind-run protocol (dual-reviewer adjudication, P7 kept honest), scenario A/B/C/D, the 12-defect adversarial battery, the d.3 reader test | per phase boundary (Phase-2 exit, Phase-3 entry, Phase-4) + per release (smoke) | human + agent |
@@ -367,9 +374,16 @@ removed with evidence, not just additions); no metric shows monotone deteriorati
 
 ### e.2 Global pass criteria (phase gates)
 
-- **Phase-2 exit (the slice):** scenario A pass (§b.1) + the slice's adversarial pair
-  (defects 1, 4) detected + duplicate count decreased + d.3 baseline run (k=0) recorded
-  as the longitudinal reference point.
+- **Phase-2 exit (the slice):** aligned with the revised slice's success criteria
+  (the slice is the authority for Phase-2 exit, final patch P4): scenario A pass
+  (§b.1) AND the planted stale-roadmap defect (defect 1) detected AND named AND
+  archive-lint, supersession-lint, decision-note-lint, canonical-impact-lint all pass
+  AND the focused-verification record is complete AND the two-axis review has no
+  unresolved spec blocker AND the untouched-scope hash / change-scope integrity passes
+  AND D-1 is DECIDED (final ruling, option A) AND d.3 baseline run (k=0) recorded as
+  the longitudinal reference point. (defect 4 + duplicate-count-decreased leave: they
+  depend on duplicate-fact-lint, which is deferred to Phase 3 — R11; they re-enter at
+  the Phase-3 gate.)
 - **Phase-3 entry:** scenario B + C pass; the new skills' atomic suites at the
   §a.3 bar; A2/A3 atoms at the 6+2 minimum bar (or their flows HONEST-BLOCKED, named).
 - **Phase-4 (simplification pass):** A8 runs on the built system; the §13 half-deletion

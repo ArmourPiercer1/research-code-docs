@@ -24,7 +24,7 @@ method:       each invariant: (a) exact charter statement; (b) SATISFIED/PARTIAL
               M1–M32 register are marked UNKNOWN-CROSSWALK.
 date:         2026-09-09
 status:       DRAFT-for-review (architecture proposal, pending human review per charter §15)
-sanitization: de-identified for external review (paths→placeholders; project/vendor names→neutral; see ../README.md; 2026-09-10, repair round)
+sanitization: de-identified for external review (paths→placeholders; project/vendor names→neutral; see ../README.md; 2026-09-10, final consistency patch)
 ```
 
 Verdict scale: **SATISFIED** = mechanism exists and phase0 found no live violation; **PARTIAL** =
@@ -152,13 +152,13 @@ release-manifest:71-73 pins completion semantics; must split when apply-mode lan
 validates legality, not role-mixing (classification S4/H5).
 
 **(c) Enforcement.** (1) Schema: orthogonal fields — the charter §12.6 candidate, REVIDED
-per repair guide R4 and TESTED against 12 real entries (state-space table in §I4.1 below —
+per repair guide R4 and TESTED against 13 real entries (state-space table in §I4.1 below —
 the charter's own warning, "do not adopt this exact schema without testing it against real
 examples," satisfied). The charter's `kind` enumeration is not adopted as-is: its values
 are not peers (route/claim = object types; hypothesis = an epistemic role; candidate = a
 selection state; decision = a lifecycle role), and one real object can simultaneously be a
 route that is a candidate, hypothesis-supported, decision=proposed, implementation=none —
-a single `kind` forces a lossy choice. Revised schema (frozen after the 12-entry test fit
+a single `kind` forces a lossy choice. Revised schema (frozen after the 13-entry test fit
 without forced semantic compromise):
 
 ```yaml
@@ -184,7 +184,7 @@ role-mixing rule (each field constrained to one dimension's value set).
 **(d) §20 acceptance.** "Research uncertainty" (freshness and implementation status
 distinguishable from epistemic state).
 
-### I4.1 (repair round, R4) — state-space test: 12 real entries
+### I4.1 (repair round, R4) — state-space test: 13 real entries
 
 Per R4's procedure: the schema is frozen only after real entries fit without forced
 semantic compromise. All entries below are real objects from this repository (no invented
@@ -192,10 +192,10 @@ examples).
 
 | # | Real object (source) | object_type | epistemic_state | decision_state | evidence_level | evidence_state | implementation_state | Represents |
 |---|---|---|---|---|---|---|---|---|
-| 1 | D-1 canonical status owner (register OPEN, awaiting human ruling) | design_decision | supported | proposed | E3 | current | not_applicable | a decision with no implementation concept |
+| 1 | D-1 canonical status owner (final ruling: option A — the status table) | design_decision | supported | decided | E3 | current | not_applicable | an accepted decision with no implementation concept (R3 case B) |
 | 2 | A1 apply-mode executor (portfolio candidate) | design_decision | hypothesis | proposed | E2 | current | planned | weakly supported active hypothesis |
 | 3 | Batch-4 research atoms route (registry planned rows; parked per R12) | route | inferred | deferred | E1 | current | planned | candidate route not yet decided |
-| 4 | "archive the VOID creation-roadmap" (selected Phase-2 candidate, decided this round) | route | supported | decided | E3 | current | none | decided route NOT yet implemented (R3 case A) |
+| 4 | "archive the VOID creation-roadmap" (selected Phase-2 candidate, decided this round) | design_decision | supported | decided | E3 | current | planned | decided change decision with implementation planned (the Phase-2 archive move) |
 | 5 | "delegate retrieval to the installed research stack" (conflict-matrix SEQ row) | route | supported | decided | E3 | current | implemented | ordinary decided route, implemented |
 | 6 | LU→CG route reversal (runlog supersession, parent Q13) | route | contradicted | rejected (superseded_by CG) | E3 | contradicted | not_applicable | rejected route with strong historical evidence |
 | 7 | A6 DQE terminal-gate promotion (canary-deferred) | design_decision | hypothesis | deferred | E2 | current | none | deferred decision, implementation not started |
@@ -204,11 +204,20 @@ examples).
 | 10 | DQE v0.4.1 advisory scope-out (ADR-DQE-001; Phase-E deferred) | design_decision | supported | decided | E3 | current | implemented | decision + implementation both complete |
 | 11 | DQE 39-run canary (P4 record) | experiment | observed | not_applicable | E3 | current | not_applicable | experiment result with no decision state |
 | 12 | "workspace-only isolation" (registry meta; D6, after the R1 line fix) | claim | supported | not_applicable | E2 | current | not_applicable | evidence-state transition with no decision involved |
+| 13 | the reconstruction program route (charter-approved; Phase 1 complete, Phase-2 conditional GO) | route | supported | decided | E3 | current | none | decided route NOT yet implemented (R3 case A) |
 
-All seven required representations from R4.5 are present (2, 3, 4, 6, 8, 10, 11 + the
-contradicted-claim-with-live-implementation case 9). R3's two required eval cases are rows
-4 (decided, implementation none) and 1 (decided-ruling with `implementation_state:
-not_applicable`) — both representable without contradiction, which is the pass condition.
+Coverage, reported honestly (final patch P6): real-state-space coverage 7/7 — every
+required R4.5 representation maps to a semantically natural real entry: weakly supported
+hypothesis (2), candidate route not yet decided (3), decided route not yet implemented
+(13), rejected route with strong historical evidence (6), claim with no
+decision/implementation concept (8), contradicted claim with temporarily-in-use
+implementation (9), experiment result with no decision state (11); plus R3's required
+cases: decided + implementation none (13) and decided + not_applicable (1, D-1 after the
+final ruling). No object was renamed to fill coverage — "archive the VOID
+creation-roadmap" (row 4) is a design_decision with implementation planned, NOT a route.
+Synthetic/adversarial schema coverage: 7/7 — the eval-plan §a.2 fixtures assert every
+state combination, including ones the live repo does not currently contain, so the
+checker stays exercised between real instances.
 
 ### I5 — §8.5 Decision reversal by supersession
 
@@ -269,9 +278,10 @@ charter pointer (G4); DQE SKILL.md:9 → VOID roadmap (D4).
 D3 and D4 RESOLVED (4e839b2); D12 partially resolved (DQE:9 fixed); D10 RESOLVED
 (098f2bb); D6 install state recorded (4df8f7f). Live instances now: D1, D2, D5, D7, D9,
 D11, D13, D14, D15–D19 — the verdict stays VIOLATED. Root cause measured: the volatile
-state→pointer rule (HF-14b) exists but its target (D-1, canonical status owner) is OPEN, so
-every produced pointer says "PENDING decision D-1" (ownership-map §4.2) — the cure is in
-flight, the disease persists. DSH comparison: "current-state prose, one physical line per
+state→pointer rule (HF-14b) exists but its target (D-1, canonical status owner) was OPEN
+at audit time — the final ruling (option A: the status table) now closes it, so the
+produced pointers resolve to a named owner once Phase-2 lands the decision note
+(ownership-map §4.2) — the cure is ruled; the disease persists until Phase-2 applies it. DSH comparison: "current-state prose, one physical line per
 paragraph, relocate-condense-raise budgets, machine-checkable links only" (dsh-current-state
 §4.1 M12; history A.7).
 
@@ -549,9 +559,9 @@ are P6 (recurring, cheaper), its corpus defects are P3.
   validator, not the harness API) is a mechanism fix, not a skill gap.
 - Q1.3 (stale current state): **NO existing skill solves it.** PSR recovers facts (the
   detector) and LDM proposes updates (proposal-only, S11), but no mechanism OWNS "the current
-  doc is false again" — D-1 (canonical status owner) is OPEN, so the pointer has no target
-  (ownership-map §4.2). This is the largest skill-level gap in the system and the Phase-2
-  slice's target.
+  doc is false again" — D-1 (canonical status owner) is now DECIDED (option A: the status
+  table), so the pointer has a target from Phase-2 onward (ownership-map §4.2). This is
+  the largest skill-level gap in the system and the Phase-2 slice's target.
 - Cross-cutting: task-quality/multi-turn coverage for PSR/GSWE/UDM is cases-built-but-runs-
   not-recorded (D8; KNOWN_LIMITATIONS #5 — eval-coverage-baseline confirms 2 task-quality
   cases each, no results runs recorded); the three Batch-5 executors carry light sets (6+2);
@@ -744,7 +754,7 @@ discharge of any doc that names executor state.
 
 **Answer (kept — five instances, each mapped to a fix):**
 1. UDM's 10-value claim-status (epistemic ⊕ process in one field — §3.3 problem 5) → §12.6
-   orthogonal fields, REVISED per R4 and TESTED on 12 real entries (I4.1 — the charter
+   orthogonal fields, REVISED per R4 and TESTED on 13 real entries (I4.1 — the charter
    §12.6 "no exact-schema adoption without that test" instruction is satisfied; the charter
    candidate's `kind` split is the one material deviation, with per-entry justification).
 2. Registry `status:` key, 3 vocabularies + "SUPERSEDED" out-of-vocabulary (ownership 1.13)
@@ -810,7 +820,7 @@ transfer the principle, not the DSH instance.*
 **Cheap half (deletable before the slice without losing a user-visible capability):**
 standalone L0 router skill (A4 — routing table in AGENTS.md + `dependency-graph-lint`
 suffices until flow count forces it); 12.4 route manager as a standalone skill (route state
-folds into the decision register's `object_type: route` (R4) + a route table file — revisit at Phase 3);
+folds into the decision register's `object_type: route` (R4) + a route table file (a GENERATED view of the register entries — non-authoritative, final patch P7) — revisit at Phase 3);
 the DQE Phase-E 3-arm matrix as a pre-slice mechanism (already DEFERRED by its own canary —
 A6); 12.7 as a separate doc type apart from an ADR-style directory (fold durable decision
 notes into `docs/decision-notes/` with ADR-DQE-001 migrated in — one format, not two);
@@ -857,9 +867,11 @@ real LU→CG reversal with lineage (parent Q13; UDM SKILL.md:51-53). Route level
 there is no route object at all (File 3: "current roadmap/active routes" has no canonical
 route store; NRSD's "routes" are call-chain steps, not managed alternatives). Target: §12.4
 implemented as the LIGHTWEIGHT form — a route record is a decision-register entry
-(`object_type: route`, R4 revised schema) + a single route table (goal / status / dependencies / active decisions /
-open questions / evidence / next discriminator / next action, per charter §12.4's own field
-list), explicitly NOT a Project→Topic→Workstream→Node hierarchy (charter §12.4: avoid it
+(`object_type: route`, R4 revised schema) = the canonical mutable route state, + a single
+route table (goal / status / dependencies / active decisions / open questions / evidence /
+next discriminator / next action, per charter §12.4's own field list) that is a GENERATED
+/ rendered view of the register entries — explicitly NOT a second source of truth (final
+patch P7) — and NOT a Project→Topic→Workstream→Node hierarchy (charter §12.4: avoid it
 "unless evidence proves it is necessary"; no such evidence exists yet). Rejection = a
 `rejected/` decision note with reason + revisit condition (DSH rejected-triplet pattern,
 history A.8); revival = a NEW note cross-linking the rejected one (supersession lineage, I5)
@@ -903,7 +915,8 @@ simulation iteration as "context required for cold-start resume" (File 5 §d). O
 definition of "understandable after many changes" (File 5 §d): a fresh no-context agent
 answers {what exists / what is current / what is decided / what is next / what is blocked}
 from the Q9 set + `git log`, scoring ≥4/5 correct within a ≤3,000-line read budget, while
-`duplicate-fact-lint` reports ≤2 active duplications. If that test passes after 25
+`duplicate-fact-lint` reports ≤2 active duplications (Phase-3+ — the checker rides with
+its build phase, R11; not a Phase-2 gate). If that test passes after 25
 simulated changes, §20 "Long-term maintainability" is satisfied by measurement, not
 demonstration.
 
