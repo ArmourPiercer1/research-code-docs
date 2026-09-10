@@ -17,14 +17,14 @@ method:       each invariant: (a) exact charter statement; (b) SATISFIED/PARTIAL
               phase0 file:line evidence; (c) proposed mechanical enforcement (named checker/
               schema/test/CI/convention, or explicit judgment-only); (d) charter §20 acceptance
               criterion that verifies it. §17 answers keep/correct the parent's preliminary
-              answers with phase0 evidence. DSH (a separately-maintained agent-harness codebase used as the reference system; hereafter "DSH") transferability labels: S1's
+              answers with phase0 evidence. DSH transferability labels: S1's
               dsh-transferability-crosswalk.md (phase1/) arrived after the first drafts; all
               former PENDING-S1 markers were swept to the crosswalk's §7 labels (DT/TAG/RSA/DN
               abbreviations as defined in the crosswalk); mechanisms absent from the crosswalk's
               M1–M32 register are marked UNKNOWN-CROSSWALK.
 date:         2026-09-09
 status:       DRAFT-for-review (architecture proposal, pending human review per charter §15)
-sanitization: de-identified for external review (paths→placeholders; project/vendor names→neutral; see ../README.md)
+sanitization: de-identified for external review (paths→placeholders; project/vendor names→neutral; see ../README.md; 2026-09-10, repair round)
 ```
 
 Verdict scale: **SATISFIED** = mechanism exists and phase0 found no live violation; **PARTIAL** =
@@ -53,9 +53,10 @@ are written as frozen-interface "artifacts" with no persistence/locus field (§3
 the D-17 decision state is stored in 4 inconsistent files (ownership-map D7; ADR rationale
 falsified un-annotated, ownership-map 1.7/D12).
 
-**(c) Enforcement.** (1) Schema: orthogonal fields per §12.6 (kind / decision_state /
-evidence_level / evidence_state / implementation_state) as one `VOCAB.yaml` consumed by
-schema files and `status_vocab_check` (extend to forbid role-mixing, not just legality).
+**(c) Enforcement.** (1) Schema: orthogonal fields per §12.6, revised per R4 (I4.1:
+object_type / epistemic_state / decision_state / evidence_level / evidence_state /
+implementation_state) as one `VOCAB.yaml` consumed by schema files and
+`status_vocab_check` (extend to forbid role-mixing, not just legality).
 (2) Schema: add a `persistence: canonical|transient|record` field to the 12-field interface
 (fixes §3.3 problem 6 mechanically). (3) Checker: new `duplicate-fact-lint` over the File-3
 owner table. Judgment-only residue: classifying a claim's epistemic level (E-level assignment)
@@ -72,7 +73,9 @@ link to it instead of repeating the fact.
 
 **(b) Verdict: VIOLATED.** 19 verified duplications (ownership-map §3 ledger D1–D19):
 release version in 13+ files (D1); per-skill status "BLOCKED vs COMPLETE" contradictory
-(D3, `documentation-refactor/SKILL.md:27-28` vs registry:333); "what is next" contradictory
+(D14 LIVE — `scientific-workspace-reconstruction/SKILL.md:49` lists built LDM as "not
+built"; D3, its twin in `documentation-refactor`, RESOLVED by 4e839b2 2026-09-10);
+"what is next" contradictory
 (D5, README:116-118 vs README:7-8); D-1/D-4 decision state re-declared in 7+ files (D8);
 OQ-1..OQ-5 ID collision with opposite states (D9); HF catalog pre-v0.4 vs v0.4 drifted
 (D11, the check was open decision D-6, never executed); safety posture in 5 copies (D18);
@@ -98,7 +101,9 @@ duplication is detectable."
 **(a) Statement.** Never silently equate: idea↔hypothesis, hypothesis↔candidate,
 candidate↔decision, literature evidence↔in-project verification, prototype↔supported
 implementation, code existence↔tested behavior, test existence↔passing validation, agent
-self-report↔external evidence.
+self-report↔external evidence, **uncertainty (weak evidence)↔rejection** (revised per
+repair guide R5 — the symmetric half: no silent promotion upward, no silent demotion from
+uncertainty to rejection).
 
 **(b) Verdict: PARTIAL.** Design is the system's strongest asset: only E3+ may be called
 "verified" (UDM SKILL.md:22-29); `register_check.py` flags VERIFIED/FACT at E≤2 (standalone,
@@ -118,6 +123,14 @@ a dated `superseded_by`/annotation link (closes D12-class). (3) Convention: no-s
 as a standing regression with preserved raw output (closes P8 "raw output discarded").
 (4) Judgment-only: E-level assignment itself (UDM) — the ≥2/3-stable-reproduction bar before
 promoting a claim (pain-points P4, defect-ledger:349-350) is a judgment rule, kept prose.
+(5) Explicit rejection bases (R5): a route/claim may be REJECTED only when one or more of:
+direct contradictory evidence; explicit constraint violation; clearly dominated alternative
+under an explicit decision criterion; human/authorized decision to stop pursuing;
+invalidated load-bearing premise. If evidence is merely insufficient, the state stays OPEN /
+DEFERRED / needs-experiment — never REJECTED. Enforced by `decision-note-lint` (a rejected/
+note requires a non-empty `rejection_basis`) + the register schema (rejected ⇒ basis field
+present + linked evidence). E≤2 alone is NOT a rejection basis (eval-plan adversarial
+defect 10 split into cases A/B accordingly).
 
 **(d) §20 acceptance.** "Verification — completion claims are grounded in external evidence";
 "Research uncertainty" (candidate vs decision distinguishable).
@@ -138,17 +151,64 @@ release-manifest:71-73 pins completion semantics; must split when apply-mode lan
 (4) Three vocabularies coexist with cross-usage rules in prose only; `status_vocab_check`
 validates legality, not role-mixing (classification S4/H5).
 
-**(c) Enforcement.** (1) Schema: §12.6 orthogonal fields — adopted as the register schema,
-but per §12.6's own warning, TESTED FIRST against the real Batch-2.5 register
-(`evals/skills/results/batch2_5/research-chain/decision-register.md`) and the 10 live
-D-1..D-7 rulings before freezing (charter: "Do not adopt this exact schema without testing
-it against real examples"). (2) One machine-readable vocabulary file `VOCAB.yaml` (single
-source for schema files + `status_vocab_check` + registry header — kills the 3-vocab
-overload mechanically). (3) Checker: extend `status_vocab_check` with a role-mixing rule
-(each field constrained to one dimension's value set).
+**(c) Enforcement.** (1) Schema: orthogonal fields — the charter §12.6 candidate, REVIDED
+per repair guide R4 and TESTED against 12 real entries (state-space table in §I4.1 below —
+the charter's own warning, "do not adopt this exact schema without testing it against real
+examples," satisfied). The charter's `kind` enumeration is not adopted as-is: its values
+are not peers (route/claim = object types; hypothesis = an epistemic role; candidate = a
+selection state; decision = a lifecycle role), and one real object can simultaneously be a
+route that is a candidate, hypothesis-supported, decision=proposed, implementation=none —
+a single `kind` forces a lossy choice. Revised schema (frozen after the 12-entry test fit
+without forced semantic compromise):
+
+```yaml
+object_type:        claim | route | experiment | design_decision | requirement | artifact
+epistemic_state:    unknown | hypothesis | inferred | observed | supported | contradicted
+decision_state:     not_applicable | proposed | decided | rejected | deferred | superseded
+evidence_level:     E0 | E1 | E2 | E3 | E4 | E5
+evidence_state:     current | stale | contradicted
+implementation_state: not_applicable | none | planned | in_progress | implemented | blocked
+```
+
+Deviations from the charter candidate, each with a real-entry justification: `kind` split
+into `object_type` + `epistemic_state` (hypothesis is an epistemic role — entry 11 in the
+table is an experiment whose epistemic role is `observed`, not a "hypothesis object");
+"candidate" is not an object type — it is `decision_state: proposed` on any object_type
+(entries 2, 3); `not_applicable` added to `decision_state` AND `implementation_state` (a
+ruling like D-1 has no implementation concept at all — entry 1; an experiment result has
+no decision state — entry 11). No other changes. (2) One machine-readable vocabulary file
+`VOCAB.yaml` (single source for schema files + `status_vocab_check` + registry header —
+kills the 3-vocab overload mechanically). (3) Checker: extend `status_vocab_check` with a
+role-mixing rule (each field constrained to one dimension's value set).
 
 **(d) §20 acceptance.** "Research uncertainty" (freshness and implementation status
 distinguishable from epistemic state).
+
+### I4.1 (repair round, R4) — state-space test: 12 real entries
+
+Per R4's procedure: the schema is frozen only after real entries fit without forced
+semantic compromise. All entries below are real objects from this repository (no invented
+examples).
+
+| # | Real object (source) | object_type | epistemic_state | decision_state | evidence_level | evidence_state | implementation_state | Represents |
+|---|---|---|---|---|---|---|---|---|
+| 1 | D-1 canonical status owner (register OPEN, awaiting human ruling) | design_decision | supported | proposed | E3 | current | not_applicable | a decision with no implementation concept |
+| 2 | A1 apply-mode executor (portfolio candidate) | design_decision | hypothesis | proposed | E2 | current | planned | weakly supported active hypothesis |
+| 3 | Batch-4 research atoms route (registry planned rows; parked per R12) | route | inferred | deferred | E1 | current | planned | candidate route not yet decided |
+| 4 | "archive the VOID creation-roadmap" (selected Phase-2 candidate, decided this round) | route | supported | decided | E3 | current | none | decided route NOT yet implemented (R3 case A) |
+| 5 | "delegate retrieval to the installed research stack" (conflict-matrix SEQ row) | route | supported | decided | E3 | current | implemented | ordinary decided route, implemented |
+| 6 | LU→CG route reversal (runlog supersession, parent Q13) | route | contradicted | rejected (superseded_by CG) | E3 | contradicted | not_applicable | rejected route with strong historical evidence |
+| 7 | A6 DQE terminal-gate promotion (canary-deferred) | design_decision | hypothesis | deferred | E2 | current | none | deferred decision, implementation not started |
+| 8 | OQ-3 research-stack provenance/license (registry:529,580) | claim | unknown | not_applicable | E1 | current | not_applicable | claim with no decision/implementation concept |
+| 9 | "frozen snapshots are PRESERVED" (registry:26; D19) | claim | contradicted | not_applicable | E2 | contradicted | implemented (temporarily in use) | contradicted claim whose associated implementation remains in use temporarily |
+| 10 | DQE v0.4.1 advisory scope-out (ADR-DQE-001; Phase-E deferred) | design_decision | supported | decided | E3 | current | implemented | decision + implementation both complete |
+| 11 | DQE 39-run canary (P4 record) | experiment | observed | not_applicable | E3 | current | not_applicable | experiment result with no decision state |
+| 12 | "workspace-only isolation" (registry meta; D6, after the R1 line fix) | claim | supported | not_applicable | E2 | current | not_applicable | evidence-state transition with no decision involved |
+
+All seven required representations from R4.5 are present (2, 3, 4, 6, 8, 10, 11 + the
+contradicted-claim-with-live-implementation case 9). R3's two required eval cases are rows
+4 (decided, implementation none) and 1 (decided-ruling with `implementation_state:
+not_applicable`) — both representable without contradiction, which is the pass condition.
 
 ### I5 — §8.5 Decision reversal by supersession
 
@@ -164,7 +224,9 @@ roadmap is still tracked and still referenced by a tracked file (DQE SKILL.md:9 
 ADR-DQE-001:227-230 states OQ-REPRO=A as "confirmed by the skill" after the canary falsified
 it, with the annotation still an OPEN decision (ownership-map 1.7, D12; `open-decisions.md:40`);
 there is no home for rejected options at all — "why was route X rejected" requires re-reading
-4–5 documents (ownership-map §2.1). DSH comparison: supersession check on every new note
+4–5 documents (ownership-map §2.1). (Reconciliation 2026-09-10: the DQE SKILL.md:9 inbound
+pointer is FIXED by 4e839b2 — D12 now PARTIALLY resolved; the unarchived roadmap + the
+system-architecture status line remain live. See post-audit-reconciliation.md §1.) DSH comparison: supersession check on every new note
 (`.agents/notes/AGENTS.md:5`), consolidation rule (history A.8.9), sealed frozen archive
 (M18 — crosswalk: M18 → TRANSFERABLE AFTER GENERALIZATION: frozen-archive semantics
 transfer, SHA-256 seal does not).
@@ -173,12 +235,19 @@ transfer, SHA-256 seal does not).
 pair must resolve, be non-circular, and the superseded side must carry a dated annotation;
 a VOID/SUPERSEDED-bannered doc must be moved to `docs/plans/archived/` or have its inbound
 pointers removed (mechanical closure of D12/D4-class). (2) Convention: decision notes
-(File 3 row 8) with `proposed/implemented/rejected` lifecycle folders — rejected decisions
-kept as frozen notes with reason + revisit condition (DSH rejected-triplet pattern, history
-A.8; B.4 "kept only while it prevents a tempting mistake"). (3) Judgment-only: judging
-whether a reversal is "material" (new note + cross-link) vs an in-place fact update
-(implemented-note rule) — DSH keeps this prose (`implemented/AGENTS.md`: "facts only, no
-decision rewrite"; reversal requires new note + cross-link).
+(File 3 row 8) with `proposed/decided/rejected` lifecycle folders + `archived/` (revised
+per repair guide R3 — decision lifecycle ≠ implementation lifecycle): `proposed/`
+proposal-oriented wording; `decided/` rewritten to present-tense ACCEPTED REALITY without
+implying implementation completion (DSH's `implemented/` tracked code changes through
+shipment — correct there, wrong as a research-decision folder name: a research decision can
+be accepted with implementation `none` or `not_applicable`); `rejected/` frozen with reason
++ revisit condition (DSH rejected-triplet pattern, history A.8; B.4 "kept only while it
+prevents a tempting mistake"); `archived/` sealed (relocation, never edit — M18).
+Implementation state is an ORTHOGONAL schema field (`implementation_state`, R4), never
+encoded in the path. (3) Judgment-only: judging whether a reversal is "material" (new note
++ cross-link) vs an in-place fact update (decided-note rule) — DSH keeps this prose
+(`implemented/AGENTS.md`: "facts only, no decision rewrite"; reversal requires new note +
+cross-link).
 
 **(d) §20 acceptance.** "Decision durability — important decisions retain rationale,
 alternatives, evidence basis, and revisit conditions without turning the active corpus into
@@ -195,22 +264,37 @@ vs Sprint 6B (D3); SWR SKILL.md:49 lists built LDM as "not built" (D14); README:
 "now at v0.2.0"/"v0.3.0" vs registry 0.4.1 (D2); `quality-control-plan.md:26-43` HF table
 pre-v0.4 vs `hard-fail.md:27-34,82-98` v0.4 (D11); README:116-118 "Next: Batch 4" contradicting
 its own banner 108 lines above (D5); system-architecture "DECIDED for Phase 1" with no
-charter pointer (G4); DQE SKILL.md:9 → VOID roadmap (D4). Root cause measured: the volatile
+charter pointer (G4); DQE SKILL.md:9 → VOID roadmap (D4).
+**Post-audit reconciliation (2026-09-10, 3bb307f — see post-audit-reconciliation.md §1):**
+D3 and D4 RESOLVED (4e839b2); D12 partially resolved (DQE:9 fixed); D10 RESOLVED
+(098f2bb); D6 install state recorded (4df8f7f). Live instances now: D1, D2, D5, D7, D9,
+D11, D13, D14, D15–D19 — the verdict stays VIOLATED. Root cause measured: the volatile
 state→pointer rule (HF-14b) exists but its target (D-1, canonical status owner) is OPEN, so
 every produced pointer says "PENDING decision D-1" (ownership-map §4.2) — the cure is in
 flight, the disease persists. DSH comparison: "current-state prose, one physical line per
 paragraph, relocate-condense-raise budgets, machine-checkable links only" (dsh-current-state
 §4.1 M12; history A.7).
 
-**(c) Enforcement.** (1) Convention + format: every current-state doc carries
-`owner:`, `last_verified:`, and points at (never restates) canonical owners — enforced by
-new checker `canonical-freshness-lint`: `last_verified` older than the newest commit touching
-the doc's declared scope ⇒ flagged (mechanical staleness signal; the judgment of "is it still
-true" stays with the LDM refine of §12.8). (2) Same-change rule (§12.8): a change that makes a
-current-state doc false must update the owner in the same change — enforced by review + the
-stale-reference list LDM already produces (LDM SKILL.md:22-41), promoted from parallel
-artifact to same-change obligation (classification S11). (3) Checker: dead-pointer lint
-(links to VOID/archived docs, existing `markdown_links_check` extended with a banner check).
+**(c) Enforcement.** (1) **Change-impact discharge** (revised per repair guide R2 —
+replaces timestamp-as-correctness): a change that touches a canonical authority, source,
+or contract carries a *declared documentation impact set*; for every impacted canonical
+owner — update it in the SAME change, or record an explicit no-doc-impact. Carriers: the
+change-scope report (touched files → impact set; the A9 mechanism), the review obligation,
+and the same-change convention (§12.8). New checker `canonical-impact-lint` (renamed from
+`canonical-freshness-lint`): flags an owner in the declared impact set that was NOT updated
+in the same change. `last_verified` MAY remain as optional informational metadata, but it
+is not a primary correctness gate: changing it alone must not satisfy freshness, and its
+absence must not imply staleness. This kills both failure modes of the timestamp test —
+unrelated commits making a still-correct doc "stale" (false positive) and a touched
+timestamp on unchanged semantics (false negative). The judgment of "is it still true"
+stays with the LDM refine of §12.8. (2) Same-change rule (§12.8): unchanged in substance —
+it IS the discharge obligation, now with the impact set as its machine-readable carrier
+(review + the stale-reference list LDM already produces, LDM SKILL.md:22-41; promoted from
+parallel artifact to same-change obligation, classification S11). (3) Checker: dead-pointer
+lint (links to VOID/archived docs, existing `markdown_links_check` extended with a banner
+check) — unchanged. Fixture tests (R2 acceptance): an unrelated commit does NOT flag a
+correct doc; an in-scope source/contract change that leaves its owner stale DOES flag; a
+timestamp-only change does NOT clear the flag.
 
 **(d) §20 acceptance.** "Long-term maintainability"; "Messy repository recovery"
 (distinguish current fact from stale documentation).
@@ -324,10 +408,17 @@ gate inventory (M6; history A.1 `6fc7dd4c02` — the rewire caught a gate that h
 wired), stacked-PR atomic landing (M21).
 
 **(c) Enforcement.** (1) Schema: machine-readable dependency graph — the registry's existing
-`upstream_dependencies`/`downstream_outputs` fields ARE the graph source; add
-`shared_resources:` + `optional_deps:` fields and a new checker `dependency-graph-lint`
-(consistency: graph vs SKILL.md upstream notes vs flow call chains — the D7/D14 staleness
-class, which is exactly "unreconciled partial views"). (2) Convention: parallel work launches
+`upstream_dependencies`/`downstream_outputs` fields ARE the single machine authority for
+implementation/optional dependencies + shared resources (revised per repair guide R7: one
+authority per relation type — the graph is NOT a synchronization target for prose copies).
+Add `shared_resources:` + `optional_deps:` fields. SKILL.md carries a one-line pointer to
+its registry graph entry, not a prose restatement of dependencies; architecture/flow
+visualizations are GENERATED from the graph. New checker `dependency-graph-lint` validates
+GRAPH INTEGRITY (referenced skills exist in the roster; no cycles; shared_resources
+declared wherever parallel work touches them; routing table ↔ registry; builtness claims ↔
+roster — the D7/D14 staleness class): it does not check equality among several
+hand-maintained prose copies. Co-run semantics (OK/SEQ/DENY/COND) stay in conflict-matrix
+— a genuinely different relation, not a duplicated edge (File 3 row 10). (2) Convention: parallel work launches
 only with a named dependency graph in the plan contract (§16.3); independent tasks parallel,
 dependent serial (§16.4-5). (3) No new scheduler machinery at current scale — DSH's gate
 runner is a TypeScript monorepo artifact (crosswalk: M6 → TRANSFERABLE AFTER
@@ -348,9 +439,10 @@ simplification path.
 after the v0.2 false pass (P2); mutation postconditions + `validate_mutation_semantics.py`
 after P3; plan validator + hard caps after P1; profile-admission Rule 0 after the D-17 canary
 (P4). Each guardrail traces to a documented failure — the ratchet works in the + direction.
-Remove-side: `creation-roadmap.md` is VOID since 2026-09-09 yet still tracked and still
-referenced (D12) — no archive mechanism enforced the move; there is no simplification-audit
-capability at all (§12.2 missing; DSH `dsh-find-simplifications` is the seed); runlog
+Remove-side: `creation-roadmap.md` is VOID since 2026-09-09 yet still tracked and
+unarchived (D12 — PARTIALLY resolved 2026-09-10: the DQE:9 inbound pointer fixed by
+4e839b2; the archive move + the system-architecture status line remain) — no archive
+mechanism enforced the move; there is no simplification-audit capability at all (§12.2 missing; DSH `dsh-find-simplifications` is the seed); runlog
 chronology grows append-only with no deletion criterion (P9); DSH's deletion record (TUI,
 knip, INDEX.md, `dsh-doc-standards` consolidation, 209 empty invariant companions — history
 Part B) is the benchmark this system currently lacks.
@@ -521,8 +613,8 @@ M30] / RSA×2 [M2, M31] / DN×13):**
   (sha256 source unchanged, candidate≠source, no fact-upgrade — existing TDR checker);
   maintenance proposals (approved:false, no auto-publish — existing LDM checker); corpus
   non-mutation (existing, verified shadow run, registry:336).
-- **New** mechanical: `duplicate-fact-lint` (I2), `canonical-freshness-lint` + dead-pointer
-  banner check (I6), `supersession-lint` (I5), `archive-lint` (I11/I12), `release-version-
+- **New** mechanical: `duplicate-fact-lint` (I2), `canonical-impact-lint` (renamed from
+  `canonical-freshness-lint`, R2) + dead-pointer banner check (I6), `supersession-lint` (I5), `archive-lint` (I11/I12), `release-version-
   lint` (D1), `dependency-graph-lint` (I10), `state-consistency-lint` in smoke (I7),
   `change-scope` report (I8), E-level field checks on claim-bearing artifacts (I3/I16).
 
@@ -540,8 +632,9 @@ executor contracts (the §16.6 seven fields); "update the owner in the same chan
 "no new persistent doc unless a decision requires one"; when to re-run PSR; what stays in
 Git only (Q8).
 
-**Schema (contract):** orthogonal decision fields (12.6); decision-note format (12.7, with
-mandatory Alternatives/Why/Revisit-condition); experiment-result record; route record.
+**Schema (contract):** orthogonal decision fields (12.6, revised per R4 — see I4.1);
+decision-note format (12.7, with mandatory Alternatives/Why/Revisit-condition +
+rejection_basis for rejected notes, R5); experiment-result record; route record.
 
 **Human approval boundary (keep exactly as designed):** write approval for move/delete/
 overwrite (CCM mode boundary; smoke safety-negative); D-1/D-4-class decisions; rejected/
@@ -551,8 +644,8 @@ deferred decision notes; DQE terminal-gate promotion (A6, deferred).
 
 **Answer (kept; the list, with one correction — see File 3 for the full owner table):**
 SKILL.md files (per-skill contracts); `references/interfaces/` frozen handoff contracts —
-**correction to current state: they must be GIT-TRACKED** (D10: a "frozen" contract with
-ACCEPTED status currently has no git history); `references/templates/` (same); harness
+**GIT-TRACKED since 098f2bb (D10 resolved 2026-09-10; 24 files now have history)**;
+`references/templates/` (same); harness
 checkers + rubric + hard-fail + `canonical-source-map.md` (the harness is the system's
 testbed); `release-manifest.yaml` + `VERSION` (single release-state source, D1 fix);
 `skills-registry.yaml` (roster only — narrative meta deleted, G1); corpus seeds + golden
@@ -577,9 +670,10 @@ it as "current" (Q8).
 ### Q7. Which artifacts should automatically become stale, archived, or deleted?
 
 **Answer (kept, made rule-explicit — the four missing definitions of I12):**
-- **Stale (mechanical signal):** any current-state doc whose `last_verified` < newest commit
-  in its declared scope ⇒ `canonical-freshness-lint` flag; any pointer to a VOID/SUPERSEDED
-  doc ⇒ dead-pointer flag (D12/D4 class).
+- **Stale (mechanical signal):** any canonical owner in a change's declared impact set that
+  was not updated in that change ⇒ `canonical-impact-lint` flag (change-impact discharge,
+  I6(c)(1)); any pointer to a VOID/SUPERSEDED doc ⇒ dead-pointer flag (D12/D4 class). A
+  bare `last_verified` touch is NOT a staleness discharge.
 - **Archived:** dated reports — superseded by the next accepted report on the same subject,
   then moved to `docs/plans/archived/` (or `reports/archive/`) at the next release boundary;
   VOID/SUPERSEDED plans — moved within one release (creation-roadmap is the live test case,
@@ -639,17 +733,20 @@ tier: architecture.md is an ordered map, not a resume doc).
   write-approval boundary intact; A1 (apply executor) missing.
 - **L0 router** (A4): not built; conflict-matrix covers routing at doc level.
 Root cause identified by phase0: skeleton-first cadence — flows written before their
-executors, then going stale exactly where builtness was claimed (D3, D14). Target rule
-(I6 + charter §16.8): a flow's SKILL.md may claim an executor "built" only if the executor
-exists and the claim is within the flow's `last_verified` window; the stale-claim class
-becomes checker-visible via `canonical-freshness-lint`.
+executors, then going stale exactly where builtness was claimed (D14 live; D3 resolved by
+4e839b2). Target rule (I6 + charter §16.8, revised per R2): a flow's SKILL.md may claim an
+executor "built" only if the executor exists in the roster and the claim matches the
+registry graph (builtness-claim ↔ roster); the stale-claim class becomes checker-visible
+via `dependency-graph-lint` (R7), with `canonical-impact-lint` covering the same-change
+discharge of any doc that names executor state.
 
 ### Q11. Which current status models conflate orthogonal dimensions?
 
 **Answer (kept — five instances, each mapped to a fix):**
 1. UDM's 10-value claim-status (epistemic ⊕ process in one field — §3.3 problem 5) → §12.6
-   orthogonal fields, TESTED FIRST on the real Batch-2.5 register + the 10 live D-rulings
-   (charter §12.6's explicit instruction; no exact-schema adoption without that test).
+   orthogonal fields, REVISED per R4 and TESTED on 12 real entries (I4.1 — the charter
+   §12.6 "no exact-schema adoption without that test" instruction is satisfied; the charter
+   candidate's `kind` split is the one material deviation, with per-entry justification).
 2. Registry `status:` key, 3 vocabularies + "SUPERSEDED" out-of-vocabulary (ownership 1.13)
    → `VOCAB.yaml` single source + role-mixing rule in `status_vocab_check`.
 3. `flow_status` COMPLETE ⊕ approval-to-continue (defensible now ONLY because
@@ -713,7 +810,7 @@ transfer the principle, not the DSH instance.*
 **Cheap half (deletable before the slice without losing a user-visible capability):**
 standalone L0 router skill (A4 — routing table in AGENTS.md + `dependency-graph-lint`
 suffices until flow count forces it); 12.4 route manager as a standalone skill (route state
-folds into the decision register's `kind: route` + a route table file — revisit at Phase 3);
+folds into the decision register's `object_type: route` (R4) + a route table file — revisit at Phase 3);
 the DQE Phase-E 3-arm matrix as a pre-slice mechanism (already DEFERRED by its own canary —
 A6); 12.7 as a separate doc type apart from an ADR-style directory (fold durable decision
 notes into `docs/decision-notes/` with ADR-DQE-001 migrated in — one format, not two);
@@ -722,9 +819,9 @@ records the check result).
 **Expensive half (deleting it loses a real capability — Phase 2 must keep it):**
 - `register_check` merged into the runner (H2) + E-level field checks — without them I3
   regresses: "VERIFIED at E2" becomes silent again (the P4 disease).
-- `duplicate-fact-lint` + `canonical-freshness-lint` — without them I2/I6 regress: P5's
-  disease (live, 7 verified instances) recurs unmeasured; the slice's own success becomes
-  unprovable.
+- `duplicate-fact-lint` + `canonical-impact-lint` (R2 rename) — without them I2/I6 regress:
+  P5's disease (live instances per post-audit-reconciliation §1) recurs unmeasured; the
+  slice's own success becomes unprovable.
 - A1 apply-mode executor — without it the closed loop stays dry-run forever (Q14 fails;
   charter mission #2 unexercised end-to-end).
 - §12.3 focused-verification — without it "smallest sufficient evidence" stays prose (P1/P3
@@ -760,7 +857,7 @@ real LU→CG reversal with lineage (parent Q13; UDM SKILL.md:51-53). Route level
 there is no route object at all (File 3: "current roadmap/active routes" has no canonical
 route store; NRSD's "routes" are call-chain steps, not managed alternatives). Target: §12.4
 implemented as the LIGHTWEIGHT form — a route record is a decision-register entry
-(`kind: route`) + a single route table (goal / status / dependencies / active decisions /
+(`object_type: route`, R4 revised schema) + a single route table (goal / status / dependencies / active decisions /
 open questions / evidence / next discriminator / next action, per charter §12.4's own field
 list), explicitly NOT a Project→Topic→Workstream→Node hierarchy (charter §12.4: avoid it
 "unless evidence proves it is necessary"; no such evidence exists yet). Rejection = a
@@ -800,7 +897,7 @@ correct as to today's path but insufficient as a target, because the chain itsel
 drifting (two of its 15 links are stale now). Target: **YES by construction** —
 (1) File 3 bounds the active corpus (every information type has a lifecycle + archive rule;
 append-only records are retrievable, not load-bearing); (2) the lints make drift
-DETECTABLE before a human reads it (duplicate-fact-lint, canonical-freshness-lint,
+DETECTABLE before a human reads it (duplicate-fact-lint, canonical-impact-lint,
 dead-pointer); (3) cold-start recovery is the Q9 set (≤7 files) and is MEASURED every
 simulation iteration as "context required for cold-start resume" (File 5 §d). Operational
 definition of "understandable after many changes" (File 5 §d): a fresh no-context agent

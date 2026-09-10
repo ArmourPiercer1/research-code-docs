@@ -18,7 +18,7 @@ inputs:       charter §14/§15/§20; ../intermediate/eval-coverage-baseline.md 
               hence what evals protect)
 date:         2026-09-09
 status:       DRAFT-for-review (architecture proposal, pending human review per charter §15)
-sanitization: de-identified for external review (paths→placeholders; project/vendor names→neutral; see ../README.md)
+sanitization: de-identified for external review (paths→placeholders; project/vendor names→neutral; see ../README.md; 2026-09-10, repair round)
 ```
 
 Existing machinery REUSED (not rebuilt): `make_injection.py` / `make_batch.py` /
@@ -74,13 +74,14 @@ read-guarded skill).
 | artifact interface | interface_check (deterministic) | interface cases for the NEW artifact types: route record, experiment spec, experiment-result record, decision note, task/plan contract (1 each = 5) — each with a planted-missing-field negative | interface_check + make_grading_injection |
 | fact/hypothesis separation | TDR/RES planted fact-upgrade (existing, caught); UDM register cases | 2: (1) register entry "VERIFIED" at E2 → register_check HARD flag (deterministic — the H2 merge makes it a runner case); (2) model case: RES synthesizes a literature claim into a project-verified phrasing → channel tag must survive | register_check (merged) + make_grading_injection |
 | refuse to overclaim | WFI reader test (OVERCLAIM_DETECTED=NO); PSR no-fabrication e2e | 2: (1) "structured-to-run ≠ runs" (E2 cap) as a first-class reader case for PSR (currently an invariant, not a case); (2) LDM claiming "docs updated" when only a proposal was written (the S11 disease, post-refine) | reader-test role (make_grading_injection) |
-| checker compatibility | planted-defect self-tests (Batch-5 pattern — H5) | self-test suites for the 10 NEW checkers (duplicate-fact-lint, canonical-freshness-lint, supersession-lint, archive-lint, release-version-lint, dependency-graph-lint, state-consistency-lint, change-scope, provenance-lint, decision-note-lint): each with ≥2 planted defects it must catch (the existing bar: a planted defect not caught = release blocker) | checker self-test (existing pattern) |
+| checker compatibility | planted-defect self-tests (Batch-5 pattern — H5) | self-test suites for the NEW checkers (duplicate-fact-lint, canonical-impact-lint (renamed from canonical-freshness-lint, R2), supersession-lint, archive-lint, release-version-lint, dependency-graph-lint, state-consistency-lint, change-scope, provenance-lint, decision-note-lint — Phase-2 minimum set per the R11 table: the other six defer with their build phase): each with ≥2 planted defects it must catch (the existing bar: a planted defect not caught = release blocker) | checker self-test (existing pattern) |
+| decision/implementation orthogonality (R3/R4) | UDM register cases (partial — the 10-value mix predates the R4 schema) | 2: (1) a research route DECIDED but implementation not started → represented as decision_state: decided + implementation_state: none WITHOUT contradiction (register_check + grader: no "decided ⇒ implemented" phrasing); (2) a decision accepted with NO software implementation at all → implementation_state: not_applicable, still representable (I4.1 entries 1/4) | register_check (merged) + make_grading_injection |
 | context boundedness | PSR budget stop-rule (SKILL.md:49-51); DQE FILES_READ audit (make_grading_injection required-read-set) | 2: (1) PSR on a repo sized ~5,000 focused lines must stop-and-summarize (the budget boundary as a case); (2) DQE grading envelope after the S1 split — assert the injected context ≤ the bounded envelope (regression against the 860-line injection) | required-read-set assertion (existing mechanism, new bounds) |
 
-New-case total: 24 + 8 + 2 + 5 + 2 + 2 + (10 checker suites × ≥2) + 2 = **~50 cases**
-plus 1 re-baselined (docref-conf-03) — all in the existing YAML format, all scored by the
-existing deterministic scorers; none requires new builder machinery (H3 refine: the
-builders are sufficient).
+New-case total: 24 + 8 + 2 + 5 + 2 + 2 + 2 (R3 orthogonality) + (10 checker suites × ≥2) + 2
+= **~52 cases** plus 1 re-baselined (docref-conf-03, done 4e839b2) — all in the existing
+YAML format, all scored by the existing deterministic scorers; none requires new builder
+machinery (H3 refine: the builders are sufficient).
 
 ### a.3 Atomic pass criteria
 
@@ -92,9 +93,13 @@ builders are sufficient).
   grading (the reader role's OVERCLAIM_DETECTED must be NO on every case);
 - checker compatibility: 100% planted-defect recall (the H5 bar);
 - context boundedness: FILES_READ within the declared budget on every case;
-- no-skill baseline: run on every skill's should-set (the P8 elevation) — the baseline
-  must be WORSE on the judgment dimensions, and its raw output preserved (P8 gap
-  closed); baseline scores reported, not hidden (P7 honesty).
+- no-skill baseline: run on every skill's should-set (the P8 elevation) — the
+  skill-vs-baseline DELTA is reported on the judgment dimensions, raw output preserved
+  (P8 gap closed); baseline scores reported, not hidden (P7 honesty). The baseline is
+  DIAGNOSTIC, not a required loser (R10.1): a TIED baseline is valid evidence — it means
+  the skill may add no value on that dimension and triggers a simplification-review
+  signal (A8 input), NOT an eval failure. "Skill must beat baseline" is not a
+  correctness gate.
 
 ---
 
@@ -104,29 +109,45 @@ All four run as orchestrated flows under `validate_eval_plan.py` + hard caps (P1
 discipline: pre-counted, hash-verified, MAX_EVAL_RUNS=64; no background-workflow
 fan-out for admission-relevant runs — `BACKGROUND_WORKFLOW_FOR_ADMISSION=FORBIDDEN`).
 
-### b.1 Scenario A — messy repository (THE Phase-2 slice; File 2 §7)
+### b.1 Scenario A — real messy repo, ONE simplification closed end-to-end (THE Phase-2 slice; File 2 §7; redesign R9)
 
 ```text
-inputs:  this repo's governance corpus (docs/skill-development/**) — the Track-A
-         precedent corpus (batch2_5-integration:60-81) with its 19 verified duplicate
-         families + 7 live stale instances (P5); PLUS two adversarial injections from
-         §c (defects 1 and 4 — planted stale roadmap, planted duplicate fact)
-chain:   PSR (fact recovery, read-only) → WFI (inventory) → UDM (decision capture:
-         D-1 resolution + duplicate findings as register entries) → LDM-refined
-         (impact set → same-change owner updates) → [human approval of the owner
-         updates — the existing write boundary] → duplicate-fact-lint +
-         canonical-freshness-lint BEFORE and AFTER → flow-state COMPLETE (dry-run
-         scope) + results record
-outputs: updated canonical owners (README status lines, SKILL.md builtness claims,
-         registry roster), the D-1 decision note (first durable note), archived
-         creation-roadmap (the ratchet event), before/after duplicate-count report,
-         checker outputs, flow-state
-pass:    flow-state terminal = COMPLETE (dry-run scope) or named HONEST-BLOCKED;
-         0 source files changed where untouched (sha256); interface_check 100%;
-         0 silent decisions (D-1_LEFT_OPEN check — the P8 assertion); duplicate count
-         strictly decreased (the slice's own proof metric); both planted defects
-         detected AND named (not silently accepted); DQE advisory ALLOW or named
-         BLOCK (never a forced verdict — Rule 0)
+inputs:  this repo (the messy governance corpus + the still-live D-defects of
+         post-audit-reconciliation §1) + one adversarial injection from §c
+         (defect 1 — the planted stale roadmap, the D12 class)
+chain:   PSR (read-only fact recovery)
+        → simplification-audit (A8: consumer classification over the still-live
+          candidate pool — WFI document-corpus inventory as its mechanical half;
+          WFI participates because the audit needs the consumer graph, R9)
+        → ONE selected evidence-backed candidate ("archive the VOID
+          creation-roadmap" — decided in this repair round; I4.1 entry 4)
+        → UDM / decision note ONLY for the durable judgment the candidate forces
+          (D-1: which doc owns "what is next" after the roadmap leaves — written to
+          proposed/ awaiting the human ruling; the slice does NOT decide D-1 by fiat —
+          P8 discipline)
+        → host agent IMPLEMENTS (real edits: archive move + banner, inbound pointer
+          fixes (D9/D12/G4-class), registry meta note cleanup) — no more, no less
+        → focused-verification (A9: the smallest relevant subset — preflight +
+          markdown_links_check + the 4 Phase-2 lints on touched paths; NOT the full
+          tier run — I8)
+        → two-axis review (standards vs spec — the code-review pattern; both axes
+          recorded, side by side)
+        → same-change canonical-owner update (LDM direction: status table 4b,
+          SKILL.md builtness line (D14), README flow count (D1))
+outputs: the archived roadmap + fixed pointers; the D-1 decision note (proposed/ —
+         first durable note; moves to decided/ after the human ruling); the
+         focused-verification record; before/after evidence (lint counts, git diff,
+         0 unrelated files touched); flow-state
+pass:    the simplification candidate is REAL (evidence cited, not asserted); the
+         implementation is REAL (git diff, not a completion claim — I7);
+         focused-verification selected a STRICT SUBSET of the full gate (I8: fewer
+         checks than a full preflight+smoke, all change-relevant ones present);
+         two-axis review recorded; before/after: archive-lint + dead-pointer +
+         canonical-impact-lint GREEN after; the planted defect detected AND named
+         (not silently accepted); 0 silent decisions (D-1_LEFT_OPEN check — the P8
+         assertion); sha256 of untouched files unchanged; NO permanent artifact
+         inflation (the change adds ≤2 persistent artifacts — the decision note + the
+         archived banner — both lifecycle-owned, R10.4)
 cadence: the slice run itself (Phase 2 entry gate), then once per phase boundary
 ```
 
@@ -136,14 +157,14 @@ cadence: the slice run itself (Phase 2 entry gate), then once per phase boundary
 inputs:  an empty directory + a one-paragraph goal statement, e.g. "a small repo for
          numerical experiments on manifold transfer" (the NRSD e2e's real research
          question — the flow-state-manifold-transfer evidence base, current-system-map
-         B.14); DSH (a separately-maintained agent-harness codebase used as the reference system; hereafter "DSH") as the greenfield REFERENCE (its day-one gate set, A.1 — what a
+         B.14); DSH as the greenfield REFERENCE (its day-one gate set, A.1 — what a
          minimal-but-enforced start looks like; NOT to be copied wholesale)
 chain:   A7 repo-bootstrap (minimal skeleton: AGENTS.md + one HARD checker +
          decision-notes dir + incident ledger + README) → first "feature" = one
          real experiment scaffold (deliberately tiny) → first decision (a real
-         scope decision, noted in proposed/ → implemented/) → first mechanical
+         scope decision, noted in proposed/ → decided/ (R3)) → first mechanical
          guardrail, ratcheted ONLY after an injected concrete failure (a planted
-         broken link in the README → freshness-lint added in the same change —
+         broken link in the README → dead-pointer/canonical-impact-lint added in the same change —
          the ratchet rule made observable)
 outputs: the minimal repo + 1 decision note + 1 guardrail + the ratchet record
          (failure → guardrail, same change — M11 DT made visible)
@@ -164,22 +185,30 @@ inputs:  a REAL open question from this corpus with ≥2 live candidate routes: 
          decision (P4: D-17, 3-arm matrix deferred — the canary report is the golden
          input for what a discriminating experiment SHOULD look like); route table
          seeded with 2 routes (e.g., "reproducibility via frozen bundles" vs
-         "reproducibility via recomputation") in the register (kind: route)
+         "reproducibility via recomputation") in the register (object_type: route, R4 schema)
 chain:   UDM (hypotheses/candidates for both routes) → RES (evidence synthesis per
          route, channel-separated, E-levels) → route state (register: both ACTIVE,
-         ranking unresolved) → A10 next-discriminating-experiment (must select the
-         smallest experiment that changes the ranking — the canary shows the answer
-         class: a 3-arm matrix; A10 must derive a ≤-cost spec with a cost bound +
-         stop criterion) → result (the canary's ACTUAL result is injected as the
+          ranking unresolved) → A10 next-discriminating-experiment (DECISION VALUE
+          FIRST, cost second (R10.2): first establish the experiment can plausibly
+          change the route ranking / decision, then minimize cost/time/risk among
+          qualifying experiments; the canary shows the answer class: a 3-arm matrix;
+          A10's spec carries decision_relevance + expected_discrimination + cost
+          bound + stop criterion)
+         → result (the canary's ACTUAL result is injected as the
          experiment outcome — reusing the 2026-08-05 data, zero new runs) → UDM
-         decision update (one route DEMOTED/rejected with reason + revisit condition;
-         the other re-ranked)
+          decision update (one route REJECTED: REJECTION BASIS = the canary's
+          discriminating result directly contradicts that route's load-bearing
+          premise (an explicit R5 basis, NOT weak evidence E≤2 alone); frozen rejected/
+          note with rejection_basis + revisit condition; the other route re-ranked)
 outputs: route table (2 → 1 active + 1 rejected note), the experiment spec (register
          entry), the decision-update register entries, the rejected/ note (first
          rejected decision note — the File 3 row 8 format's first use)
-pass:    A10's spec ≤ the canary's actual cost (0.7M-token class — measured against
-         the canary record, P4); the rejected route has a frozen rejected/ note with
-         reason + non-empty revisit_condition (decision-note-lint); NO history
+pass:    A10's spec is decision-relevant (ranking-change plausible; a cheap
+          NON-discriminating alternative spec must LOSE to it = the R10.2 acceptance)
+          and ≤ the canary's actual cost (0.7M-token class, measured against the
+          canary record, P4); the rejected route has a frozen rejected/ note with
+          non-empty rejection_basis (the canary contradiction) + revisit_condition
+          (decision-note-lint); NO history
          falsification (the superseded ranking line stays, supersession-lint);
          E-levels on all claims (provenance-lint); the decision update distinguishes
          "strong literature support" from "verified here" (Q16 assertion: no E<3
@@ -241,21 +270,22 @@ canonical owner, a register entry, or a completion claim with no flag anywhere.
 
 | # | §14.3 defect | Planted instance (concrete) | Detector (primary → secondary) | Expected system behavior |
 |---|---|---|---|---|
-| 1 | stale roadmap | a roadmap file with "Status: IN PROGRESS — Batch 2.5" after the batch closed (the D10 live instance, recreated as fixture) | `canonical-freshness-lint` (mechanical, primary) → PSR (model) | lint flags (last_verified < scope newest commit); PSR state report marks it stale; LDM impact set names it; the D10 fixture is the slice's planted defect (scenario A) |
+| 1 | stale roadmap | a roadmap file with "Status: IN PROGRESS — Batch 2.5" after the batch closed (the D12 live class: creation-roadmap VOID but unarchived at 3bb307f, recreated as fixture; D10's tracking half resolved by 098f2bb) | `canonical-impact-lint` (mechanical, primary; R2: the file is in the closed scope's declared impact set and was not same-change-updated) → PSR (model) | lint flags (impact-set member not same-change-updated); PSR state report marks it stale; LDM impact set names it; the D12 fixture is the slice's planted defect (scenario A) |
 | 2 | contradictory evidence | two evidence-map entries for the same claim, opposite outcomes, both E2 (a D-17-class split, current §1.7) | RES/UDM (model, primary) → `provenance-lint` (field presence) → `register_check` | UDM must NOT average them: the register carries both as conflicting evidence, status OPEN, a discriminating experiment proposed (A10) or an honest BLOCKED; silent merge = fail |
 | 3 | obsolete result artifact | a results JSON whose corpus version predates the last corpus mutation (the D17 class — stale "structured-to-run" claim) | PSR (model, primary) → corpus census (mechanical — File 3 row 17) | "structured-to-run ≠ runs" (E2 cap): the report may claim the structure, not the run; the census mismatch is flagged; no completion claim without a current run |
 | 4 | duplicate facts in several docs | the same release version string in 3 docs (the D1 class, recreated) | `duplicate-fact-lint` (mechanical — the defect it was built for) | the lint reports the exact duplicate set + the single allowed owner; the others must become links; slice's second planted defect (scenario A) |
 | 5 | unsupported "verified" claim | a register entry "VERIFIED" at E2 (literature-only support) | `register_check` in runner (mechanical — the H2 merge makes it unskippable) → DQE FACTUAL_VALIDITY (model) | HARD flag at E≤2 (existing self-test, now in the runner path); the entry may not gate anything until E3+; DQE audit for the doc-level phrasing |
-| 6 | half-implemented feature | a flow SKILL.md claiming an executor "built" that exists as a skeleton (the D3/D14 live class) | `flow_state_check` (HONEST-BLOCKED) + `dependency-graph-lint` (builtness claim vs roster) → PSR | the claim is either matched to the roster (built) or the flow goes HONEST-BLOCKED with named blocked_by; last_verified-scoped claims (I6); D14 fixture |
+| 6 | half-implemented feature | a flow SKILL.md claiming an executor "built" that exists as a skeleton (the D14 live class; D3 resolved by 4e839b2 as its twin) | `flow_state_check` (HONEST-BLOCKED) + `dependency-graph-lint` (builtness claim vs roster, R7) → PSR | the claim is either matched to the roster (built) or the flow goes HONEST-BLOCKED with named blocked_by; builtness claims matched against the graph, not timestamps (I6/I10, R2/R7); D14 fixture |
 | 7 | misleading saved notebook output | a .ipynb whose saved output shows a PASS from a previous, different code state (research-specific — no DSH analog) | PSR (model, primary — "notebook output = claim, not evidence," E0/E1) → reader test | PSR marks the output a CLAIM about a past state (E≤1, not verified); the reader test asserts no "runs/passes" phrasing from the output; no checker catches this — the model case must (documented residual, §a.3) |
 | 8 | branch divergence | two worktrees both modifying the same canonical owner (scenario D's shared_resources, undeclared) | `dependency-graph-lint` (shared_resources conflict — mechanical) → git (divergence is deterministic) → §16.9 integration re-evaluation | the conflict is flagged BEFORE parallel launch (or at integration if launched); the combined state is re-verified (smoke), not assumed from the two greens; M22: verify the artifact, not the report |
 | 9 | stale decision | a decision note whose premise was falsified by a later result, un-annotated (the D12/ADR-OQ-REPRO live instance, recreated) | `supersession-lint` (annotation required — mechanical) → UDM (model) | the lint requires a dated superseded_by/falsified annotation; UDM's register update carries the reversal with lineage (I5); silent rewrite = fail |
-| 10 | route that should be rejected | a route whose evidence is all E≤2 after the discriminating experiment (scenario C's second route) | UDM (model, primary) → `register_check` (rejected entries need reason + revisit_condition) → `decision-note-lint` | the route is REJECTED with a frozen rejected/ note (reason + revisit condition), NOT deleted and NOT silently deprioritized; lineage preserved (Q15); the rejected note is retrievable, history not falsified |
+| 10A | route with an explicit rejection basis | the route whose load-bearing premise is directly contradicted by the canary's discriminating result (scenario C's first route) | UDM (model, primary) → `register_check` (rejected entries need rejection_basis + revisit_condition) → `decision-note-lint` | the route is REJECTED with a frozen rejected/ note (non-empty rejection_basis = the contradiction + revisit condition), NOT deleted and NOT silently deprioritized; lineage preserved (Q15); the rejected note is retrievable, history not falsified |
+| 10B | route with only weak evidence | a route whose evidence is all E≤2 after the discriminating experiment, with no contradiction, constraint violation, domination, or stop decision (scenario C's second route) | UDM (model, primary) → `register_check` → `decision-note-lint` | the route STAYS OPEN / DEFERRED / needs-further-experiment, NOT REJECTED (no silent demotion from uncertainty to rejection, R5); if a reviewer forces a rejection, decision-note-lint fails it for the missing basis |
 | 11 | agent claiming success without external evidence | a sub-agent reports "all checks green" while a planted failure exists (the P8 baseline disease; the smoke's planted-contradiction generalization) | `state-consistency-lint` (doc/claim vs mechanically observed state — mechanical) → smoke safety-negative (existing) → reader test (OVERCLAIM) | the claim is contradicted by the observed state (lint or reader flags it); completion requires the external evidence to pass (I7); the M22 proof: the regression guard must FAIL on the unfixed state |
-| 12 | duplicated or speculative abstractions | two skills/checkers implementing the same invariant (e.g., a new freshness checker duplicating last_verified prose) + a speculative abstraction with zero consumers (the TUI pattern, B.1) | A8 simplification-audit (model — consumer classification, primary) → `dependency-graph-lint` (zero-consumer detection, mechanical half) | A8 names the candidate with consumer analysis (the §12.2 "few strong over many thin" bar); the zero-consumer abstraction is a named deletion candidate; the knip guardrail: no exception inventory ships with the detector (B.2.1) |
+| 12 | duplicated or speculative abstractions | two skills/checkers implementing the same invariant (e.g., a new timestamp-gate checker duplicating last_verified prose, the R2 class) + a speculative abstraction with zero consumers (the TUI pattern, B.1) | A8 simplification-audit (model — consumer classification, primary) → `dependency-graph-lint` (zero-consumer detection, mechanical half) | A8 names the candidate with consumer analysis (the §12.2 "few strong over many thin" bar); the zero-consumer abstraction is a named deletion candidate; the knip guardrail: no exception inventory ships with the detector (B.2.1) |
 
 **Adversarial pass criteria:** all 12 defects detected-or-named (0 silent acceptances);
-the no-skill baseline run on the same fixtures detects ≤50% (the P8 value
+the no-skill baseline run on the same fixtures is reported as a DELTA diagnostic (R10.1: a tied baseline is valid evidence, triggers the A8 simplification signal, not a failure; the P8 value
 demonstration — the baseline is the control, its raw output preserved); every
 mechanical detector's planted-defect recall = 100% (the H5 bar). **Cadence:** the
 12-defect battery runs on every NEW checker/skill (its self-test IS its adversarial
@@ -275,7 +305,7 @@ case) and as a full battery at each phase boundary (manual).
   5× decisions made, 2× decisions reversed (supersession), 2× routes rejected, 2×
   incidents (with guardrails), 1× simplification (A8 removes one planted abstraction),
   2× corpus mutations.
-- **After every iteration k:** the lints run (duplicate-fact-lint, canonical-freshness-
+- **After every iteration k:** the lints run (duplicate-fact-lint, canonical-impact-
   lint, supersession-lint, archive-lint, dependency-graph-lint) + the metric census
   below + (every 5th iteration) the cold-start reader test (d.3).
 - **Run:** orchestrated under validate_eval_plan.py + caps (P1 discipline); each
@@ -288,17 +318,17 @@ cheapest extras included)
 
 | # | §14.4 metric | How measured here | Pass shape (25 iterations) |
 |---|---|---|---|
-| 1 | active artifact count | census of non-archived docs under the File-3 owner paths | sub-linear growth; ceiling = seed + 25×(1 artifact/change max); archive-lint enforces the archive side |
+| 1 | active artifact count | census of non-archived docs under the File-3 owner paths | INDICATOR, not a correctness gate (R10.4): track the trend; FAIL on pathological growth (monotone increase without capability gain, duplicate artifact types, one fact carried by multiple artifacts); archive-lint enforces the archive side |
 | 2 | duplicated canonical facts | duplicate-fact-lint output count | ≤2 at every k (0 target; the 2 tolerance = known adjudicated duplicates) |
-| 3 | stale-reference count | canonical-freshness-lint + dead-pointer check | 0 at every k (a stale reference is a defect, not a budget) |
+| 3 | stale-reference count | canonical-impact-lint + dead-pointer check | 0 at every k (a stale reference is a defect, not a budget) |
 | 4 | unresolved decisions | register census (OPEN count) | bounded: no monotone growth; each new OPEN has a named owner + next discriminator |
 | 5 | superseded artifacts still active | supersession-lint + archive-lint (active dir, banner present) | 0 at every k |
 | 6 | context required for cold-start resume | d.3 reader test: lines read to answer the 5 questions | ≤3,000 lines at every 5th k |
 | 7 | token/time cost to reconstruct current state | PSR re-run cost on the fixture (budgeted, ~2,000-line class) | no monotone increase (flat or decreasing — PSR's job is to keep it bounded) |
 | 8 | time to identify the next actionable task | reader test: the "what is next" answer (status-table lookup) | 1 file, ≤1 read (the D5 single-owner rule made measurable) |
-| 9 | Skills involved in a common workflow | census of skill invocations in the scripted common change (doc fix: PSR→LDM→checkers) | bounded; a common change touches ≤3 skills (the anti-role-explosion metric, charter §0) |
-| 10 | artifacts generated per change | per-iteration artifact census (Q14) | ≤2 persistent + records per change (the artifact budget, I2/Q14) |
-| 11 | rate obsolete machinery is removed | A8 runs (iterations 12 and 24) count deletions/archive-events; the ratchet ratio = removals/additions | ≥1 removal event per 10 iterations (the Phase-4 requirement made continuous); the ratio must not be 0:25 |
+| 9 | Skills involved in a common workflow | census of skill invocations in the scripted common change (doc fix: PSR→LDM→checkers) | INDICATOR (R10.4): track the count; fail on a NEW skill with no unique judgment entering a common workflow, not on the raw number (the anti-role-explosion metric, charter §0) |
+| 10 | artifacts generated per change | per-iteration artifact census (Q14) | INDICATOR (R10.4): the I2/Q14 budget (≤2 persistent + records) is the TARGET, not a gate; correctness = no pathological growth (duplicate artifact types / one fact in multiple artifacts) |
+| 11 | rate obsolete machinery is removed | A8 runs (iterations 12 and 24) count deletions/archive-events; the ratchet ratio = removals/additions | R10.3: NO fixed deletion quota; the fixture PLANTS known-obsolete abstractions at iterations 12 and 24, each must be removed/archived WITH justification (a healthy fixture with no obsolete abstraction may have ZERO removals); the ratio is an indicator, not a gate |
 
 ### d.3 "Understandable after many changes" — operational definition
 
@@ -315,7 +345,9 @@ closing sentence, made falsifiable).
 ### d.4 Longitudinal pass criteria
 
 all 11 metrics within pass shape at k=25; the d.3 test passes at all 5 checkpoints;
-at least one ratchet-DOWN event occurred (metric 11 ≥1 — a guardrail or abstraction was
+the 2 planted obsolete abstractions (iterations 12, 24) were removed/archived WITH
+justification (R10.3: planted-obsolescence, not a fixed quota), and at least one
+ratchet-DOWN event occurred (metric 11 ≥1 — a guardrail or abstraction was
 removed with evidence, not just additions); no metric shows monotone deterioration
 (a flat-or-bounded trend is the system's health line).
 

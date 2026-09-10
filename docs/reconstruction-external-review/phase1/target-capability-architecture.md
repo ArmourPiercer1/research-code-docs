@@ -17,13 +17,13 @@ method:       per capability: CURRENT (which existing skill/checker/doc covers i
               second ledger; new skill only for repeated non-trivial judgment/orchestration.
 date:         2026-09-09
 status:       DRAFT-for-review (architecture proposal, pending human review per charter §15)
-sanitization: de-identified for external review (paths→placeholders; project/vendor names→neutral; see ../README.md)
+sanitization: de-identified for external review (paths→placeholders; project/vendor names→neutral; see ../README.md; 2026-09-10, repair round)
 ```
 
 Mechanism-layer vocabulary (§10): SKILL / CONVENTION / AGENTS.md / SCHEMA / CHECKER / TEST /
 CI-GATE / GIT-PR-CONVENTION / DOC-FORMAT / HUMAN-APPROVAL / EXTERNAL-TOOL / NO-AUTOMATION.
 A capability may combine layers; the FIRST listed is the primary owner.
-DSH (a separately-maintained agent-harness codebase used as the reference system; hereafter "DSH") transferability labels: resolved from S1's `dsh-transferability-crosswalk.md`
+DSH transferability labels: resolved from S1's `dsh-transferability-crosswalk.md`
 (phase1/, on disk at sweep time) — labels cited as "crosswalk: Mx → <§7 label>";
 mechanisms absent from the crosswalk's M1–M32 register are marked UNKNOWN-CROSSWALK.
 
@@ -42,7 +42,7 @@ mechanisms absent from the crosswalk's M1–M32 register are marked UNKNOWN-CROS
   only after concrete failure) is codified anywhere.
 - **DECISION: SKILL** (`repo-bootstrap`, new — phase0 A-list addition, "A7") **plus
   CONVENTION** (a minimal skeleton template: root `AGENTS.md` layout map + standing orders,
-  one HARD checker wired into preflight, `docs/decision-notes/{proposed,implemented,rejected}`,
+  one HARD checker wired into preflight, `docs/decision-notes/{proposed,decided,rejected,archived}` (R3: decision lifecycle folders; implementation_state is a field, not a folder),
   `docs/decision-register.md`, `docs/incident-ledger.md`, `README` current-state rule,
   optional CI; NO speculative governance tree — charter §12.1) **plus AGENTS.md** (the
   ratchet rule: "add mechanical guardrail only after a concrete need/failure; name the
@@ -254,8 +254,9 @@ mechanisms absent from the crosswalk's M1–M32 register are marked UNKNOWN-CROS
   UPDATE THE OWNERS IN THE SAME CHANGE; a standalone report is optional, for review value.
 - **DECISION: SKILL** (existing LDM, REFINE per phase0: impact set → same-change owner
   updates; standalone report only when explicit review is wanted) **+ CHECKER**
-  (`canonical-freshness-lint` + dead-pointer check, File 1 I6 — the mechanical half of
-  "docs stay current"). Justification: judging WHICH docs a change invalidates and HOW to
+  (`canonical-impact-lint` + dead-pointer check, File 1 I6 — the mechanical half of
+  "docs stay current"; R2: declared impact set + same-change discharge, not timestamp
+  comparison). Justification: judging WHICH docs a change invalidates and HOW to
   update them minimally is repeated non-trivial judgment (kept as skill); detecting
   staleness is decidable (moved to checker); the "update in same change" rule is AGENTS.md
   convention.
@@ -297,7 +298,7 @@ mechanisms absent from the crosswalk's M1–M32 register are marked UNKNOWN-CROS
 - **GAP:** active/deferred/rejected alternatives cannot be represented without falsifying
   history (Q15); no next-discriminator field anywhere.
 - **DECISION: SCHEMA + CONVENTION first** (route record = decision-register entry
-  `kind: route` + fields goal/status/dependencies/active decisions/open questions/evidence/
+  `object_type: route` (R4 schema) + fields goal/status/dependencies/active decisions/open questions/evidence/
   next discriminator/next action — charter §12.4's own list) **+ CHECKER** (route table
   consistency: every route's status vocabulary legal, next-discriminator non-empty for
   active routes) — **SKILL PENDING Phase-3 evidence** (a standalone route-manager skill is
@@ -434,8 +435,12 @@ M31 → RESEARCH-SPECIFIC ADAPTATION REQUIRED.
 
 - **CURRENT:** four unreconciled partial views (ownership 1.9).
 - **GAP/DECISION:** SCHEMA + CHECKER (registry `upstream_dependencies`/`downstream_outputs`
-  + new `shared_resources`/`optional_deps` fields as the single machine graph;
-  `dependency-graph-lint` cross-checks it against SKILL.md notes and flow call chains —
+  + new `shared_resources`/`optional_deps` fields as the single machine graph — R7: the
+  registry graph OWNS all dependency / shared-resource relations; SKILL.md carries a
+  one-line pointer to its graph entry; architecture/flow views are GENERATED from the
+  graph (no prose copy is synced); `dependency-graph-lint` validates GRAPH INTEGRITY
+  (roster existence, no cycles, shared_resources declared, routing table ↔ registry,
+  builtness claim vs roster), not prose synchronization —
   the D7/D14 staleness class becomes a lint). Justification: fully decidable once the
   fields exist; DSH's `run-gates.ts` validated-graph idea is imported as the invariant
   ("one graph, one source of truth," M6), not the runner. crosswalk: M6 →
@@ -500,7 +505,9 @@ M31 → RESEARCH-SPECIFIC ADAPTATION REQUIRED.
 - **GAP:** no repo-level owner doc; the harness table is the eval system's fixture, not the
   system's declaration.
 - **DECISION: DOC-FORMAT + CHECKER** (`docs/canonical-source-map.md` = File 3's table,
-  tracked, single source; `duplicate-fact-lint` runs against it — every owner row declares
+  tracked, single source — R6: ONE hand-maintained map; the existing harness-side table
+  `evals/skills/harness/canonical-source-map.md` becomes a thin pointer / generated view
+  (no second manual copy); `duplicate-fact-lint` runs against it — every owner row declares
   the fact templates that may appear once; the 4 assigners collapse to 1 decider per
   information type: DIA decides, File-3 records, lint enforces). NO skill. Justification:
   ownership is a declaration with decidable consequences; the judgment (which home) is DIA's
@@ -510,9 +517,8 @@ M31 → RESEARCH-SPECIFIC ADAPTATION REQUIRED.
 
 - **CURRENT:** `system-architecture.md` (stale status line, G4) + README (version drift,
   D2) + per-skill SKILL.md (self-sufficient contracts).
-- **GAP:** I6 violations (7 live); no freshness mechanics.
-- **DECISION: CONVENTION + CHECKER** (current-state prose rule + `owner:`/`last_verified:`
-  front-matter on every current-state doc + `canonical-freshness-lint` + DSH budgets
+- **GAP:** I6 violations (7 live at the pre-repair census; re-counted per post-audit-reconciliation §1); no change-impact mechanics (R2 replaces timestamp freshness with declared impact set + same-change discharge).
+- **DECISION: CONVENTION + CHECKER** (current-state prose rule + `owner:` front-matter (optional informational `last_verified:`, R2) + `canonical-impact-lint` + DSH budgets
   pattern: relocate → condense → raise with justification, M12/A.7) — the maintenance
   JUDGMENT stays with LDM (§2.9). Justification: detecting staleness is decidable; writing
   the corrected current state is LDM's judgment.
@@ -534,9 +540,8 @@ M31 → RESEARCH-SPECIFIC ADAPTATION REQUIRED.
   cheap durable home" (pain-points §4.3); ADR's falsified claim un-annotated (D12).
 - **DECISION: DOC-FORMAT + CHECKER** (note format per charter §12.7: Problem / Decision /
   Evidence / Alternatives considered / Why / Consequences / Revisit condition; lifecycle
-  folders `proposed/`→`implemented/|rejected/`→`archived/`; `decision-note-lint`: required
-  sections, non-empty Alternatives for non-trivial notes, revisit-condition on rejected/
-  deferred — the DSH `verify-agent-note-format` pattern, history A.8/M2) — NO skill.
+  folders `proposed/`→`decided/|rejected/`→`archived/` (R3: decision lifecycle, not implementation lifecycle — implementation_state is a field, R4); `decision-note-lint`: required
+  sections, non-empty Alternatives for non-trivial notes, non-empty rejection_basis + revisit-condition on rejected/ (R5: rejection requires an explicit basis — direct contradiction, constraint violation, explicit domination, human stop decision, or invalidated load-bearing premise) — the DSH `verify-agent-note-format` pattern, history A.8/M2) — NO skill.
   Justification: the FORMAT is decidable; WHEN a decision is non-trivial enough to note is
   a review-enforced prose rule (DSH kept exactly this as prose after `b1b57a0ac5`,
   history A.8.5 — a mechanism that was tried, evaluated, and left as judgment).
@@ -546,7 +551,7 @@ M31 → RESEARCH-SPECIFIC ADAPTATION REQUIRED.
 - **CURRENT:** per-run registers only (UDM); no persistent store (ownership 1.6).
 - **GAP:** Q5/Q7/Q15 all need one; the 10 live D-rulings are scattered in 7+ files (D8).
 - **DECISION: DOC + SCHEMA + CHECKER** (`docs/decision-register.md`, UDM-owned; schema per
-  §12.6; `register_check` HARD in runner; global unique IDs) — NO new skill (UDM is the
+  §12.6, revised per R4 (I4.1); `register_check` HARD in runner; global unique IDs) — NO new skill (UDM is the
   skill). Justification: the store is a document; the state transitions are UDM's
   judgment; the legality is the checker.
 
@@ -567,9 +572,9 @@ M31 → RESEARCH-SPECIFIC ADAPTATION REQUIRED.
 
 - **CURRENT:** `markdown_links_check` (link existence only).
 - **GAP:** pointers to VOID/archived docs are not flagged (D12/D4 live); `last_verified`
-  staleness not flagged (I6).
+  impact-set staleness not flagged (I6, R2).
 - **DECISION: CHECKER** (extend `markdown_links_check` with banner-awareness + the
-  `canonical-freshness-lint` staleness signal) — NO skill. Justification: decidable.
+  `canonical-impact-lint` same-change-discharge signal) — NO skill. Justification: decidable.
 
 ### 5.8 Corpus simplification
 
@@ -595,8 +600,8 @@ evidence recording, §3.11 literature-search planning — the latter already exi
 | SKILL | repo-bootstrap (new), WFI (refine), PSR (keep), simplification-audit (new), CCM (keep + A1 apply mode), GSWE (keep), UDM (keep, §12.6 refine), RQLP (keep), RES (keep), focused-verification (new), next-discriminating-experiment (new), LDM (refine) | 12 (8 existing, 4 new; A1 counted as a mode) |
 | CONVENTION (primary) | route table (12.4 light), experiment-result records, worktree/branch, integration ordering, current-state doc writing, corpus-simplification targets, recovery practice | 7 |
 | AGENTS.md (primary) | executor/task contracts, plan-contract template, ratchet rule, review two-axis rule, Git-only rule | 5 |
-| SCHEMA (primary) | orthogonal decision fields (12.6), decision-note format, dependency-graph fields, provenance fields, persistence field, route record | 6 |
-| CHECKER (primary) | duplicate-fact-lint, canonical-freshness-lint, supersession-lint, archive-lint, release-version-lint, dependency-graph-lint, state-consistency-lint, change-scope, provenance-lint, decision-note-lint (all 10 new) + register_check-merge + existing tier kept | 12 (10 new, 2 existing-extended) |
+| SCHEMA (primary) | orthogonal decision fields (12.6, revised per R4 — I4.1), decision-note format, dependency-graph fields, provenance fields, persistence field, route record | 6 |
+| CHECKER (primary) | duplicate-fact-lint, canonical-impact-lint (renamed, R2), supersession-lint, archive-lint, release-version-lint, dependency-graph-lint, state-consistency-lint, change-scope, provenance-lint, decision-note-lint (all 10 proposed; Phase-2 minimum set = canonical-impact-lint, archive-lint, supersession-lint, decision-note-lint, R11 — the other six defer with their build phase) + register_check-merge + existing tier kept | 12 (10 new, 2 existing-extended) |
 | CI-GATE | preflight + run_checks on PR/commit (existing, extended) | 1 |
 | DOC-FORMAT (primary) | canonical-source-map, decision notes, evidence maps | 3 |
 | GIT-PR-CONVENTION (primary) | integration, interface-freeze versioning | 2 |
@@ -613,62 +618,52 @@ of register_check into the runner. Net new persistent documents: 5**
 forward from phase0:** runlog (REPLACE), creation-roadmap (REMOVE), registry narrative
 meta (roster-only refactor).)
 
-## 7. Phase-2 vertical slice (charter §15 Phase 2)
+## 7. Phase-2 vertical slice (charter §15 Phase 2; redesign R9)
 
-**Chosen slice — the parent's candidate (execution-notes §"Candidate Phase-2 vertical
-slice") ADOPTED, with four refinements. It beats the two alternates:**
+**The full redesign lives in `revised-phase2-vertical-slice.md`** (created in the repair
+round, repair guide R9). Summary of the shape the guide requires:
 
 ```text
-this repo's governance corpus (messy: 19 verified duplicate families, 7 live stale
-instances — P5, the only still-active top-3 failure mode)
-  → PSR (fact recovery, read-only, within budget)
-  → WFI (inventory: which docs own which facts, orphan/stale candidates)
-  → UDM (decision capture: resolve D-1 = canonical status owner; each duplicate
-     finding logged as a register entry; D12-class supersession annotations)
-  → LDM-refined (impact set → SAME-CHANGE updates of the canonical owners:
-     README status lines, SKILL.md builtness claims, registry roster, VOID-roadmap
-     archive + pointer fix)
-  → new checkers run BEFORE AND AFTER: duplicate-fact-lint + canonical-freshness-lint
-     (+ archive-lint for the VOID roadmap move) — before/after counts are the proof
-  → flow-state COMPLETE (dry-run scope) + results record under results/
+this repo (real messy governance corpus; the still-live D-defects of
+post-audit-reconciliation §1 — no synthetic fixture for the primary loop)
+  → PSR (read-only fact recovery, within budget)
+  → simplification-audit (A8: consumer classification over the still-live
+  candidate pool; WFI document-corpus inventory participates as the audit's mechanical
+  half, only because the audit needs the consumer graph — R9: WFI is a stage
+  only when actually needed)
+  → ONE selected evidence-backed candidate: "archive the VOID creation-roadmap"
+  (decided in the repair round — I4.1 entry 4; the ratchet's remove-side event)
+  → decision note ONLY for the durable judgment it forces: D-1 (which doc owns
+  "what is next" after the roadmap leaves) — written to proposed/, the human
+  ruling gates it (P8: the slice does NOT decide D-1 by fiat)
+  → host agent IMPLEMENTS (archive move + banner, inbound pointer fixes
+  D9/D12/G4-class, registry meta note cleanup — no more, no less)
+  → focused-verification (A9: smallest relevant subset — preflight +
+  markdown_links_check + the 4 Phase-2 minimum lints on touched paths; NOT a full
+  tier run — I8)
+  → two-axis review (standards vs spec; both axes recorded)
+  → same-change canonical-owner update (status table 4b, SKILL.md builtness line
+  (D14), README flow count (D1))
 ```
 
-**Why this slice over the alternates:**
-- vs the 12.3 smallest-evidence-selector slice: 12.3 attacks P1/P3, which were ONE-SHOT
-  past costs (63M + 2.6M, both already paid); the P5 slice attacks the disease that is
-  LIVE at audit (7 verified instances) and re-payable every day the system runs.
-- vs the 12.6 decision-model-refactor slice: 12.6 is a schema change with no closed loop —
-  it cannot demonstrate end-to-end behavior alone; the orthogonal schema ships INSIDE this
-  slice (the D-1 resolution note + duplicate register entries exercise it on real entries,
-  satisfying §12.6's "test against real examples first" requirement).
-- It exercises the highest-value new mechanisms in one loop: `duplicate-fact-lint`,
-  `canonical-freshness-lint`, `archive-lint`, `supersession-lint`, the persistent decision
-  register + decision notes (the D-1 resolution note IS the first durable decision note),
-  LDM's refined same-change-update direction (the S11 refine), and the HONEST-BLOCKED /
-  flow-state discipline.
-- Success is checker-verifiable without model judgment: before/after duplicate count,
-  freshness-lint green, sha256 of untouched files, flow-state terminal state — matching
-  the execution-notes criterion ("success checkable without model judgment").
-- The corpus is real and already validated as an eval corpus: `docs/skill-development/`
-  was the Track-A corpus (batch2_5-integration:60-81) and the documentation-refactor
-  target (ownership §4.5) — the slice reuses existing infrastructure.
-
-**Refinements over the parent's candidate:**
-1. The slice MUST resolve D-1 (canonical status owner) with a decision note — the
-   ownership-map §4.2 shows the pointer currently has no target; without a resolved D-1,
-   the "same-change update" has no owner to update.
-2. First mechanical step: track `references/` in git (D10) so the frozen interface
-   contract the slice runs through has a version history.
-3. The slice carries its own eval set (File 5 §b scenario A + two adversarial injections:
-   a planted stale roadmap, a planted duplicate fact) — charter §15: "the slice must have
-   evals."
-4. The slice closes with a real remove-side ratchet event (I11): archive
-   `creation-roadmap.md` (VOID since 2026-09-09) + fix the DQE SKILL.md:9 pointer —
-   proving the ratchet's deletion direction works, not just its addition direction.
+**Why this redesign over the original candidate (kept for the record):**
+- R9: the slice starts from a REAL messy repo and closes ONE simplification end-to-end
+  (candidate → decision if non-trivial → implementation → focused verification
+  → two-axis review → same-change owner updates), not a synthetic duplicate-census
+  loop. The original before/after duplicate-count proof is replaced by before/after lint
+  counts + git diff + 0 unrelated files touched (success remains checker-verifiable
+  without model judgment).
+- R9: WFI is not a mandatory slice stage; it participates only because the
+  simplification-audit needs its consumer graph (participation documented, not assumed).
+- R9/R11: the slice uses the MINIMUM checker set (canonical-impact-lint,
+  archive-lint, supersession-lint, decision-note-lint) instead of the full 10-checker
+  portfolio; deferred checkers ride with their build phase.
+- R10: the slice's own eval set (File 5 §b scenario A, rewritten in this round) reports
+  baseline DELTAS, designs experiments decision-value-first, and plants obsolescence
+  instead of quotaing deletions.
 
 **Out of scope for the slice (explicit, ratchet discipline):** apply-mode A1 (Phase 3 —
-the slice's owner updates are hand-applied under the existing write-approval boundary, so
-the slice does not depend on A1); the 12.3/12.5 skills (Phase 3); multi-agent machinery
-beyond the two parallel synthesis subagents this plan already ran (S1/S2) as the §4.5
-evidence.
-
+the slice's owner updates are hand-applied under the existing write-approval boundary,
+so the slice does not depend on A1); the A2/A3/A4/A6 parked capability gaps (R12);
+multi-agent machinery beyond the two parallel synthesis subagents this plan already ran
+(S1/S2) as the §4.5 evidence.

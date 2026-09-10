@@ -16,15 +16,19 @@ inputs:       ../phase0/existing-skill-classification.md (labels — proposed_ac
               File 1 (Q-answers, invariants); File 2 (capability decisions); File 3 (owners)
 date:         2026-09-09
 status:       DRAFT-for-review (architecture proposal, pending human review per charter §15)
-sanitization: de-identified for external review (paths→placeholders; project/vendor names→neutral; see ../README.md)
+sanitization: de-identified for external review (paths→placeholders; project/vendor names→neutral; see ../README.md; 2026-09-10, repair round)
 ```
 
-Label agreement rule: `proposed_action` equals the phase0 classification label for every
-phase0-labeled item (KEEP×13, REFINE×7, SPLIT×1 SWR, MERGE×1 register_check→run_checks,
-REPLACE×1 runlog, REMOVE×1 creation-roadmap, ADD×6 A1–A6). Where this matrix disagrees
-with a naive reading, the disagreement is stated in `why_this_must_be_a_skill` with
-evidence. Entries without a convincing `why_this_must_be_a_skill` default to another
-mechanism (named) or removal — per charter §11 and File 2 §6.
+Label agreement (repair round, R8 — prior/posterior rule): the phase0 classification
+label is the PRIOR (`phase0_label`); this matrix is the POSTERIOR (`phase1_label`). Any
+delta (phase1_label != phase0_label) must carry a `delta_reason` + the new evidence in
+the entry. Census at the 3bb307f re-verification: KEEP×15, REFINE×7, SPLIT×1 SWR,
+MERGE×1 register_check→run_checks, REPLACE×1 runlog, REMOVE×1 creation-roadmap, ADD×6
+A1–A6 — zero deltas (the header's old "KEEP×13" undercounted; §6 below explains the
+15 = 9 skills + 6 harness mechanisms). Where this matrix disagrees with a naive reading,
+the disagreement is stated in `why_this_must_be_a_skill` with evidence. Entries without a
+convincing `why_this_must_be_a_skill` default to another mechanism (named) or removal —
+per charter §11 and File 2 §6.
 
 ---
 
@@ -168,7 +172,7 @@ evals: 23 trigger / 5 conflict / 2 task-quality (eval-coverage-baseline); plante
 dsh_basis: M2 RSA (decision notes with mandatory alternatives + richer research
   provenance); M16 DN (the enforced-vocabulary fix is our §12.6 orthogonalization, not
   a board)
-research_specific_delta: routes (kind: route) and experiments (kind: experiment) live in
+research_specific_delta: routes (object_type: route) and experiments (object_type: experiment, R4) live in
   the SAME register (File 2 §3.3/§3.6) — the research delta vs DSH's software-only 6-class set
 ```
 
@@ -392,7 +396,7 @@ why_this_must_be_a_skill: judging WHICH docs a change invalidates and HOW to upd
   impact-set → SAME-CHANGE owner updates (the S11 defect was "proposal-parallel
   maintenance outputs that duplicate the same-change update path", classification S11);
   a standalone report survives only for explicit review value. The mechanical half
-  (detecting staleness) moves to canonical-freshness-lint + dead-pointer check.
+  (detecting stale impact) moves to canonical-impact-lint + dead-pointer check (R2).
 trigger: after any change touching a canonical owner (or its declared scope); the
   Phase-2 slice stage 4
 non_trigger: first-time design (DIA); rewriting for quality (TDR); judging (DQE)
@@ -406,7 +410,7 @@ upstream: any change (CCM apply, TDR, code), DQE flags
 downstream: canonical owners (File 3 rows 2–4, 14); archive-lint (stale banners)
 invariants: proposal-only → same-change (refine); approved:false until applied; no
   auto-publish (existing)
-mechanical_checks: canonical-freshness-lint (new — staleness detection); dead-pointer
+mechanical_checks: canonical-impact-lint (new — same-change impact discharge, R2); dead-pointer
   check (new — VOID/archived targets); existing LDM checker (approved:false)
 failure_modes: parallel-artifact disease (S11 — the refine fixes it); missing owner
   (D-1 OPEN — the slice resolves it, File 2 §7 refinement 1)
@@ -487,7 +491,7 @@ writes: flow-state + staging
 upstream: (entry: PSR stage, shared prefix)
 downstream: WFI → GSWE → (prefix ends at design; tail: research atoms)
 invariants: honest BLOCKED (existing — the tail's boundary is the system's best honest
-  claim, D14 shows even it goes stale → last_verified scope, I6); exactly-one-L1-at-a-time
+  claim, D14 shows even it goes stale → impact-set discharge, R2/I6); exactly-one-L1-at-a-time
 mechanical_checks: flow_state_check; the tail's blocked_by must name EXISTING atoms
   (dependency-graph-lint — the D14 class becomes a lint: a "not built" claim must match
   the roster)
@@ -527,7 +531,7 @@ invariants: honest BLOCKED at the Batch-4 boundary (existing); evidence front ne
 mechanical_checks: flow_state_check; provenance-lint on the evidence map (new);
   blocked_by names existing/planned atoms (dependency-graph-lint)
 failure_modes: silent promotion of a candidate to "the plan" (I3 — the Q15 discipline);
-  tail claimed as built (D14 class → last_verified scope)
+  tail claimed as built (D14 class → builtness-claim vs roster, R7)
 evals: 6 trigger / 3 conflict (eval-coverage-baseline); the manifold-transfer e2e (real
   evidence base — File 5 §b scenario C input)
 dsh_basis: M2 RSA (decision notes for the design candidates); M9 TAG (smallest
@@ -841,7 +845,7 @@ current_owner: docs/skill-development/system-architecture.md
 proposed_action: refine   # phase0 G4 = REFINE (agreed)
 why_this_must_be_a_skill: N/A — the architecture DOC (DOC-FORMAT + CHECKER). REFINES:
   status line "DECIDED for Phase 1" (2026-08-05) gets a pointer to the active charter
-  + `last_verified` (D12/G4); the OQ-1..OQ-5 table DELETED (moved to the decision
+  + optional informational `last_verified:` (R2: not a freshness gate; D12/G4); the OQ-1..OQ-5 table DELETED (moved to the decision
   register — the D9 collision, File 3 row 2); "advisory checkpoint" rule restatements
   collapse to the decision note + links (current §1.2: ≥5 copies). Kept as the ordered
   map (DSH tier: architecture.md is an ordered map, not a resume doc — File 1 Q9).
@@ -856,7 +860,7 @@ upstream: decision notes
 downstream: flows (call-chain reference)
 invariants: current-state prose (I6); no rule restatement (I2); open questions live in
   the register only
-mechanical_checks: canonical-freshness-lint (new); dead-pointer check (new)
+mechanical_checks: canonical-impact-lint (new, R2); dead-pointer check (new)
 failure_modes: status drift (G4 — the live instance); ID collisions (D9)
 evals: n/a
 dsh_basis: M12 DT (tier taxonomy: architecture.md = ordered map); M1 TAG (budgeted
@@ -878,7 +882,8 @@ why_this_must_be_a_skill: N/A — CONVENTION + DOC-FORMAT + decision note. confl
   plan: kept (its §10 pass targets govern File 5; the drifted HF table D11 fixed by
   pointing at hard-fail.md, not re-listing); current-skills-audit: kept as an append-
   only record (it is the audit, not a current claim); ADR-DQE-001: KEPT but MIGRATED
-  into docs/decision-notes/implemented/ (File 3 row 8) + ANNOTATED (the OQ-REPRO=A
+  into docs/decision-notes/decided/ (File 3 row 8, R3: decision lifecycle folder; its
+  implementation_state = implemented — the freeze is operational) + ANNOTATED (the OQ-REPRO=A
   falsification, D12 — supersession-lint enforces the annotation).
 trigger: routing decisions (conflict-matrix); eval runs (QC plan); audits
 non_trigger: n/a
@@ -1000,11 +1005,19 @@ invariants: honest BLOCKED until built (the D14 discipline); frozen interface pe
 mechanical_checks: interface_check per atom (existing pattern); dependency-graph-lint
   (blocked_by names)
 failure_modes: skeleton-first (the D3/D14 disease — SKILL.md claims builtness only when
-  true; last_verified scope)
+  true; builtness matched to the graph, R7)
 evals: 6 trigger / 2 conflict per atom (the Batch-5 pattern, the minimum bar)
 dsh_basis: M2 RSA (research decision notes at each fork); M9 TAG (smallest evidence at
   each atom)
 research_specific_delta: the entire batch is research-specific (DSH has no research core)
+parked: PARKED CAPABILITY GAP (R12, repair round)
+  gap: the evidence-front-to-implementation bridge (6 research atoms)
+  evidence_of_need: NRSD tail HONEST-BLOCKED at exactly these atoms (SKILL.md:40-60);
+    the 10-upstream call chain is the system's largest honest-BLOCKED surface
+  current_blocked_consumer: NRSD (Batch-4 tail, live at 3bb307f)
+  activation_condition: a real consumer request arrives (a design question the evidence
+    front cannot answer without an atom) AND D-1 is ruled (route state has a home)
+  not_planned_until: the first real consumer request (Phase 3+; no speculative build)
 ```
 
 ```yaml
@@ -1025,10 +1038,18 @@ upstream: the L1 flows' tails
 downstream: flow-state completion
 invariants: honest BLOCKED until built; frozen interface per atom
 mechanical_checks: interface_check; dependency-graph-lint
-failure_modes: the D14 stale-builtness claim (last_verified scope + lint)
+failure_modes: the D14 stale-builtness claim (builtness-claim vs roster + lint, R7)
 evals: 6 trigger / 2 conflict per atom (minimum bar)
 dsh_basis: M28 TAG (canonical SKILL.md section sequence for the new atoms)
 research_specific_delta: research-workspace-specific execution (data/experiment docs)
+parked: PARKED CAPABILITY GAP (R12, repair round)
+  gap: the 4 remaining doc-execution atoms (SWR/DR tails)
+  evidence_of_need: SWR SKILL.md:49 names them not-built (D14's stale-claim class —
+    builtness now graph-matched, R7)
+  current_blocked_consumer: SWR + DR execution tails
+  activation_condition: a real document-execution request reaches the tail AND the
+    interface contracts are versioned (File 3 row 11)
+  not_planned_until: the first real consumer request (Phase 3+)
 ```
 
 ```yaml
@@ -1065,6 +1086,16 @@ dsh_basis: M3 DT (frontmatter non-triggers ARE the routing mechanism — the tab
   their repo-level complement); M1 TAG (AGENTS.md as standing-order home)
 research_specific_delta: research requests split along EVIDENCE axes (literature vs
   project vs inference) that the table must encode — the research routing delta
+parked: PARKED CAPABILITY GAP (R12, repair round) — the CONVENTION + CHECKER half
+  (routing table in AGENTS.md + dependency-graph-lint) ships with the Phase-3
+  convention batch; the SKILL promotion stays parked
+  gap: single invocable router entry point
+  evidence_of_need: none measured yet (18 commits, no unresolved routing case — the
+    PROMOTION TRIGGER above is the evidence bar)
+  current_blocked_consumer: none (the table covers routing at 3-flow scale)
+  activation_condition: flow count > 3 OR routing needs judgment beyond
+    OK/SEQ/DENY/COND
+  not_planned_until: that trigger fires
 ```
 
 ```yaml
@@ -1134,6 +1165,16 @@ dsh_basis: M24 TAG (honest admission: missing capability = loud non-verdict); A.
   budget)
 research_specific_delta: the profile dimension (which document classes are admissible)
   is the research delta — DSH's gates are binary, DQE's are profile-scoped
+parked: PARKED CAPABILITY GAP (R12, repair round) — stays DEFERRED by the canary (P4):
+  the 3-arm matrix has not run, so promotion evidence does not exist yet
+  gap: the evidence + procedure for DQE terminal-gate promotion
+  evidence_of_need: P2's false pass (a single-run gate is untrustworthy); the Phase-E
+    canary deferred the matrix itself
+  current_blocked_consumer: none today — DQE advisory scope is sufficient (Rule 0);
+    the release gate stays binary
+  activation_condition: the 3-arm matrix runs and passes for a profile AND a human
+    ruling promotes it (decision note, File 3 row 8)
+  not_planned_until: the canary's revisit conditions are met (Phase-E evidence exists)
 ```
 
 ```yaml
@@ -1159,7 +1200,8 @@ writes: the new repo
 upstream: GSWE (scope)
 downstream: everything in the new repo
 invariants: no speculative governance tree (§12.1); every guardrail names its failure
-  mode (charter §18); current-state docs carry owner/last_verified from day one (I6)
+  mode (charter §18); current-state docs carry owner front-matter (optional informational
+  last_verified, R2) from day one (I6)
 mechanical_checks: preflight from day one (the one HARD checker); AGENTS.md budget
   (M1 — a small ceiling on standing orders)
 failure_modes: premature framework inflation (the anti-pattern §12.1 names); missing
@@ -1257,20 +1299,22 @@ name: A10 — next-discriminating-experiment
 problem: choose the smallest experiment most likely to change which route we pursue
 current_owner: none (the system sequences "next tasks", never decision-value — §12.5)
 proposed_action: add   # new ADD (charter §12.5 candidate — evaluated in §5.5)
-why_this_must_be_a_skill: information-gain / decision-value optimization over competing
-  routes is PURE repeated non-trivial judgment — nothing about it is checker-decidable
+why_this_must_be_a_skill: DECISION-VALUE-FIRST, cost-second optimization (R10.2:
+  decision relevance + expected discrimination established BEFORE cost minimization)
+  over competing routes is PURE repeated non-trivial judgment — nothing about it is checker-decidable
   (File 2 §3.6: "you cannot lint 'discriminating'"). The cost-bounding half (pre-
   counted, capped plans feeding validate_eval_plan.py's existing caps — the P1 fix)
   is CONVENTION + the existing validator. DSH evidence: M9 TAG (the same "smallest
   evidence" principle generalized to research) + A.6 (the canary is the one time this
   question was answered well — by hand, at 0.7M tokens; the skill exists to make that
   judgment repeatable, not to replace it).
-trigger: ≥2 active routes with an unresolved ranking (register kind: route)
+trigger: ≥2 active routes with an unresolved ranking (register object_type: route, R4)
 non_trigger: a single-route continuation (just the next task); an admitted-profile
   document question (DQE)
 inputs: the route table + evidence maps + register state
-outputs: the experiment spec (hypothesis tested, cost bound, what ranking change would
-  mean what, stop criterion) as a register entry kind: experiment
+outputs: the experiment spec (decision_relevance, expected_discrimination, hypothesis
+  tested, cost bound, what ranking change would mean what, stop criterion) as a register
+  entry object_type: experiment (R4)
 canonical_or_transient: the spec is a register entry (canonical); the result is a
   record (File 3 row 6) + evidence-map merge
 reads: register, evidence maps
@@ -1278,8 +1322,9 @@ writes: register (experiment entry)
 upstream: UDM (route state), RES (evidence gaps)
 downstream: the experiment (external execution), result ingestion (File 2 §3.7), UDM
   (E-level/ranking update)
-invariants: cost bound mandatory (pre-countable — the P1 discipline); stop criterion
-  mandatory; the output changes a RANKING, not a to-do list (§8.8)
+invariants: decision value first, cost second (R10.2 — a cheap NON-discriminating
+  alternative must lose); cost bound mandatory (pre-countable — the P1 discipline);
+  stop criterion mandatory; the output changes a RANKING, not a to-do list (§8.8)
 mechanical_checks: register schema (experiment kind: cost + stop fields required —
   register_check); validate_eval_plan.py (existing) on the execution
 failure_modes: task-sequencing masquerade ("continue the next task" — the named anti-
@@ -1326,7 +1371,7 @@ Rationale: the route OBJECT is needed (Q15: routes cannot be paused/rejected/rev
 without falsifying history today), but the STANDALONE MANAGER SKILL fails the §10 test
 at current scale — route bookkeeping is checker-able, and route-strategy judgment has
 not been exercised at multi-route scale (this repo has run one route at a time).
-Decision: route records = register entries `kind: route` + a route table file
+Decision: route records = register entries `object_type: route` (R4 schema) + a route table file
 (schema + checker, File 2 §3.3); promotion trigger: Phase 3 evidence of repeated
 non-trivial route judgment (the charter's own caution: no big hierarchy "unless evidence
 proves it is necessary"). This is the portfolio's largest deliberate NOT-a-skill call.
@@ -1338,9 +1383,12 @@ calibration discipline (named budget); A10 carries it.
 
 ### 5.6 §12.6 Decision model refactor — **ADOPT** → `refine` (UDM + register schema; NOT a new skill)
 Rationale: the conflation is verified (Q11.1; §3.3 prob-5); the charter's own
-instruction is to TEST the schema against the real Batch-2.5 register + the 10 live
-D-rulings BEFORE freezing (File 1 I4) — this portfolio schedules that test as part of
-the Phase-2 slice (the D-1 resolution + duplicate entries exercise it on real data).
+instruction was to TEST the schema against real examples BEFORE freezing (File 1 I4) —
+DONE in the repair round (R4): the 12-entry state-space test (File 1 §I4.1, all real
+entries) passed, with one material deviation: the charter's `kind` split into
+`object_type` + `epistemic_state`, plus `not_applicable` on decision/implementation
+states (per-entry justification in I4.1). The Phase-2 slice then exercises the revised
+schema on new real entries (the D-1 note + register updates).
 Mechanism: SCHEMA + `VOCAB.yaml` + role-mixing rule in status_vocab_check + register_check
 (H2 merge) — no new skill (UDM keeps the judgment).
 
@@ -1357,7 +1405,7 @@ b1b57a0ac5:37, crosswalk M19). Format + `decision-note-lint`, not a skill.
 Rationale: the S11 defect (proposal-parallel artifacts duplicating the same-change path)
 is exactly the disease §12.8 names; the refinement (impact set → same-change owner
 updates, optional standalone report) is in the LDM entry above; the mechanical half
-(freshness + dead-pointer lints) is new; the DSH basis is M30 TAG + M12 DT + M18 TAG.
+(freshness-lint → canonical-impact-lint (R2) + dead-pointer lints) is new; the DSH basis is M30 TAG + M12 DT + M18 TAG.
 
 ### 5.9 Evaluation summary (verdict → portfolio delta)
 
