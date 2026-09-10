@@ -9,8 +9,7 @@ Rules (prompt §5.3, 2026-09-10 Phase-2 implementation prompt):
       must be defined in the same file as `id: <ID>`.
   S3: self-supersession (target resolves to the file itself) is a problem.
   S4: a file under docs/plans/archived/ that is pointed at by a supersession reference
-      must still carry a VOID/SUPERSEDED banner OR an explicit supersession marker
-      (lineage must survive an archive move).
+      must still carry a VOID/SUPERSEDED banner (lineage must survive an archive move).
   S5: a `superseded_by:` reference requires a non-empty `reason:` within the next 12
       lines (a superseded/contradicted decision keeps its lineage annotation).
 
@@ -19,6 +18,7 @@ vacuously.
 
 Usage:
     python supersession_lint.py <file.md> [...]
+    python supersession_lint.py --repo        # scan all .md under the repo root
 Exit code 0 if all pass, 1 otherwise.
 """
 from __future__ import annotations
@@ -113,16 +113,25 @@ def check_file(path: Path) -> tuple[bool, list[str]]:
 
 
 def main(argv: list[str]) -> int:
-    if len(argv) < 2:
-        print("usage: supersession_lint.py <file.md> [...]", file=sys.stderr)
+    if not argv[1:]:
+        print("usage: supersession_lint.py <file.md> [...] | --repo", file=sys.stderr)
         return 2
+    if argv[1] == "--repo":
+        files = sorted(p for p in ROOT.rglob("*.md")
+                       if ".venv" not in p.parts and "node_modules" not in p.parts)
+        print(f"supersession_lint --repo {ROOT}: scanning {len(files)} .md files")
+    else:
+        files = [Path(a) for a in argv[1:]]
     ok_all = True
-    for arg in argv[1:]:
-        ok, problems = check_file(Path(arg))
-        print(f"[{'PASS' if ok else 'FAIL'}] {arg}")
-        for p in problems:
-            print(f"    - {p}")
-        ok_all = ok_all and ok
+    for arg in files:
+        ok, problems = check_file(arg)
+        if not ok:
+            print(f"[FAIL] {arg}")
+            for p in problems:
+                print(f"    - {p}")
+            ok_all = False
+    if argv[1:] == ["--repo"]:
+        print(f"supersession_lint --repo: {'PASS' if ok_all else 'FAIL'}")
     return 0 if ok_all else 1
 
 

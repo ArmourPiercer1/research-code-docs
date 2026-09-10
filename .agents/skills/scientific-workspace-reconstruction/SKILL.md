@@ -41,12 +41,12 @@ substantive step is a **delegated call**.
 workspace-forensics-and-inventory  (workspace mode, READ-ONLY)          → inventory-report
 → project-state-reconstructor      (what RUNS / is TESTED; FACT/UNKNOWN)→ project-state-report
 → goal-scope-and-workflow-elicitor (goal + intended dev–test–exp flow)  → goal-scope-note
-── v0 SKELETON STOPS HERE (the stages below are Batch 4/5, NOT BUILT) ──
+── v0 SKELETON STOPS HERE (the Batch 4/5 stages below are NOT BUILT — except LDM, built 2026-08-06; D14) ──
 → dev-test-experiment-workspace-architect   (target layout)             [BLOCKED: not built]
 → experiment-provenance-and-reproducibility (provenance/repro plan)      [BLOCKED: not built]
 → workspace-migration-planner                (dry-run move map first)    [BLOCKED: not built]
 → scientific-validation-and-benchmark-planner                           [BLOCKED: not built]
-→ living-design-maintainer                                              [BLOCKED: not built]
+→ living-design-maintainer                                              [built v0.1.0, manual-only; not yet wired into this chain (D14)]
 ```
 
 Every hand-off is **verified** against the artifact's frozen interface (`interface_check.py`) before the next

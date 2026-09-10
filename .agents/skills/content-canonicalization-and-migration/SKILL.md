@@ -12,7 +12,7 @@ source_commit: 07b5306
 source_documents:
   - references/agent-skills/skills/documentation-and-adrs/SKILL.md (MIT — supersede-don't-delete lifecycle; canonical home; method-borrow)
   - references/agent-skills/skills/source-driven-development/SKILL.md (MIT — checkable locator: every source/target is a real path; method-borrow)
-  - docs/skill-development/creation-roadmap.md §5 (Batch-5 workspace-migration-planner: dry-run first)
+  - docs/plans/archived/creation-roadmap.md §5 (Batch-5 workspace-migration-planner: dry-run first; VOID 2026-09-09 — historical provenance)
   - docs/skill-development/system-architecture.md §3.3 (documentation-refactor chain, executor tail)
   - references/interfaces/document-artifact-map.schema.md + references/interfaces/migration-map.schema.md
   - references/documentation-methodology/upstream-method-matrix.md §2.10

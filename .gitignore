@@ -18,6 +18,9 @@ references/*
 # snapshots
 evals/skills/snapshots/
 
+# lint self-test scratch (deterministic fixtures, cleaned by selftest_phase2_lints.py)
+.lint-fixtures-tmp/
+
 # planning state — canonical stores TRACKED (final consistency patch P2):
 #   tracked:  docs/plans/active/**, docs/plans/archived/**
 #   ignored:  docs/plans/local/**, docs/plans/scratch/** (explicit ephemeral dirs)

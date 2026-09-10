@@ -13,7 +13,7 @@ source_documents:
   - references/github-awesome-copilot/skills/acquire-codebase-knowledge/SKILL.md (+ references/stack-detection.md, references/inquiry-checkpoints.md) (MIT)
   - references/agent-skills/skills/context-engineering/SKILL.md (MIT)
   - docs/skill-development/system-architecture.md §3.2/§3.3 (chain position), §12 (untrusted content)
-  - docs/skill-development/creation-roadmap.md §2 (Batch 2)
+  - docs/plans/archived/creation-roadmap.md §2 (Batch 2; VOID 2026-09-09 — historical provenance)
   - references/documentation-methodology/upstream-method-matrix.md §2.5
 last_verified: 2026-08-05
 -->

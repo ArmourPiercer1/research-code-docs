@@ -4,7 +4,7 @@
 generated_by_skill: (manual, Phase-1 governance authoring)
 skill_version: n/a
 source_commit: mattpocock/skills vendored snapshot (plugin.json v1.2.0; no pinned commit)
-source_documents: [docs/skill-development/quality-control-plan.md, docs/skill-development/creation-roadmap.md]
+source_documents: [docs/skill-development/quality-control-plan.md, docs/plans/archived/creation-roadmap.md (VOID 2026-09-09 — historical provenance)]
 status: DECIDED (v0.1 harness layout)
 last_verified: 2026-07-30T09:47:06Z
 -->

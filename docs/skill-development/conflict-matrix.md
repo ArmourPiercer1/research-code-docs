@@ -28,7 +28,7 @@ These share adjacent surfaces ("messy files" / "messy docs" / "fuzzy algorithm")
 | `numerical-research-software-design` | `documentation-refactor` | DENY | routing decision | If the idea is buried in messy docs, **refactor/curate first** only if docs block understanding; otherwise design flow proceeds and refactor is a later handoff. One at a time. | LIVE¹ |
 | `scientific-workspace-reconstruction` | `documentation-refactor` | SEQ | reconstruction | Files-and-code mess → reconstruction; if the *residue* is a doc corpus, reconstruction hands off to refactor after state is known. Doc-only input → refactor directly. | LIVE¹ |
 
-**¹ Built 2026-08-05 (Batch 3, v0 skeletons) — all three are `experimental` + `disable-model-invocation: true` + manual/user-invoked-only, so auto co-trigger is currently impossible by construction. These DENY/SEQ rules are the design target enforced *before* any of them flips to `auto_trigger` (creation-roadmap §3 gate). Each flow's own `conflict/*.yaml` encodes the cluster cases.**
+**¹ Built 2026-08-05 (Batch 3, v0 skeletons) — all three are `experimental` + `disable-model-invocation: true` + manual/user-invoked-only, so auto co-trigger is currently impossible by construction. These DENY/SEQ rules are the design target enforced *before* any of them flips to `auto_trigger` ([creation-roadmap](../plans/archived/creation-roadmap.md) §3 gate — VOID 2026-09-09, historical). Each flow's own `conflict/*.yaml` encodes the cluster cases.**
 
 **Disambiguator (from `system-architecture.md` §5):** route by the **dominant artifact type** after a read-only forensic/state pass. When ambiguous, `goal-scope-and-workflow-elicitor` asks exactly **one** routing question; no flow launches until it resolves.
 

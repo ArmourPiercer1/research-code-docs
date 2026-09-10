@@ -1,0 +1,170 @@
+# =============================================================================
+# impact-declaration.yaml — Phase-2 vertical-slice change contract
+# Change: the ONE candidate (archive the VOID creation-roadmap + re-point inbound
+# refs) + the canonical stores + the tracking transition + Commit-A mechanisms
+# (4 Phase-2 lints + register_check merge + A8/A9). Slice-level contract:
+# base = slice start 1dc6b86; the change spans commit A (8a37387, pushed) and the
+# slice commit B. (An 8a37387-based run of canonical_impact_lint was also executed
+# as a supplementary check — see execution-record §4.1.)
+# Consumed by: canonical_impact_lint.py (C1 changed⊆declared; C2 owners updated in
+# the same change; C3 no_impact justifications; C4 no timestamp-only discharge)
+# and by A9 focused-verification (contract conformance).
+# =============================================================================
+change: phase2-vertical-slice
+base: 1dc6b8694dac60ac355b8094e61ffebde322fba0
+date: 2026-09-10
+author: Phase-2 slice (per research_code_docs_phase2_implementation_prompt.md)
+
+# ---- declared changed paths (C1: every actual changed path must be here) ----
+changed_paths:
+  # ===== commit A (8a37387): minimum Phase-2 mechanisms + A8/A9 =====
+  - .agents/skills/simplification-audit/SKILL.md
+  - .agents/skills/focused-verification/SKILL.md
+  - evals/skills/harness/checkers/archive_lint.py
+  - evals/skills/harness/checkers/supersession_lint.py
+  - evals/skills/harness/checkers/canonical_impact_lint.py
+  - evals/skills/harness/checkers/decision_note_lint.py
+  - evals/skills/harness/checkers/selftest_phase2_lints.py
+  - evals/skills/harness/checkers/run_checks.py              # + pre-existing CLI gap fix: multi-path invocations only processed the first arg
+  - evals/skills/trigger/simplification-audit.yaml
+  - evals/skills/trigger/focused-verification.yaml
+  - evals/skills/conflict/simplification-audit.yaml
+  - evals/skills/conflict/focused-verification.yaml
+  - docs/skill-development/skills-registry.yaml              # A8/A9 entries + meta.phase2 (commit A) + A9 class enum / norm_sources normalization (slice B)
+  # ===== the candidate: archive move (git mv — delete old + add new) =====
+  - docs/skill-development/creation-roadmap.md          # deleted by git mv
+  - docs/plans/archived/creation-roadmap.md             # added by git mv (banner intact)
+  # the seven inbound references, re-pointed / labeled (5 files; full census in
+  # execution-record §2 — frozen/historical mentions classified and kept)
+  - .agents/skills/content-canonicalization-and-migration/SKILL.md
+  - .agents/skills/workspace-forensics-and-inventory/SKILL.md
+  - docs/skill-development/README.md                    # 3 links (banner, index row, D5 section)
+  - docs/skill-development/conflict-matrix.md           # §3 gate footnote
+  - evals/skills/README.md                              # source_documents locator
+  # same-change canonical-owner updates (D12 / D1 / counts)
+  - docs/skill-development/system-architecture.md       # D12 status line: pointer, not "DECIDED for Phase 1"
+  - README.md                                           # skill counts + checker list + governance pointers
+  # same-change stale-claim correction (prompt §7.3, D14 class)
+  - .agents/skills/scientific-workspace-reconstruction/SKILL.md   # LDM builtness: [BLOCKED: not built] -> built v0.1.0 (D14)
+  # the canonical stores (new)
+  - docs/canonical-source-map.md                        # §A owner table + §B generic rows (single manual authority)
+  - evals/skills/harness/canonical-source-map.md        # -> thin pointer (10 rows moved to docs/ §B)
+  - docs/decision-register.md                           # seed: D-1 + R-001 (no backfill)
+  - docs/decision-notes/README.md                       # store lifecycle owner doc
+  - docs/decision-notes/decided/d-1-what-is-next-canonical-owner.md
+  - docs/decision-notes/proposed/.gitkeep
+  - docs/decision-notes/rejected/.gitkeep
+  - docs/decision-notes/archived/.gitkeep
+  # slice working files (new)
+  - docs/plans/active/reconstruction/phase2/impact-declaration.yaml   # this file
+  - docs/plans/active/reconstruction/phase2/execution-record.md
+  # D-1 owner + layout + status updates
+  - docs/plans/active/reconstruction/README.md
+  # mechanism-side deltas during the review-response pass (slice B)
+  - evals/skills/harness/checkers/canonical_impact_lint.py   # worktree-mode robustness: utf-8 git IO, C-style path unquoting, new-file C4, directory owners, CLI bounds
+  - evals/skills/harness/checkers/markdown_links_check.py    # banner-aware extension (prompt §9 L406 / §5.2-4)
+  - evals/skills/harness/checkers/supersession_lint.py       # --repo mode (persisted verbatim-rerunnable scan)
+  - evals/skills/harness/checkers/archive_lint.py            # docstring typo fix
+  - docs/skill-development/reports/runlog.md                 # transition-thin real-use line (QCP §7; row 13 pointer)
+  # corpus attribution (append-only ledger; DQE gold corpus unchanged)
+  - docs/testing/benchmark-changelog.md
+  - .gitignore                                          # +.lint-fixtures-tmp/ scratch ignore
+  # tracking transition: docs/plans/active/** + docs/plans/archived/** become tracked
+  # (37 files — the complete list is declared explicitly for C1)
+  - docs/plans/active/reconstruction/README.md
+  - docs/plans/active/reconstruction/execution-notes.md
+  - docs/plans/active/reconstruction/post-audit-reconciliation.md
+  - docs/plans/active/reconstruction/revised-phase2-vertical-slice.md
+  - docs/plans/active/reconstruction/architecture-review-disposition.md
+  - docs/plans/active/reconstruction/intermediate/brief-s1.md
+  - docs/plans/active/reconstruction/intermediate/brief-s2.md
+  - docs/plans/active/reconstruction/intermediate/check_deliverables.py
+  - docs/plans/active/reconstruction/intermediate/dsh-current-state-findings.md
+  - docs/plans/active/reconstruction/intermediate/dsh-history-findings.md
+  - docs/plans/active/reconstruction/intermediate/eval_coverage_baseline.py
+  - docs/plans/active/reconstruction/intermediate/eval-coverage-baseline.md
+  - docs/plans/active/reconstruction/intermediate/parent-preliminary-answers.md
+  - docs/plans/active/reconstruction/phase0/current-information-ownership-map.md
+  - docs/plans/active/reconstruction/phase0/current-system-map.md
+  - docs/plans/active/reconstruction/phase0/existing-skill-classification.md
+  - docs/plans/active/reconstruction/phase0/pain-point-evidence.md
+  - docs/plans/active/reconstruction/phase1/canonical-information-model.md
+  - docs/plans/active/reconstruction/phase1/dsh-transferability-crosswalk.md
+  - docs/plans/active/reconstruction/phase1/dsh-workflow-evidence-map.md
+  - docs/plans/active/reconstruction/phase1/eval-plan.md
+  - docs/plans/active/reconstruction/phase1/skill-change-matrix.md
+  - docs/plans/active/reconstruction/phase1/target-capability-architecture.md
+  - docs/plans/active/reconstruction/phase1/target-workflow-invariants.md
+  - docs/plans/active/research_code_docs_phase2_implementation_prompt.md
+  - docs/plans/active/research_software_agent_workflow_reconstruction_charter.md
+  - docs/plans/archived/Batch2_5集成冲刺与Batch3最小控制流开发计划.md
+  - docs/plans/archived/Batch3后续_首个闭环垂直切片与分层测试节奏计划.md
+  - docs/plans/archived/creation-roadmap.md
+  - docs/plans/archived/DQE_D3决策与PhaseE安全准入计划.md
+  - docs/plans/archived/DQE_v0.4_OQ-REPRO决策与下一阶段开发计划.md
+  - docs/plans/archived/DQE_v0.4_测试修正与最小升级计划.md
+  - docs/plans/archived/DQE_v4_待决策项回复与下一阶段开发计划.md
+  - docs/plans/archived/Research-Code-Docs_v0.1.0-alpha.1预览版发布前准备计划.md
+  - docs/plans/archived/Research-Code-Docs当前进展_阻塞项与下一阶段开发计划.md
+
+# ---- canonical owners (File-3 table rows; C2/C3) ----
+canonical_owners:
+  - path: docs/skill-development/system-architecture.md
+    row: 2 (project architecture)
+    impact: updated
+  - path: docs/plans/active/reconstruction/README.md
+    row: 4b (current execution status / what-is-next — the D-1 owner)
+    impact: updated
+  - path: docs/canonical-source-map.md
+    row: 5.1 (single manual canonical source map)
+    impact: updated
+  - path: docs/decision-register.md
+    row: 7 (open decisions / decision state)
+    impact: updated
+  - path: docs/decision-notes/
+    row: 8 (durable decision rationale)
+    impact: updated
+  - path: docs/plans/
+    row: 9 (execution plans; tracking + archive location)
+    impact: updated
+  - path: .agents/skills/
+    row: 3 (per-skill contracts — 2 SKILL.md source_documents locators re-pointed + 1 D14 builtness fix in scientific-workspace-reconstruction)
+    impact: updated
+  - path: docs/skill-development/skills-registry.yaml
+    row: 14 (skill roster)
+    impact: updated
+    justification: "commit A: A8/A9 entries + meta.phase2 (new roster facts). Slice B: A9 class `verify` -> `evaluate` (legal §10 enum) + A8/A9 norm_sources normalized to fact-store vocabulary (no canonical fact-store consumer -> []); two-axis review response."
+  - path: release-manifest.yaml
+    row: 15 (release state)
+    impact: no_impact
+    justification: "0.1.0-alpha.1 packaging frozen (prompt §0: one closed loop, don't broaden); A8/A9 explicitly NOT packaged — recorded as a Phase-3/packaging follow-up in the registry notes + root README."
+  - path: docs/testing/benchmark-changelog.md
+    row: 17 (eval corpus state)
+    impact: updated
+  - path: tests/corpus/
+    row: 17 (DQE gold corpus)
+    impact: no_impact
+    justification: "DQE gold corpus byte-unchanged (append-only ledger addendum records the 4 routing-yaml additions; no dataset_version bump — routing evals are per-skill datasets, their history = git)."
+  - path: references/interfaces/
+    row: 11 (interface contracts)
+    impact: no_impact
+    justification: "no interface contract changed; the decision-register INTERFACE (references/interfaces/decision-register.schema.md) is untouched — the new register conforms to it (register_check PASS)."
+  - path: docs/incident-ledger.md
+    row: 12 (incident/defect history)
+    impact: no_impact
+    justification: "home file not yet materialized (File 3 row 12 delta: 'format exists, home file does not — current §1.11'; creation + P1–P10 seed migration belong to a later phase). No P-class incident in this slice; the two lint false-positive fixes + the run_checks CLI fix are in-mechanism development fixes, recorded in phase2/execution-record.md §4.2."
+  - path: docs/skill-development/conflict-matrix.md
+    row: 10 (co-run semantics)
+    impact: updated
+    justification: "substantive label fix (roadmap gate pointer -> archived path + VOID label); no DENY/SEQ/COND rule changed."
+  - path: docs/skill-development/reports/runlog.md
+    row: 13 (implementation history — transition-thin pointer; runlog is being replaced by git + incident-ledger)
+    impact: updated
+    justification: "one transition-thin real-use line appended (A8+A9 real use, QCP §7) pointing to phase2/execution-record.md — the pointer form row 13 allows during transition; full run detail lives in the record, not the runlog."
+
+# ---- intentionally untracked by this change (carved out of C1, recorded per slice) ----
+# docs/plans/finished/ (2 guide docs) is OUT of the Phase-2 tracking spec (active/** +
+# archived/** only) — left untracked on purpose; tracking decision deferred to Phase 3.
+intentionally_untracked:
+  - docs/plans/finished/research_code_docs_phase1_architecture_repair_guide.md
+  - docs/plans/finished/research_code_docs_phase1_final_consistency_patch.md

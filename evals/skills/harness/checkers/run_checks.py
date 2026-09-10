@@ -172,12 +172,15 @@ def main(argv: list[str]) -> int:
     if not args:
         print("usage: run_checks.py <path> [--json] [--advisory-is-hard]", file=sys.stderr)
         return 2
-    report = run(Path(args[0]), advisory_is_hard=("--advisory-is-hard" in flags))
-    if "--json" in flags:
-        print(json.dumps(report, indent=2, ensure_ascii=False))
-    else:
-        print_human(report)
-    return 1 if report["hard_fail"] else 0
+    hard_fail = False
+    for a in args:
+        report = run(Path(a), advisory_is_hard=("--advisory-is-hard" in flags))
+        if "--json" in flags:
+            print(json.dumps(report, indent=2, ensure_ascii=False))
+        else:
+            print_human(report)
+        hard_fail = hard_fail or report["hard_fail"]
+    return 1 if hard_fail else 0
 
 
 if __name__ == "__main__":

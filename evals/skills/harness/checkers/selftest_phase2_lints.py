@@ -146,6 +146,8 @@ revisit_condition: If a second what-is-next owner proves necessary.
 BAD_NOTE = GOOD_NOTE.replace("decision_state: decided", "decision_state: decided  # wrong folder") \
     .replace("implementation_state: not_applicable", "") \
     .replace("revisit_condition: If a second what-is-next owner proves necessary.", "")
+# slice §6 shape: the decision is carried as `ruling:` (no literal `decision:` key)
+RULING_NOTE = GOOD_NOTE.replace("decision: Option A — the status table.", "ruling: Option A — the status table.")
 
 
 def t_decision_note():
@@ -155,12 +157,15 @@ def t_decision_note():
         "docs/decision-notes/proposed/mismatch.md": GOOD_NOTE,   # N4 folder vs decision_state
         "docs/decision-notes/rejected/no-basis.md":
             GOOD_NOTE.replace("decision_state: decided", "decision_state: rejected"),
+        "docs/decision-notes/decided/ruling-shape.md": RULING_NOTE,
         "docs/other/note-lookalike.md": GOOD_NOTE,               # out of scope
     })
     decision_note_lint.ROOT = fx
     try:
         ok, _ = decision_note_lint.check_file(fx / "docs/decision-notes/decided/good.md")
         report("decision-note: clean decided note passes", ok)
+        ok, _ = decision_note_lint.check_file(fx / "docs/decision-notes/decided/ruling-shape.md")
+        report("decision-note: slice §6 ruling-shape note passes (decision alias)", ok)
         ok, probs = decision_note_lint.check_file(fx / "docs/decision-notes/decided/bad.md")
         report("decision-note: planted missing fields caught (N2+N3)",
                (not ok) and any("N2" in p and "implementation_state" in p for p in probs)
@@ -281,11 +286,16 @@ def t_planted_defect1():
 
 # --------------------------------------------------------------- register H2
 def t_register_scoped():
-    # existing real registers must still pass
+    # frozen-corpus regression guard: the two existing registers live in the
+    # byte-frozen evals/skills/results/ set (sha256-verified per slice); skipped
+    # if a future checkout lacks them so the selftest stays repo-state independent
     for rel in ("evals/skills/results/batch2_5/research-chain/decision-register.md",
                 "evals/skills/results/uncertainty-and-decision-manager/e2e/decision-register.md"):
-        ok, probs = register_check.check_file(HERE.parents[3] / rel)
-        report(f"register: existing {rel.split('/')[-1]} passes", ok, str(probs))
+        p = REPO_ROOT / rel
+        if not p.exists():
+            continue
+        ok, probs = register_check.check_file(p)
+        report(f"register: existing {rel.split('/')[-1]} passes (frozen-corpus guard)", ok, str(probs))
     # planted: VERIFIED at E2 (HF-10)
     fx = make_fixture({"docs/decision-notes/decided/r.md": ""})
     reg = fx / "register.md"
@@ -296,7 +306,41 @@ def t_register_scoped():
     ok, probs = register_check.check_file(reg)
     report("register: planted VERIFIED-at-E2 entry caught",
            (not ok) and any("E2" in p for p in probs), str(probs))
-    shutil.rmtree(fx)
+    _rmtree(fx)
+
+
+# ------------------------------------- markdown_links_check banner-aware (§9)
+def t_links_banner_aware():
+    import markdown_links_check as mlc
+    fx = make_fixture({
+        "docs/plans/active/charter.md": "# Charter\n",
+        "docs/plans/archived/old-plan.md":
+            "# Old Plan\n\n"
+            "> **⛔ VOID / SUPERSEDED (2026-08-01).** Retired. Governing plan: "
+            "[charter.md](../../plans/active/charter.md).\n",
+        # planted: live doc links to the archived plan WITHOUT a historical label
+        "docs/live-unlabeled.md":
+            "# Live\n\nCurrent build plan: [old-plan.md](plans/archived/old-plan.md) §2.\n",
+        # clean: labeled on its line
+        "docs/live-labeled.md":
+            "# Live\n\nSee [old-plan.md](plans/archived/old-plan.md) (frozen history, VOID 2026-08-01).\n",
+        # clean: frozen source (eval corpus) may link unlabeled — historical evidence
+        "tests/corpus/frozen-case.md":
+            "# Case\n\nRef [old-plan.md](../../docs/plans/archived/old-plan.md)\n",
+    })
+    orig_root = mlc.ROOT
+    mlc.ROOT = fx
+    try:
+        ok, probs = mlc.check_file(fx / "docs/live-unlabeled.md")
+        report("links: unlabeled live→archived pointer caught (banner-aware, §5.2-4/§9)",
+               (not ok) and any("archive-pointer" in p for p in probs), str(probs))
+        ok, probs = mlc.check_file(fx / "docs/live-labeled.md")
+        report("links: labeled live→archived pointer passes", ok, str(probs))
+        ok, probs = mlc.check_file(fx / "tests/corpus/frozen-case.md")
+        report("links: frozen-source link exempt (historical evidence)", ok, str(probs))
+    finally:
+        mlc.ROOT = orig_root
+        _rmtree(fx)
 
 
 if __name__ == "__main__":
@@ -306,6 +350,7 @@ if __name__ == "__main__":
     t_canonical_impact()
     t_planted_defect1()
     t_register_scoped()
+    t_links_banner_aware()
     try:
         shutil.rmtree(TMP_AREA)
     except OSError:

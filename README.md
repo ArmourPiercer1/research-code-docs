@@ -28,9 +28,13 @@ This repository is the **skill content + eval harness**, not a runtime. You run 
 - **1 supported workflow** — `documentation-refactor` (dry-run migration + candidate rewrite + advisory
   review + maintenance proposal).
 - **11 atomic skills** usable as manual advisory tools; **2 experimental** L1 flows that stop honestly at
-  unbuilt capabilities.
-- **Deterministic checkers** (front-matter, interface, flow-state, migration, rewrite, maintenance) +
-  a read-only `preflight.py` and a clean-room `smoke_test.py`.
+  unbuilt capabilities. Phase-2 (2026-09-10) adds two more atomic governance skills —
+  `simplification-audit` (A8) and `focused-verification` (A9) — registered `experimental` +
+  `disable-model-invocation`, **not yet in the release manifest** (next packaging pass).
+- **Deterministic checkers** (front-matter, status-vocab, archive, supersession, decision-note,
+  interface, flow-state, migration, rewrite, maintenance, register) + the change-level
+  `canonical_impact_lint` + a planted-defect self-test suite + a read-only `preflight.py` and a
+  clean-room `smoke_test.py`.
 
 ## Safety posture (non-negotiable in Alpha)
 
@@ -43,7 +47,12 @@ unauthorized write request → flow_status=BLOCKED
 ## Project governance (developers)
 
 The design/governance lives under [docs/skill-development/](docs/skill-development/) (architecture,
-conflict matrix, creation roadmap, skills registry, eval reports). The clean-room release procedure is
+conflict matrix, skills registry, eval reports) and [docs/](docs/) (canonical source map, decision
+register + decision notes); the batch creation roadmap (frozen history, VOID 2026-09-09) is
+archived at [docs/plans/archived/creation-roadmap.md](docs/plans/archived/creation-roadmap.md);
+execution status / what-is-next lives in the
+[reconstruction status table](docs/plans/active/reconstruction/README.md) (D-1). The clean-room
+release procedure is
 [docs/release/clean-room-smoke-test.md](docs/release/clean-room-smoke-test.md).
 
 ---

@@ -42,10 +42,45 @@ TIMESTAMP_ONLY = re.compile(r"^\s*(last_verified|last_evaluated|last_updated)\s*
 
 
 def _git(*args: str, root: Path = ROOT) -> str:
-    out = subprocess.run(["git", "-C", str(root), *args], capture_output=True, text=True)
+    out = subprocess.run(["git", "-C", str(root), *args], capture_output=True,
+                         text=True, encoding="utf-8", errors="replace")
     if out.returncode != 0:
         raise RuntimeError(f"git {' '.join(args)} failed: {out.stderr.strip()}")
-    return out.stdout
+    return out.stdout or ""
+
+
+def _unquote_git_path(p: str) -> str:
+    """git (core.quotepath=true) quotes non-ASCII paths C-style with octal escapes."""
+    if not (p.startswith('"') and p.endswith('"')):
+        return p
+    body = p[1:-1]
+    out = bytearray()
+    i = 0
+    while i < len(body):
+        c = body[i]
+        if c == "\\" and i + 1 < len(body):
+            n = body[i + 1]
+            if n in "01234567":
+                out.append(int(body[i + 1:i + 4], 8))
+                i += 4
+                continue
+            simple = {"n": 10, "t": 9, "r": 13, '"': 34, "\\": 92}
+            if n in simple:
+                out.append(simple[n])
+                i += 2
+                continue
+        out.append(ord(c))
+        i += 1
+    return out.decode("utf-8", errors="replace")
+
+
+def _clean_paths(raw: str) -> list[str]:
+    out = []
+    for l in raw.splitlines():
+        l = l.strip()
+        if l:
+            out.append(_unquote_git_path(l))
+    return out
 
 
 def changed_paths(base: str, worktree: bool, root: Path = ROOT) -> list[str]:
@@ -56,16 +91,36 @@ def changed_paths(base: str, worktree: bool, root: Path = ROOT) -> list[str]:
         untracked = _git("ls-files", "--others", "--exclude-standard", root=root)
         paths = set()
         for block in (diff, staged, untracked):
-            paths.update(l.strip() for l in block.splitlines() if l.strip())
+            paths.update(_clean_paths(block))
         return sorted(paths)
-    return sorted(l.strip() for l in _git("diff", "--name-only", f"{base}..HEAD", root=root).splitlines()
-                  if l.strip())
+    return _clean_paths(_git("diff", "--name-only", f"{base}..HEAD", root=root))
+
+
+def _exists_in_ref(ref: str, path: str, root: Path) -> bool:
+    try:
+        r = subprocess.run(["git", "-C", str(root), "cat-file", "-e", f"{ref}:{path}"],
+                           capture_output=True)
+        return r.returncode == 0
+    except Exception:
+        return True  # conservative: assume it existed
 
 
 def diff_for(path: str, base: str, worktree: bool, root: Path = ROOT) -> str:
     if worktree:
-        return _git("diff", base, "--", path, root=root) + _git("diff", "--cached", base, "--", path, root=root)
-    return _git("diff", f"{base}..HEAD", "--", path, root=root)
+        d = _git("diff", base, "--", path, root=root) + _git("diff", "--cached", base, "--", path, root=root)
+    else:
+        d = _git("diff", f"{base}..HEAD", "--", path, root=root)
+    if not d.strip():
+        # empty diff + the path is NEW relative to base (untracked/staged additions don't
+        # always show in a `git diff <base>` path-limited view) → synthesize the content
+        # as added lines so C4 judges the real content, not the emptiness
+        if not _exists_in_ref(base, path, root):
+            try:
+                content = (root / path).read_text(encoding="utf-8", errors="replace")
+                d = "\n".join("+" + l for l in content.splitlines())
+            except OSError:
+                d = ""
+    return d
 
 
 def _load_impact(impact: Path) -> dict:
@@ -101,8 +156,11 @@ def check(impact_path: Path | None, base: str, worktree: bool, root: Path = ROOT
                             f"has no impact declaration (--impact <file>)")
         return (len(problems) == 0), problems
 
-    # C1: actual ⊆ declared
+    # C1: actual ⊆ declared (+ optional intentionally_untracked carve-out, recorded)
+    untracked_carveout = {p.strip() for p in (impact or {}).get("intentionally_untracked") or []}
     for p in actual:
+        if p in untracked_carveout:
+            continue
         if p not in declared:
             problems.append(f"canonical-impact-lint C1: changed path not declared in impact contract: {p}")
 
@@ -124,11 +182,17 @@ def check(impact_path: Path | None, base: str, worktree: bool, root: Path = ROOT
             if not just:
                 problems.append(f"canonical-impact-lint C3: owner {op} declared no_impact without justification")
         elif kind == "updated":
-            if op not in actual:
+            # a directory owner (path ending in '/') matches any change beneath it
+            op_norm = op.replace("\\", "/")
+            hit = op in actual or (op_norm.endswith("/") and any(p.startswith(op_norm) for p in actual))
+            if not hit:
                 problems.append(f"canonical-impact-lint C2: owner {op} declared 'updated' but not "
                                 f"changed in this change (same-change rule, R2)")
             else:
-                d = diff_for(op, base, worktree, root)
+                if op_norm.endswith("/"):
+                    d = "".join(diff_for(p, base, worktree, root) for p in actual if p.startswith(op_norm))
+                else:
+                    d = diff_for(op, base, worktree, root)
                 if is_timestamp_only(d):
                     problems.append(f"canonical-impact-lint C4: owner {op} change is timestamp-only — "
                                     f"does not count as impact discharge")
@@ -145,9 +209,15 @@ def main(argv: list[str]) -> int:
     i = 1
     while i < len(argv):
         if argv[i] == "--impact":
+            if i + 1 >= len(argv):
+                print("missing value for --impact", file=sys.stderr)
+                return 2
             i += 1
             args["impact"] = Path(argv[i])
         elif argv[i] == "--base":
+            if i + 1 >= len(argv):
+                print("missing value for --base", file=sys.stderr)
+                return 2
             i += 1
             base = argv[i]
         elif argv[i] == "--worktree":

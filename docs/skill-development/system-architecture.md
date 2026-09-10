@@ -8,11 +8,11 @@ source_documents:
   - docs/prompt.md
   - docs/研究软件文档Skills系统_设计与创建指南.md  (third-party design guide — fine-tuned here, not followed verbatim)
   - docs/skill-development/current-skills-audit.md  (Phase-A audit)
-status: DECIDED (architecture v0.1 for Phase 1) with OPEN items explicitly listed
-last_verified: 2026-08-05  (§3.3/§gate-rule DQE terminal-gate wording revised → advisory checkpoint, Batch-2.5 §8)
+status: DECIDED (architecture v0.1 — what the system currently is; execution status / "what is next" is owned by the reconstruction status table per D-1: docs/plans/active/reconstruction/README.md) with OPEN items explicitly listed
+last_verified: 2026-09-10  (D12 status-line fix: pointer, not "DECIDED for Phase 1" scope claim; earlier 2026-08-05 §3.3/gate-rule DQE terminal-gate wording revised → advisory checkpoint, Batch-2.5 §8)
 -->
 
-> **Status of this document:** `architecture v0.1`, DECIDED for Phase 1 scope, `experimental` for everything downstream of the first four skills. It **fine-tunes** the third-party guide to the *actual* environment found in the audit. Where this document diverges from the guide, the divergence is marked **[ADAPT]** with a reason.
+> **Status of this document:** `architecture v0.1` — it describes what the system **currently is** (architecture map, not execution status; "what is next" is owned by the reconstruction status table per D-1), DECIDED for the architecture it documents, `experimental` for everything downstream of the first four skills. It **fine-tunes** the third-party guide to the *actual* environment found in the audit. Where this document diverges from the guide, the divergence is marked **[ADAPT]** with a reason.
 > **Generated:** 2026-07-30 17:47 +0800.
 
 ---

@@ -6,7 +6,7 @@ Rules (prompt §5.2, 2026-09-10 Phase-2 implementation prompt):
       docs/plans/archived/ (or the banner + pointers removed). The frozen external
       review mirror (docs/reconstruction-external-review/) is exempt — it is a
       frozen snapshot, not a live plan.
-  R2: a VOID/SUPERSEDED-bannned doc under docs/plans/archived/ must KEEP its
+  R2: a VOID/SUPERSEDED-bannered doc under docs/plans/archived/ must KEEP its
       supersession metadata: a dated banner AND a replacement pointer (a link or
       backticked path within 12 lines of the banner).
   R3 (repo mode only): every file under docs/plans/archived/ must be tracked in git

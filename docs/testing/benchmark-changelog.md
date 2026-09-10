@@ -144,4 +144,15 @@ is byte-identical to the D-16 build (only the declared version string moved 0.4.
 - Nothing installed, pushed, or auto-triggered. Skill stays `disable-model-invocation: true`, `experimental`;
   promotion to `provisional-gate` remains GATED on the Phase E admission bar (not yet run at time of writing).
 
+### Addendum — Phase-2 routing eval datasets for A8/A9 (2026-09-10; DQE gold corpus UNCHANGED)
+
+- **Added 4 routing-eval case files** (NOT DQE gold cases; the DQE test corpus is byte-unchanged — no
+  `dataset_version` bump): `evals/skills/trigger/simplification-audit.yaml` + `evals/skills/conflict/
+  simplification-audit.yaml` (A8) and `evals/skills/trigger/focused-verification.yaml` + `evals/skills/
+  conflict/focused-verification.yaml` (A9) — 20 trigger + 5 conflict cases each, `dataset_version: 1`,
+  `real: false` (authored datasets, not yet scored by a routing run — the skills stay
+  `experimental` + `disable-model-invocation` until that run passes).
+- Mutation history of these routing files = git (row 13: git is the chronology owner); this addendum
+  exists for later regression attribution (score shifts → this data addition vs a skill change).
+
 

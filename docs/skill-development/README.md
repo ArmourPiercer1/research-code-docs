@@ -1,6 +1,6 @@
 # Skill Development — Phase 1 Index
 
-> **Plan change (2026-09-09).** The batch roadmap ([creation-roadmap.md](creation-roadmap.md)) is
+> **Plan change (2026-09-09; archived 2026-09-10).** The batch roadmap ([creation-roadmap.md](../plans/archived/creation-roadmap.md), now in `docs/plans/archived/`) is
 > **VOID / superseded**. The governing development plan is now the Research Software Agent Workflow
 > Reconstruction Charter:
 > [docs/plans/active/research_software_agent_workflow_reconstruction_charter.md](../plans/active/research_software_agent_workflow_reconstruction_charter.md).
@@ -60,7 +60,7 @@ gate until the v1.0 bar (full golden suite + ablation + recall≥90%) is met. De
 | [current-skills-audit.md](current-skills-audit.md) | Phase A: audit of all installed + reference skills, classified KEEP/…/REMOVE |
 | [system-architecture.md](system-architecture.md) | Phase B: the fine-tuned architecture (layers, call chains, trigger ladder, norms, write model, budgets, versioning) |
 | [conflict-matrix.md](conflict-matrix.md) | pairwise co-trigger rules + release gates |
-| [creation-roadmap.md](creation-roadmap.md) | batched creation plan (0→5) + what we deliberately don't build |
+| [creation-roadmap.md](../plans/archived/creation-roadmap.md) | batched creation plan (0→5) + what we deliberately don't build — **archived 2026-09-10 (VOID)** |
 | [quality-control-plan.md](quality-control-plan.md) | hard-fail catalog, soft rubric, eval methodology, governance |
 | [skills-registry.yaml](skills-registry.yaml) | machine-readable roster (schema, status, write-scope, evals) |
 | [../../references/documentation-methodology/upstream-method-matrix.md](../../references/documentation-methodology/upstream-method-matrix.md) | per-rule source + license + adoption boundary |
@@ -119,4 +119,4 @@ dry-run+candidate scope, **corpus byte-for-byte untouched**, D-1/D-4 left OPEN, 
 [sprint6-routing-and-first-closed-loop-2026-08-06.md](reports/sprint6-routing-and-first-closed-loop-2026-08-06.md).
 **Next (directive §10):** **Batch 4** — the numerical-design atoms (two slices: problem-framer/architect/
 spec-author, then prototype/validation/roadmap) — which is what lets `numerical-research-software-design` cross
-its BLOCKED. See [creation-roadmap.md](creation-roadmap.md) §3–§5.
+its BLOCKED. See [creation-roadmap.md](../plans/archived/creation-roadmap.md) §3–§5 (frozen history, VOID 2026-09-09).

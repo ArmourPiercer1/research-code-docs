@@ -550,7 +550,7 @@ skills:
     write_scope: {read_only: true, creates_new_files: true, may_overwrite: false, may_move: false, may_delete: false, requires_user_approval: false, requires_isolated_branch: false}
     context_budget: {default_reads: [change-target, plan-text, census-rows], max_scope: "target file(s) + cited census rows; repo-wide SEARCHES by design, whole-tree reading not", whole_repo_allowed: false}
     required_tools: [Read, Grep, Glob, Bash]
-    norm_sources: [revised-phase2-vertical-slice]
+    norm_sources: []   # reads plan documents + git census rows — no canonical fact-store consumer
     status_vocab: true
     license_sources:
       - {method: "five-way consumer classification, search-evidenced and cited per reference", src: "research_code_docs_phase2_implementation_prompt.md §2.1 + revised-phase2-vertical-slice.md §3", license: internal, adoption: adapt}
@@ -563,7 +563,7 @@ skills:
     version: "0.1.0"
     status: experimental
     layer: L2-atomic
-    class: verify
+    class: evaluate
     batch: phase-2
     owner: research-code-docs
     purpose: >
@@ -584,7 +584,7 @@ skills:
     write_scope: {read_only: true, creates_new_files: true, may_overwrite: false, may_move: false, may_delete: false, requires_user_approval: false, requires_isolated_branch: false}   # writes exactly its own verification record
     context_budget: {default_reads: [contract, git-diff, checker-reports], max_scope: "declared scope diffs + failing-check evidence; repo-wide steps are the mechanical hash pass + lint runs", whole_repo_allowed: false}
     required_tools: [Read, Grep, Glob, Bash]
-    norm_sources: [revised-phase2-vertical-slice]
+    norm_sources: []   # reads plan/contract documents (A8 output) — no canonical fact-store consumer
     status_vocab: true
     license_sources:
       - {method: "recompute-don't-trust + smallest-sufficient-set + one-artifact-out discipline", src: "research_code_docs_phase2_implementation_prompt.md §2.2 + revised-phase2-vertical-slice.md §3", license: internal, adoption: adapt}

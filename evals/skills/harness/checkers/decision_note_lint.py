@@ -49,7 +49,8 @@ FOLDER_ALLOWED = {
 }
 CONTENT_ALIASES = {
     "problem": ("problem", "question"),
-    "decision": ("decision",),
+    # the slice §6 note shape carries the decision as `ruling:` — accept both
+    "decision": ("decision", "ruling"),
     "evidence_basis": ("evidence_basis", "evidence"),
     "alternatives": ("alternatives", "alternatives_considered"),
     "why": ("why",),

@@ -1,43 +1,24 @@
-# Canonical-Source Map
+# Canonical-Source Map (harness copy — thin pointer)
 
 <!--
-generated_by_skill: (manual, Phase-1 governance authoring; v0.3 addition)
+generated_by_skill: (manual, Phase-1 governance authoring; v0.3 addition; Phase-2 slice converted to a thin pointer)
 skill_version: n/a
-source_commit: n/a
+source_commit: 8a37387
 source_documents:
-  - docs/skill-development/reports/documentation-quality-evaluator_独立检查失败复盘与升级要求.md §5.7
-  - docs/skill-development/system-architecture.md §6 (canonical homes)
-status: DECIDED (v0.3 shared reference)
-last_verified: 2026-07-30
+  - docs/canonical-source-map.md (single manual authority — §A owner table + §B the 10 generic rows moved here from this file on 2026-09-10)
+  - docs/plans/active/research_code_docs_phase2_implementation_prompt.md §6 (harness map -> thin pointer)
+status: DECIDED (thin pointer; live content moved to docs/canonical-source-map.md)
+last_verified: 2026-09-10
 -->
 
-> Shared reference for `documentation-quality-evaluator`. It grounds **HF-14b (volatile-state
-> contamination)** and the **canonical-source / maintainability** rubric dimensions: "this fact
-> belongs in X, not copied into a stable doc" is decided against this table, not by feel. A stable
-> design doc (roadmap / architecture / vision / ADR / algorithm-spec) that **embeds** a fact whose
-> canonical home is dynamic (code/tests/CI/status) — without a **timestamped pointer** to that single
-> source — is contaminating itself and will drift.
-
-| Information type | Canonical source | If it appears in a stable doc |
-|---|---|---|
-| Current implementation behavior | code + tests | pointer only (`see src/…`), never a restated fact |
-| Current progress / % done | `status` / issue tracker | pointer + timestamp, or omit |
-| Test status / counts / "all green" | CI / test report | pointer + `as-of <date>`; a bare "59 tests green" in a roadmap is HF-14b |
-| Architecture *rationale* (why) | ADR | the roadmap links the ADR; it does not re-argue it |
-| Long-term goal / vision | vision / overview doc | one stable statement; not mixed with live status |
-| Phase / milestone plan | roadmap | the roadmap owns this — but only the *plan*, not live completion state |
-| Algorithm math / spec details | algorithm spec | roadmap links it; does not inline the derivation |
-| Experiment results / metrics | experiment report / registry | pointer + run id; not a floating number |
-| Literature-transfer basis | research basis / evidence map | pointer; transfer assumptions labeled (HF-12D/E) |
-| Session / interview decisions | decision register (ADR) | a `用户决定 (本轮)` block inside a roadmap is residue (HF-13 + agent_session_residue) |
-
-## How to use it (evaluator)
-
-1. For each **volatile fact** in a stable-design doc, look up its canonical source here.
-2. If the fact is **restated** (not a pointer) and carries **no `as-of <date>` / single-source
-   reference** → candidate **HF-14b**. If two such restatements disagree → **HF-14a**.
-3. A doc whose type **is** the canonical source for that fact (a state report owns live counts; an
-   experiment report owns metrics) is exempt from HF-14b for those facts — check HF-14a (internal
-   contradiction) instead.
-4. Feed the maintainability + canonical-source rubric dimensions from the count of un-pointered
-   restatements (drift risk already realized = low score).
+> **Thin pointer (Phase-2 slice, 2026-09-10).** This file is no longer a hand-maintained copy.
+> The single manual canonical source map is now
+> **[docs/canonical-source-map.md](../../../docs/canonical-source-map.md)** — §A is the repo
+> owner table (R6: one table, one home), §B carries the 10 generic evaluator-guidance rows that
+> lived here (moved verbatim on 2026-09-10), and §C the same-change maintenance rule.
+>
+> Evaluator usage (HF-14b grounding) is unchanged: look up the fact's canonical home in
+> `docs/canonical-source-map.md` §B (generic rows) / §A (repo-specific owners), apply the
+> restatement/pointer rule from §B "How to use it". Frozen copies under
+> `evals/skills/snapshots/**` and `evals/skills/results/batch2_5/**` remain version-frozen
+> artifacts (superseded for live use).
