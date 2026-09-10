@@ -17,7 +17,7 @@
 meta:
   schema_version: "0.1"
   generated: "2026-07-30T09:47:06Z"
-  isolation: "workspace-only; nothing here is installed to the live loader without user approval"
+  isolation: "Mode-B test install RECORDED (4df8f7f, docs/skill-development/README.md 'Recorded install state': all 14 skills installed to the live loader as a deliberate test fixture, user-ruled 2026-09-10). Workspace-only isolation remains the default: nothing else is installed without user approval."
   status_vocabulary: [FACT, VERIFIED, DECIDED, BASELINE, HYPOTHESIS, CANDIDATE, OPEN, DEFERRED, REJECTED, STALE]
   evidence_levels: [E0, E1, E2, E3, E4, E5]
   formal_verified_threshold: E3
