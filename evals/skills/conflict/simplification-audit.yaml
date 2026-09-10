@@ -1,0 +1,35 @@
+skill: simplification-audit
+skill_version: "0.1.0"
+dataset_version: 1
+# 5 conflict cases: input superficially looks like a simplification audit but a neighbor should lead.
+cases:
+  - id: sa-conf-01
+    set: conflict
+    real: false
+    input: "This workspace is a total mystery — before anything else, tell me what's even in here."
+    expected: {decision: route, route_to: workspace-forensics-and-inventory}
+    notes: "No change target named: this is a from-scratch inventory (WFI), not a pre-change audit. A8 consumes a WFI map; it does not replace one."
+  - id: sa-conf-02
+    set: conflict
+    real: false
+    input: "I just did the archive move — verify it against the contract and give me the record."
+    expected: {decision: route, route_to: focused-verification}
+    notes: "Post-change is A9's lane; A8 is strictly pre-change. The audit is already done; now reality must match it."
+  - id: sa-conf-03
+    set: conflict
+    real: false
+    input: "Reconstruct the true state of this project — what actually works, what's dead."
+    expected: {decision: route, route_to: project-state-reconstructor}
+    notes: "State recovery without a proposed change is PSR. A8's PSR half serves a named change target, not a whole-project reconstruction."
+  - id: sa-conf-04
+    set: conflict
+    real: false
+    input: "Go ahead and do the archive move plus the pointer fixes now."
+    expected: {decision: route, route_to: implement}
+    notes: "Execution is the host's job. A8 produces the minimal set + impact draft; it executes nothing."
+  - id: sa-conf-05
+    set: conflict
+    real: false
+    input: "Design the target canonical structure for this doc corpus — who owns what information type."
+    expected: {decision: route, route_to: document-information-architect}
+    notes: "Information-architecture DESIGN, not an audit of a named change. A8 classifies existing references; it does not design the target."

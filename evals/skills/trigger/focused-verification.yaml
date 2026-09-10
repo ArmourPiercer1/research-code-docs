@@ -1,0 +1,30 @@
+skill: focused-verification
+skill_version: "0.1.0"
+dataset_version: 1
+# A9 (Phase-2 vertical slice): post-change verification against an explicit contract.
+cases:
+  # ---------- should-trigger (engage) ----------
+  - {id: fv-trig-01, set: should-trigger, real: false, input: "The archive move is implemented. Verify it against its contract before I accept the commit."}
+  - {id: fv-trig-02, set: should-trigger, real: false, input: "Check that this change touched exactly the files in the impact declaration — nothing more, nothing less."}
+  - {id: fv-trig-03, set: should-trigger, real: false, input: "The change claims every impacted canonical owner was updated. Verify none of them are timestamp-only bumps."}
+  - {id: fv-trig-04, set: should-trigger, real: false, input: "Confirm nothing outside the declared scope moved — hash-compare the untouched set."}
+  - {id: fv-trig-05, set: should-trigger, real: false, input: "[scientific-workspace-reconstruction] run focused verification on the Phase-2 slice change against base 1dc6b86."}
+  - {id: fv-trig-06, set: should-trigger, real: false, input: "The commit message says it only touched six files. Recompute that from git diff."}
+  - {id: fv-trig-07, set: should-trigger, real: false, input: "Verify the preflight is still green and the lint self-tests pass after this change."}
+  - {id: fv-trig-08, set: should-trigger, real: false, input: "Write the verification record for this implemented change, with per-check evidence and a verdict."}
+
+  # ---------- should-not (decline or route) ----------
+  - {id: fv-not-01, set: should-not, real: false, input: "Audit what this planned change will touch before we start.", expected: {route_to: simplification-audit}, notes: "pre-change is A8; A9 verifies implemented reality"}
+  - {id: fv-not-02, set: should-not, real: false, input: "Review the code style of the new lint modules against the repo conventions.", expected: {route_to: code-review}, notes: "standards review of how the code is written, not contract conformance"}
+  - {id: fv-not-03, set: should-not, real: false, input: "Do the full release review of the whole repository.", expected: {decision: decline}, notes: "whole-repo release gates own that scope; A9 is the focused, contract-scoped mechanical half"}
+  - {id: fv-not-04, set: should-not, real: false, input: "What is the actual current state of this repo?", expected: {route_to: project-state-reconstructor}, notes: "state recovery, not change verification"}
+  - {id: fv-not-05, set: should-not, real: false, input: "Fix the archive lint that's failing on the moved file.", expected: {route_to: diagnosing-bugs}, notes: "fixing a failing check is implementation/diagnosis; A9 reports the FAIL and the clearing action"}
+  - {id: fv-not-06, set: should-not, real: false, input: "Inventory the docs folder for me.", expected: {route_to: workspace-forensics-and-inventory}, notes: "from-scratch inventory, not verification"}
+  - {id: fv-not-07, set: should-not, real: false, input: "The plan for next week's migration — verify it's realistic.", expected: {route_to: simplification-audit}, notes: "verifying an UNIMPLEMENTED plan is pre-change work (A8), not A9"}
+  - {id: fv-not-08, set: should-not, real: false, input: "Explain what sha256 hashing is for.", expected: {decision: decline}, notes: "knowledge question; answer directly"}
+
+  # ---------- short-ambiguous ----------
+  - {id: fv-amb-01, set: short-ambiguous, real: false, input: "verify the change", expected: {decision: engage-with-clarify}, notes: "clarify which change + whether the contract (impact declaration) exists; without a contract A9 cannot verify"}
+  - {id: fv-amb-02, set: short-ambiguous, real: false, input: "is it done?", context: "an archive move was just implemented", expected: {decision: engage}, notes: "engage: conformance + integrity is exactly the A9 question"}
+  - {id: fv-amb-03, set: short-ambiguous, real: false, input: "check the diff", expected: {decision: engage-with-clarify}, notes: "clarify: contract conformance (A9) vs code-quality review (code-review)?"}
+  - {id: fv-amb-04, set: short-ambiguous, real: false, input: "hash check", context: "the frozen mirror is part of the declared untouched set", expected: {decision: engage}, notes: "engage: untouched-scope integrity pass"}

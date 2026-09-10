@@ -7,7 +7,10 @@ checks (quality hygiene), and SIGNAL checks (v0.3 — candidates the model adjud
 HF-13/14/15; they NEVER block or change the exit code). Prints a JSON summary and exits
 non-zero if any HARD gate fails.
 
-    HARD:     frontmatter_check (HF-9), status_vocab_check (HF-3/HF-10)
+    HARD:     frontmatter_check (HF-9), status_vocab_check (HF-3/HF-10),
+              archive_lint (Phase-2 R9/I11/I12), supersession_lint (Phase-2 I5),
+              decision_note_lint (Phase-2 R3/R4/R5), register_check (H2 merge, scoped to
+              decision-register files)
     ADVISORY: markdown_links_check, placeholders_check, interface_check (batch2.5 handoff contract),
               flow_state_check (batch3 control-flow status contract), migration_map_check (batch5 dry-run migration),
               rewrite_provenance_check (batch5 candidate rewrite), maintenance_impact_check (batch5 proposal-only maintenance)
@@ -42,8 +45,43 @@ import completion_open_conflict   # noqa: E402
 import roadmap_stage_fields       # noqa: E402
 import agent_session_residue      # noqa: E402
 import artifact_role_mixing       # noqa: E402
+import register_check             # noqa: E402
+import archive_lint               # noqa: E402
+import supersession_lint          # noqa: E402
+import decision_note_lint         # noqa: E402
 
-HARD = [("frontmatter", frontmatter_check), ("status_vocab", status_vocab_check)]
+
+class _RegisterCheckScoped:
+    """H2 merge: register_check (HF-3/HF-10) participates in the HARD tier but only
+    applies to decision-register FILES — the checker FAILs vacuously on any other file
+    ('no ## Register section'), and heading/name-based scoping was measured too wide
+    (upstream docs legitimately have '## Register …' sections; the interface SCHEMA and
+    TEMPLATE for the register artifact are not registers). Rule: a live register is named
+    exactly `decision-register.md` or `decision-register-*.md`."""
+    @classmethod
+    def _is_register(cls, path: Path) -> bool:
+        n = path.name
+        return (n == "decision-register.md"
+                or (n.startswith("decision-register-") and n.endswith(".md")))
+
+    @classmethod
+    def check_file(cls, path: Path) -> tuple[bool, list[str]]:
+        if not cls._is_register(path):
+            return True, []
+        return register_check.check_file(path)
+
+
+HARD = [
+    ("frontmatter", frontmatter_check),
+    ("status_vocab", status_vocab_check),
+    # Phase-2 (2026-09-10 prompt §5): minimum lint set, merged into the hard tier now
+    # (eval-plan §a). Out-of-scope files pass vacuously. canonical_impact_lint is a
+    # change-level tool (own CLI; see selftest_phase2_lints.py), not a per-file module.
+    ("archive_lint", archive_lint),
+    ("supersession_lint", supersession_lint),
+    ("decision_note_lint", decision_note_lint),
+    ("register_check", _RegisterCheckScoped),
+]
 ADVISORY = [("markdown_links", markdown_links_check), ("placeholders", placeholders_check),
             ("interface", interface_check), ("flow_state", flow_state_check),
             ("migration_map", migration_map_check), ("rewrite_provenance", rewrite_provenance_check),

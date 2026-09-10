@@ -1,0 +1,35 @@
+skill: focused-verification
+skill_version: "0.1.0"
+dataset_version: 1
+# 5 conflict cases: input superficially looks like change verification but a neighbor should lead.
+cases:
+  - id: fv-conf-01
+    set: conflict
+    real: false
+    input: "Before we start, audit which canonical owners this planned migration will impact."
+    expected: {decision: route, route_to: simplification-audit}
+    notes: "Pre-change impact audit is A8. A9 runs after implementation, against the contract A8 drafts."
+  - id: fv-conf-02
+    set: conflict
+    real: false
+    input: "The new checker code is inconsistent with the repo's checker style — review it."
+    expected: {decision: route, route_to: code-review}
+    notes: "Standards review of implementation style; A9's checks verify contract conformance, not style."
+  - id: fv-conf-03
+    set: conflict
+    real: false
+    input: "Diagnose why the preflight goes red after the move."
+    expected: {decision: route, route_to: diagnosing-bugs}
+    notes: "A failing check needs diagnosis (root cause). A9 would record the FAIL + clearing action and hand it back."
+  - id: fv-conf-04
+    set: conflict
+    real: false
+    input: "Review the whole change set for quality before we tag the release."
+    expected: {decision: route, route_to: documentation-quality-evaluator}
+    notes: "Whole-change-set quality/review is DQE's advisory terminal-gate lane; A9 is the focused mechanical scope check that feeds the gate."
+  - id: fv-conf-05
+    set: conflict
+    real: false
+    input: "Tell me the real state of this workspace right now."
+    expected: {decision: route, route_to: project-state-reconstructor}
+    notes: "State recovery, not change verification — PSR's job."

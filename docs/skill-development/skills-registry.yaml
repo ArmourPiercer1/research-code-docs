@@ -5,7 +5,7 @@
 # generated_by: manual (Phase-1 governance authoring)
 # schema_version: 0.1
 # source_commit: mattpocock/skills vendored snapshot (plugin.json v1.2.0; no pinned commit)
-# last_verified: 2026-08-05  (v0.4.1 advisory freeze + Batch-2 decoupling; earlier governance 2026-07-30T09:47:06Z)
+# last_verified: 2026-09-10  (Phase-2 vertical slice: +simplification-audit, +focused-verification; earlier 2026-08-05 v0.4.1 advisory freeze + Batch-2 decoupling; 2026-07-30T09:47:06Z)
 #
 # Schema per entry: see docs/skill-development/system-architecture.md §10.
 # STATUS values: experimental | active | planned | deprecated | replaced | retired | reference-only
@@ -26,6 +26,7 @@ meta:
   phase_e: "DEFERRED to a future promotion gate (2026-08-05). The 61-slot 3-arm admission matrix + the reproducibility-release contract (ADR-DQE-002 / HF-REPRO / a reproducibility checker / 12-slot canary) are NOT built now — they belong to the later experiment-provenance-and-reproducibility capability, not to making DQE 'perfect' before Batch 2. Restart preconditions: >=2 Batch-2 skills done + 5-10 real downstream Skill outputs collected + explicit intent to promote DQE from advisory to a terminal gate (corpus should then be real outputs, not synthetic mutations). Canary-failure evidence + frozen snapshots are PRESERVED: tests/corpus/blind-runs/phase-e-2026-08-05/ and evals/skills/snapshots/{dqe-v0.3.0,dqe-v0.4.0-pre-d16,dqe-v0.4.1-candidate}/."
   v0_4_1_freeze: "DQE v0.4.1 FROZEN as advisory/profile-scoped (2026-08-05). Added a profile-ADMISSION scope guard (SKILL.md Rule 0 + EVALUATOR_CONTRACT): an unsupported profile -> GATE_DECISION=INCOMPLETE / GATE_REASON=unsupported-evaluation-profile. This resolves the halted D-17 canary by SCOPING OUT the controlled+release-gate experiment-report profile (NOT by adopting HF-REPRO): the canary's stable false-ALLOW becomes a safe INCOMPLETE. NO HF-1..15 threshold, no rubric weight, and no gate rules 1-3 changed — the guard sits above them. Report: reports/dqe-v0.4.1-freeze-and-batch2-entry-2026-08-05.md."
   batch2_5: "Batch 2.5 integration sprint COMPLETE (2026-08-05 directive). Proved the atomic skills compose through explicit, deterministically-checked artifact interfaces with NO chat dependence, before building Batch 3. Two real chains, one run each, <=12 agent slots, 0 reruns: Track A (forensics document-corpus -> PSR -> goals -> IA -> DQE-advisory -> reader) over the real docs/skill-development/ corpus; Track B (RQLP -> lit-review[REAL OpenAlex retrieval, 5 sources] -> RES -> UDM -> DQE-advisory -> reader). Froze a minimal 12-field handoff interface: references/interfaces/README.md + 7 *.schema.md + evals/skills/harness/checkers/interface_check.py (ADVISORY; --advisory-is-hard enforces; opt-in on artifact_type; aliases produced_by_skill/source_artifacts; NO HARD frontmatter_check change). All 12 handoff artifacts PASS interface_check; batch2_5 tree hard_fail=False (plain + --advisory-is-hard). All directive-§7 exit conditions met; 0 SKILL_DEFECT / 0 INTERFACE_DEFECT; 2 TEST_HARNESS nits found+fixed; 1 MISSING_CAPABILITY (documentation-refactor executors are Batch 5 -> IA next_handoff=BLOCKED, correct). Sources unchanged; nothing installed/pushed; all 4 Batch-2 skills stay experimental + manual-only. Architecture §8 gate-rule corrected (DQE = advisory checkpoint, ALLOW auto-triggers nothing). .pyc hygiene done. OQ-4 OPEN (evidence says keep RQLP+RES separate). Report: reports/batch2_5-integration-2026-08-05.md."
+  phase2: "Phase-2 vertical slice (2026-09-10, prompt research_code_docs_phase2_implementation_prompt.md). Added the governance pair simplification-audit (A8, orchestrator-only) + focused-verification (A9, manual-only), both experimental + disable-model-invocation, registered here but NOT in release-manifest.yaml (0.1.0-alpha.1 packaging frozen — next packaging pass adds them). Their trigger/conflict evals are authored (dataset_version 1) but not yet scored by a routing run — promotion to auto-trigger requires that run to pass (Rule: auto_trigger ONLY when trigger+conflict == pass). The Phase-2 lint portfolio (archive/supersession/decision-note in the HARD tier; canonical-impact change-level; register_check merged scoped) lives in evals/skills/harness/checkers/ with selftest_phase2_lints.py."
   v0_2_upgrade: "Batch-1 skills upgraded to 0.2.0 from real vendored references (agent-skills/github-awesome-copilot/research-paper-writing-skills MIT; academic-research-skills CC-BY-NC ideas-only). Per-method attribution in references/documentation-methodology/upstream-method-matrix.md. Regression re-eval: see reports/batch1-eval-run-2026-07-30.md (v0.2 section)."
   v0_3_upgrade: "documentation-quality-evaluator -> 0.3.0 after a hybrid-roadmap false-pass. Added anti-erosion/no-PASS-prediction discipline, structural gates HF-13/HF-14a/HF-14b/HF-15, decomposed HF-12A-E (doc-only vs source-needing -> DOCUMENT_QUALITY vs FACTUAL_VALIDITY), roadmap rubric + non-compensatory scoring, two-layer reader, structured KEY=VALUE verdict, 5 SIGNAL checkers + isolated grading harness. Anchor golden-negative (eoopt roadmap) now FAILs with HF-13/14a/14b/15 (recall 1.0, false_pass 0); B1 comprehensive-report PASSes (no HF-13 over-fire); trigger+conflict 28/28 no-regression. Report: reports/dqe-v0.3-upgrade-2026-07-30.md."
   v0_4_upgrade: "documentation-quality-evaluator -> 0.4.0 -> 0.4.1 (ADR-DQE-001 ACCEPTED). 0.4.0: caller-supplied evaluation_profile (provenance_policy/decision_mode NEVER silently inferred), profile-aware HF-9 (external/legacy docs not hard-failed for missing local front-matter), two-axis verdict QUALITY_BAND(quality) vs GATE_DECISION(may-proceed) with DOCUMENT_QUALITY compat map + EVALUATION_PROFILE echo, document_lifecycle vocab distinct from claim-status, HF-14b profile-severity map. HF-12A/HF-15 logic + HF-13/HF-14a thresholds UNCHANGED. 0.4.1: D-16 gate-composition fix (deterministic 3-rule GATE_DECISION; rubric total + FACTUAL_VALIDITY gate QUALITY_BAND only). Diagnostic 8/8 (dataset_version 4). OQ-REPRO=A: no HF-REPRO gate added. Frozen bundles under evals/skills/snapshots/. Phase E admission matrix pending. Reports: reports/dqe-v0.4-{skill-change-summary,diagnostic-matrix,oq-repro-decision,defect-ledger}.md + reports/dqe-v0.4.1-diagnostic-close.md."
@@ -519,6 +520,78 @@ skills:
     evals: {trigger: "pass (routing: 3 should-trigger + 3 should-not; part of the 24/24 combined eval)", conflict: "pass (2 boundary: apply/publish -> hold-at-BLOCKED explicit-write-approval; unapproved-canonical + volatile-into-stable -> refuse)", shadow: "pass (real closed-loop stage on Track-A -> maintenance-impact-report; 5 proposed updates all approved:false, 4/5 decision-blocked; single-source-of-truth held; maintenance_impact_check + interface_check PASS; corpus untouched)", reader_test: "pass (closure reader: maintenance implications identified; nothing published)", checker_selftest: "pass (planted defects caught: auto_publish, volatile-into-stable, unapproved mark-canonical, candidate-as-canonical, dual home)"}
     last_evaluated: "2026-08-06"
     notes: "Batch-5 doc-refactor executor #3. v0 proposal-only; edits/publishes NOTHING; candidate != canonical while unapproved. Reusable later by scientific-workspace-reconstruction. Stays experimental + orchestrator-only. Evidence: evals/skills/results/batch3/documentation-refactor-closure/maintenance-impact-report.md."
+
+  # ---------------------------------------------------------------------------
+  # PHASE 2 — governance pair for the vertical slice (2026-09-10, prompt §2.1/§2.2)
+  #   NOT in release-manifest.yaml (0.1.0-alpha.1 packaging frozen; next packaging pass).
+  # ---------------------------------------------------------------------------
+  - name: simplification-audit
+    version: "0.1.0"
+    status: experimental
+    layer: L2-atomic
+    class: audit
+    batch: phase-2
+    owner: research-code-docs
+    purpose: >
+      Pre-change blast-radius audit for a proposed change: PSR-verified state + WFI
+      structural map + a deterministic inbound-reference census, every reference classified
+      five ways (CURRENT-AUTHORITY/POINTER, HISTORICAL-PROVENANCE, FROZEN-RESULT/FIXTURE,
+      PLAIN-TEXT-HISTORY, DEAD/STALE), yielding the minimal sufficient change set + a draft
+      canonical impact declaration. Executes nothing; the plan's own reference count is an
+      input to recompute, never a result.
+    invocation: orchestrator-only
+    auto_trigger: false
+    disable_model_invocation: true
+    upstream_dependencies: [project-state-reconstructor, workspace-forensics-and-inventory]   # consumed as the PSR / WFI halves
+    downstream_outputs: [simplification-audit-report, impact-declaration(draft)]
+    conflicts: []
+    replaces: null
+    replaced_by: null
+    write_scope: {read_only: true, creates_new_files: true, may_overwrite: false, may_move: false, may_delete: false, requires_user_approval: false, requires_isolated_branch: false}
+    context_budget: {default_reads: [change-target, plan-text, census-rows], max_scope: "target file(s) + cited census rows; repo-wide SEARCHES by design, whole-tree reading not", whole_repo_allowed: false}
+    required_tools: [Read, Grep, Glob, Bash]
+    norm_sources: [revised-phase2-vertical-slice]
+    status_vocab: true
+    license_sources:
+      - {method: "five-way consumer classification, search-evidenced and cited per reference", src: "research_code_docs_phase2_implementation_prompt.md §2.1 + revised-phase2-vertical-slice.md §3", license: internal, adoption: adapt}
+      - {method: "compact SKILL structure + trigger/do-not-trigger discipline", src: "mattpocock/skills@snapshot writing-great-skills", license: MIT, adoption: method-borrow}
+    evals: {trigger: "authored 2026-09-10 (8 should-trigger + 8 should-not + 4 short-ambiguous; not yet scored by a routing run)", conflict: "authored 2026-09-10 (5 cases; A8-vs-A9/PSR/WFI/host/IA boundaries)", task_quality: pending, reader_test: pending}
+    last_evaluated: "2026-09-10"
+    notes: "Phase-2 vertical-slice skill A8 (prompt §2.1). NO dependency-graph lint is part of it — classification is search-based and cited per reference (Phase-2 minimum checker set). Experimental + orchestrator-only until its evals score pass; NOT in release-manifest.yaml (0.1.0-alpha.1 packaging frozen — add on the next packaging pass)."
+
+  - name: focused-verification
+    version: "0.1.0"
+    status: experimental
+    layer: L2-atomic
+    class: verify
+    batch: phase-2
+    owner: research-code-docs
+    purpose: >
+      Post-change verification against an explicit change contract: actual-vs-declared
+      changed-path conformance (git diff, recomputed), canonical-impact discharge (R2 —
+      same-change updates or justified no_impact; timestamp-only does not count), the
+      SMALLEST sufficient check set (each check mapped to a contract line), and
+      untouched-scope hash integrity. Emits one verification record with a
+      VERIFIED / NOT VERIFIED verdict. No deferred dependency-graph gate.
+    invocation: manual-only
+    auto_trigger: false
+    disable_model_invocation: true
+    upstream_dependencies: [simplification-audit]   # the contract (impact declaration) comes from A8
+    downstream_outputs: [verification-record]
+    conflicts: []
+    replaces: null
+    replaced_by: null
+    write_scope: {read_only: true, creates_new_files: true, may_overwrite: false, may_move: false, may_delete: false, requires_user_approval: false, requires_isolated_branch: false}   # writes exactly its own verification record
+    context_budget: {default_reads: [contract, git-diff, checker-reports], max_scope: "declared scope diffs + failing-check evidence; repo-wide steps are the mechanical hash pass + lint runs", whole_repo_allowed: false}
+    required_tools: [Read, Grep, Glob, Bash]
+    norm_sources: [revised-phase2-vertical-slice]
+    status_vocab: true
+    license_sources:
+      - {method: "recompute-don't-trust + smallest-sufficient-set + one-artifact-out discipline", src: "research_code_docs_phase2_implementation_prompt.md §2.2 + revised-phase2-vertical-slice.md §3", license: internal, adoption: adapt}
+      - {method: "compact SKILL structure + trigger/do-not-trigger discipline", src: "mattpocock/skills@snapshot writing-great-skills", license: MIT, adoption: method-borrow}
+    evals: {trigger: "authored 2026-09-10 (8 should-trigger + 8 should-not + 4 short-ambiguous; not yet scored by a routing run)", conflict: "authored 2026-09-10 (5 cases; A9-vs-A8/code-review/DQE/PSR boundaries)", task_quality: pending, reader_test: pending}
+    last_evaluated: "2026-09-10"
+    notes: "Phase-2 vertical-slice skill A9 (prompt §2.2). A check runs only because a contract line requires it; exclusions are recorded, not silent. Experimental + manual-only; NOT in release-manifest.yaml (0.1.0-alpha.1 packaging frozen — add on the next packaging pass)."
 
   # [ADAPT] additions beyond the guide's 20
   - {name: scientific-validity-review,                version: "0.0.0", status: planned, layer: L2-atomic, class: evaluate,  batch: 5, note: "keep scientific checks OUT of code-review; separate axis.", conflicts: []}

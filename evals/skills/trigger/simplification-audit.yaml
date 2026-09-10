@@ -1,0 +1,30 @@
+skill: simplification-audit
+skill_version: "0.1.0"
+dataset_version: 1
+# A8 (Phase-2 vertical slice): pre-change blast-radius audit. should-trigger / should-not / short-ambiguous.
+cases:
+  # ---------- should-trigger (engage) ----------
+  - {id: sa-trig-01, set: should-trigger, real: false, input: "We plan to archive the VOID creation-roadmap. Audit exactly what the change has to touch before we execute it."}
+  - {id: sa-trig-02, set: should-trigger, real: false, input: "Before this doc refactor, census every inbound reference to these three files and derive the minimal change set."}
+  - {id: sa-trig-03, set: should-trigger, real: false, input: "The plan claims there is only one inbound reference, at SKILL.md:9. Recompute that census against the current repo state."}
+  - {id: sa-trig-04, set: should-trigger, real: false, input: "What is the real blast radius of moving docs/skill-development/creation-roadmap.md to the archive?"}
+  - {id: sa-trig-05, set: should-trigger, real: false, input: "[scientific-workspace-reconstruction] run the simplification audit on the archive candidate before the host implements it."}
+  - {id: sa-trig-06, set: should-trigger, real: false, input: "I want to rewrite the canonical source map. First classify every reference to it: live authority, pointer, frozen fixture, or plain history."}
+  - {id: sa-trig-07, set: should-trigger, real: false, input: "Which references to this file are live pointers and which are frozen results? Give me the cited census, not a guess."}
+  - {id: sa-trig-08, set: should-trigger, real: false, input: "Draft the impact declaration for this change: which canonical owners get updated, which stay untouched, and why."}
+
+  # ---------- should-not (decline or route) ----------
+  - {id: sa-not-01, set: should-not, real: false, input: "I inherited this repo and have no idea what actually works. Reconstruct the real state.", expected: {route_to: project-state-reconstructor}, notes: "state recovery without a change target is PSR, not an audit"}
+  - {id: sa-not-02, set: should-not, real: false, input: "Inventory this unknown workspace — what's even in here?", expected: {route_to: workspace-forensics-and-inventory}, notes: "from-scratch inventory; A8 consumes a WFI map but is change-target-driven"}
+  - {id: sa-not-03, set: should-not, real: false, input: "Verify the archive move I just implemented against its contract.", expected: {route_to: focused-verification}, notes: "post-change is A9; A8 is pre-change"}
+  - {id: sa-not-04, set: should-not, real: false, input: "Now execute the minimal change set — do the archive move and the pointer fixes.", expected: {route_to: implement}, notes: "A8 executes nothing; the host does"}
+  - {id: sa-not-05, set: should-not, real: false, input: "Brainstorm what could possibly be deleted from this repo.", expected: {decision: decline}, notes: "open-ended scoping with no named targets; name the targets, then audit"}
+  - {id: sa-not-06, set: should-not, real: false, input: "Review the code quality of this diff.", expected: {route_to: code-review}, notes: "style/content review, not blast-radius audit"}
+  - {id: sa-not-07, set: should-not, real: false, input: "Design the target canonical structure for our docs.", expected: {route_to: document-information-architect}, notes: "design, not audit"}
+  - {id: sa-not-08, set: should-not, real: false, input: "Add a dependency-graph lint to CI so we never miss references again.", expected: {route_to: implement}, notes: "explicitly NOT part of the Phase-2 A8 minimum checker set (prompt §2.1); classification here is search-based"}
+
+  # ---------- short-ambiguous ----------
+  - {id: sa-amb-01, set: short-ambiguous, real: false, input: "audit this plan?", expected: {decision: engage-with-clarify}, notes: "clarify: audit of a named change target (A8) vs quality review of the plan document (DQE)?"}
+  - {id: sa-amb-02, set: short-ambiguous, real: false, input: "blast radius of moving that file?", context: "a VOID plan file is under discussion", expected: {decision: engage}, notes: "engage: that is the A8 question with a named target"}
+  - {id: sa-amb-03, set: short-ambiguous, real: false, input: "how many references?", expected: {decision: engage-with-clarify}, notes: "clarify which artifact and whether a bare grep or a classified census is wanted"}
+  - {id: sa-amb-04, set: short-ambiguous, real: false, input: "check the roadmap", expected: {decision: engage-with-clarify}, notes: "clarify: pre-change audit of an archive candidate (A8) vs verifying an already-made change to it (A9)?"}
